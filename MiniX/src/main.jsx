@@ -10,6 +10,10 @@ import {
 } from "react-router-dom";
 
 import { AnimatePresence } from "framer-motion";
+import Orders from "./pages/Orders.jsx";
+import Payments from "./pages/Payments.jsx";
+
+import OrderDetails from "./pages/OrderDetails";
 
 import ProfilePage from "./pages/ProfilePage";
 import App from "./App.jsx";
@@ -23,6 +27,8 @@ import OrderSuccess from "./pages/OrderSuccess.jsx";
 import AuthPage from "./pages/AuthPage.jsx";
 import WishlistPage from "./pages/WishlistPage.jsx";
 
+import Addresses from "./pages/Addresses";   // ✅ ADDED
+import EditProfile from "./pages/EditProfile";
 
 import "./index.css";
 
@@ -32,11 +38,12 @@ import { WishlistProvider } from "./context/WishlistContext.jsx";
 
 import PageTransition from "./Components/PageTransition.jsx";
 
+
 // -------- Protected Route Wrapper --------
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
 
-  if (loading) return null; // can add loader later
+  if (loading) return null;
 
   return user ? children : <Navigate to="/auth" replace />;
 }
@@ -55,50 +62,112 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
+
         <Route path="/" element={<PageTransition><App /></PageTransition>} />
 
         <Route path="/shop" element={<PageTransition><Shop /></PageTransition>} />
 
-        <Route path="/product/:id" element={<PageTransition><ProductPage /></PageTransition>} />
+        <Route
+          path="/product/:id"
+          element={<PageTransition><ProductPage /></PageTransition>}
+        />
 
         <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
 
         <Route path="/about" element={<PageTransition><About /></PageTransition>} />
 
-        <Route path="/profile" element={<PageTransition><ProfilePage /></PageTransition>} />
+        <Route
+          path="/profile"
+          element={<PageTransition><ProfilePage /></PageTransition>}
+        />
+
+        <Route path="/edit-profile" element={<EditProfile />} />
+
+        {/* ⭐ NEW ADDRESS ROUTE (Protected) */}
+        <Route
+          path="/addresses"
+          element={
+            <ProtectedRoute>
+              <PageTransition><Addresses /></PageTransition>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/payments"
+          element={
+            <ProtectedRoute>
+              <PageTransition><Payments /></PageTransition>
+            </ProtectedRoute>
+          }
+        />
 
 
-        {/* 🔒 Protected */}
-        <Route path="/cart" element={
-          <ProtectedRoute>
-            <PageTransition><Cart /></PageTransition>
-          </ProtectedRoute>
-        } />
+        {/* Protected Routes */}
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <PageTransition><Cart /></PageTransition>
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/wishlist" element={
-          <ProtectedRoute>
-            <PageTransition><WishlistPage /></PageTransition>
-          </ProtectedRoute>
-        } />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <PageTransition><Orders /></PageTransition>
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/checkout" element={
-          <ProtectedRoute>
-            <PageTransition><Checkout /></PageTransition>
-          </ProtectedRoute>
-        } />
 
-        <Route path="/order-success" element={
-          <ProtectedRoute>
-            <PageTransition><OrderSuccess /></PageTransition>
-          </ProtectedRoute>
-        } />
+        <Route
+          path="/wishlist"
+          element={
+            <ProtectedRoute>
+              <PageTransition><WishlistPage /></PageTransition>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders/:orderId"
+          element={
+            <ProtectedRoute>
+              <PageTransition><OrderDetails /></PageTransition>
+            </ProtectedRoute>
+          }
+        />
 
-        {/* 🔒 Block /auth if already logged in */}
-        <Route path="/auth" element={
-          <BlockAuthWhenLoggedIn>
-            <PageTransition><AuthPage /></PageTransition>
-          </BlockAuthWhenLoggedIn>
-        } />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <PageTransition><Checkout /></PageTransition>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/order-success"
+          element={
+            <ProtectedRoute>
+              <PageTransition><OrderSuccess /></PageTransition>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Block /auth if logged in */}
+        <Route
+          path="/auth"
+          element={
+            <BlockAuthWhenLoggedIn>
+              <PageTransition><AuthPage /></PageTransition>
+            </BlockAuthWhenLoggedIn>
+          }
+        />
+
       </Routes>
     </AnimatePresence>
   );

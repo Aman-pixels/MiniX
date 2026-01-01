@@ -9,6 +9,7 @@ import Collections from "./Components/Collections";
 import FeaturedProduct from "./Components/FeaturedProduct";
 
 
+
 function App() {
   const { showToastVisible, toastMessage } = useCart();
 

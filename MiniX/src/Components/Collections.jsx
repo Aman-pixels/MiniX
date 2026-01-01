@@ -1,48 +1,13 @@
-// src/Components/Collections.jsx
 import React from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-
-const categories = [
-  {
-    name: "Hoodies",
-    slug: "Hoodies",
-    image:
-      "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=1400&q=80",
-    cta: "Tap to view all hoodies →",
-  },
-  {
-    name: "Tees",
-    slug: "Tees",
-    image:
-      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1400&q=80",
-    cta: "Tap to view all tees →",
-  },
-  {
-    name: "Bottoms",
-    slug: "Bottoms",
-    image:
-      "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=1400&q=80",
-    cta: "Tap to view all bottoms →",
-  },
-  {
-    name: "Accessories",
-    slug: "Accessories",
-    image:
-      "https://images.unsplash.com/photo-1592878849126-2f1fdf5d93a6?auto=format&fit=crop&w=1400&q=80",
-    cta: "Tap to view all accessories →",
-  },
-];
+import categories from "../data/Categories"; 
 
 export default function Collections() {
   const navigate = useNavigate();
 
-  const handleClick = (slug) => {
-    if (slug === "All") {
-      navigate("/shop");
-    } else {
-      navigate(`/shop?category=${slug}`);
-    }
+  const handleClick = (id) => {
+    navigate(`/shop?category=${id}`);
   };
 
   return (
@@ -63,7 +28,7 @@ export default function Collections() {
         </div>
 
         <button
-          onClick={() => handleClick("All")}
+          onClick={() => navigate("/shop")}
           className="text-sm md:text-base text-gray-300 hover:text-white inline-flex items-center gap-1 self-start md:self-end"
         >
           View all products
@@ -71,12 +36,12 @@ export default function Collections() {
         </button>
       </div>
 
-      {/* Cards */}
+      {/* Category Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         {categories.map((cat, index) => (
           <motion.button
-            key={cat.name}
-            onClick={() => handleClick(cat.slug)}
+            key={cat.id}
+            onClick={() => handleClick(cat.id)}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -91,7 +56,7 @@ export default function Collections() {
             {/* Background image */}
             <img
               src={cat.image}
-              alt={cat.name}
+              alt={cat.label}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             />
 
@@ -106,10 +71,10 @@ export default function Collections() {
 
               <div>
                 <h3 className="text-2xl md:text-3xl font-semibold text-white mb-1">
-                  {cat.name}
+                  {cat.label}
                 </h3>
                 <p className="text-xs md:text-sm text-gray-200 flex items-center gap-1">
-                  {cat.cta}
+                  Tap to view
                   <span className="group-hover:translate-x-1 transition-transform">
                     →
                   </span>

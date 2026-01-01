@@ -1,28 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useCart } from "../context/CartContext";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, MapPin } from "lucide-react";
 
 export default function Checkout() {
   const { cartItems, total, clearCart } = useCart();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    zip: "",
-    payment: "cod",
-  });
+  const [addresses, setAddresses] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState(null);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("minix-addresses")) || [];
+      setAddresses(saved);
+      setSelectedAddress(saved.find(a => a.isDefault) || saved[0] || null);
+    } catch {
+      setAddresses([]);
+    }
+  }, []);
 
   const generateOrderId = () => {
     const t = Date.now().toString(36).toUpperCase();
@@ -31,52 +30,43 @@ export default function Checkout() {
   };
 
   const handleOrder = () => {
-    if (
-      !form.name ||
-      !form.email ||
-      !form.phone ||
-      !form.address ||
-      !form.city ||
-      !form.zip
-    ) {
-      alert("Please fill all details.");
+    if (!selectedAddress) {
+      alert("Please add an address before placing order.");
+      navigate("/addresses");
       return;
     }
 
     const order = {
       orderId: generateOrderId(),
-      items: cartItems.map((it) => ({
+      items: cartItems.map(it => ({
         id: it.id,
         name: it.name,
-        price:
-          typeof it.price === "string"
-            ? parseFloat(it.price.replace("$", ""))
-            : Number(it.price),
+        price: Number(it.price),
         quantity: it.quantity || 1,
         selectedSize: it.selectedSize || null,
         selectedColor: it.selectedColor || null,
         image: it.image || null,
       })),
-      amount: Number(total) || 0,
+      amount: Number(total),
       shipping: 5,
       grandTotal: Number(total) + 5,
-      customer: {
-        name: form.name,
-        email: form.email,
-        phone: form.phone,
-        address: form.address,
-        city: form.city,
-        zip: form.zip,
-      },
-      paymentMethod: form.payment || "cod",
+      address: selectedAddress,
+      paymentMethod: "cod",
       paymentStatus: "pending",
       createdAt: new Date().toISOString(),
     };
 
     try {
+      const existing = JSON.parse(localStorage.getItem("minix-orders")) || [];
+      localStorage.setItem(
+        "minix-orders",
+        JSON.stringify([order, ...existing])
+      );
+
+      // 🔥 REQUIRED for OrderSuccess page
       localStorage.setItem("minix-last-order", JSON.stringify(order));
     } catch (err) {
-      console.error("Failed to save order locally", err);
+      console.error("Order save failed", err);
     }
 
     clearCart();
@@ -87,15 +77,16 @@ export default function Checkout() {
     return (
       <div className="bg-black text-white min-h-screen flex flex-col">
         <Navbar />
-        <div className="flex-1 flex flex-col items-center justify-center text-center px-6">
+        <div className="flex-1 flex flex-col items-center justify-center">
           <h2 className="text-2xl mb-3">Your cart is empty</h2>
           <Link
             to="/shop"
-            className="px-6 py-3 bg-white text-black rounded-lg font-semibold hover:bg-gray-200 transition"
+            className="px-6 py-3 bg-white text-black rounded-lg font-semibold"
           >
             Back to Shop
           </Link>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -107,7 +98,7 @@ export default function Checkout() {
       <section className="px-6 lg:px-20 py-16">
         <Link
           to="/cart"
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition"
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8"
         >
           <ArrowLeft size={18} /> Back to Cart
         </Link>
@@ -115,130 +106,82 @@ export default function Checkout() {
         <h1 className="text-4xl font-bold mb-12">Checkout</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          {/* LEFT */}
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
+            initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
             className="lg:col-span-2 space-y-8"
           >
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md shadow-xl">
-              <h2 className="text-xl font-semibold mb-4">Billing Details</h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Full Name"
-                  onChange={handleChange}
-                  className="input-box"
-                />
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email Address"
-                  onChange={handleChange}
-                  className="input-box"
-                />
-                <input
-                  type="text"
-                  name="phone"
-                  placeholder="Phone Number"
-                  onChange={handleChange}
-                  className="input-box"
-                />
-                <input
-                  type="text"
-                  name="zip"
-                  placeholder="ZIP / Postal Code"
-                  onChange={handleChange}
-                  className="input-box"
-                />
+            {/* ADDRESS */}
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+              <div className="flex justify-between mb-4">
+                <h2 className="text-xl font-semibold">Delivery Address</h2>
+                <button
+                  onClick={() => navigate("/addresses")}
+                  className="text-sm text-gray-400 hover:text-white"
+                >
+                  Change
+                </button>
               </div>
 
-              <input
-                type="text"
-                name="address"
-                placeholder="Street Address"
-                onChange={handleChange}
-                className="input-box mt-4"
-              />
-
-              <input
-                type="text"
-                name="city"
-                placeholder="City"
-                onChange={handleChange}
-                className="input-box mt-4"
-              />
+              {selectedAddress ? (
+                <div className="flex gap-3">
+                  <MapPin size={18} className="text-white/50 mt-1" />
+                  <div>
+                    <p className="font-medium">{selectedAddress.name}</p>
+                    <p className="text-sm text-white/60">
+                      {selectedAddress.house}, {selectedAddress.street}
+                    </p>
+                    <p className="text-sm text-white/60">
+                      {selectedAddress.city}, {selectedAddress.state} – {selectedAddress.pincode}
+                    </p>
+                    <p className="text-sm text-white/60">
+                      Phone: {selectedAddress.phone}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-gray-400">No address selected.</p>
+              )}
             </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md shadow-xl">
-              <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
-
-              <label className="flex items-center gap-3 cursor-pointer">
-                <input
-                  type="radio"
-                  name="payment"
-                  value="cod"
-                  checked={form.payment === "cod"}
-                  onChange={handleChange}
-                />
-                <span>Cash on Delivery (COD)</span>
-              </label>
-
-              <p className="text-gray-400 text-sm mt-2">
-                Online payments will be added when backend is ready.
-              </p>
+            {/* PAYMENT */}
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+              <h2 className="text-xl font-semibold mb-2">Payment</h2>
+              <p className="text-sm text-gray-400">Cash on Delivery</p>
             </div>
           </motion.div>
 
+          {/* RIGHT */}
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
+            initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md shadow-xl h-fit"
+            className="bg-white/5 border border-white/10 rounded-2xl p-6 h-fit"
           >
             <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
 
-            <div className="space-y-3 max-h-56 overflow-auto pr-2">
-              {cartItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex justify-between items-start border-b border-white/10 pb-3"
-                >
-                  <div className="flex-1 pr-3">
-                    <p className="font-medium">{item.name}</p>
-                    <p className="text-gray-400 text-sm">
-                      {item.quantity} × ${item.price}
-                    </p>
-                  </div>
-                  <p className="font-semibold">
-                    ${(item.quantity * (Number(item.price) || 0)).toFixed(2)}
+            {cartItems.map(item => (
+              <div key={item.id} className="flex justify-between mb-3">
+                <div>
+                  <p>{item.name}</p>
+                  <p className="text-sm text-gray-400">
+                    {item.quantity} × ${item.price}
                   </p>
                 </div>
-              ))}
-            </div>
-
-            <div className="flex justify-between mt-4 text-gray-300">
-              <p>Subtotal</p>
-              <p>${total.toFixed(2)}</p>
-            </div>
-
-            <div className="flex justify-between mt-1 text-gray-300">
-              <p>Shipping</p>
-              <p>$5.00</p>
-            </div>
+                <p>${(item.quantity * item.price).toFixed(2)}</p>
+              </div>
+            ))}
 
             <div className="border-t border-white/10 my-4"></div>
 
-            <div className="flex justify-between text-lg font-semibold">
+            <div className="flex justify-between text-gray-300">
               <p>Total</p>
-              <p>${(Number(total) + 5).toFixed(2)}</p>
+              <p>${(total + 5).toFixed(2)}</p>
             </div>
 
             <button
               onClick={handleOrder}
-              className="w-full mt-6 bg-white text-black py-3 rounded-lg font-semibold hover:bg-gray-200 transition"
+              className="w-full mt-6 bg-white text-black py-3 rounded-lg font-semibold hover:bg-gray-200"
             >
               Place Order
             </button>
