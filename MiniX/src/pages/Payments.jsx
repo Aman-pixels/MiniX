@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ArrowLeft,
   CreditCard,
@@ -10,6 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
+import axios from "axios";
 
 export default function Payments() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function Payments() {
   const [methods, setMethods] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [type, setType] = useState("card"); // card | upi
+  const [loading, setLoading] = useState(true);
 
   const [form, setForm] = useState({
     cardName: "",
@@ -26,6 +28,23 @@ export default function Payments() {
     isDefault: false,
   });
 
+  useEffect(() => {
+    fetchPayments();
+  }, []);
+
+  const fetchPayments = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:5000/api/payments", {
+        withCredentials: true,
+      });
+      setMethods(data.methods || []);
+    } catch (error) {
+      console.error("Failed to fetch payment methods", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({
@@ -34,7 +53,7 @@ export default function Payments() {
     }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (
       (type === "card" &&
         (!form.cardName || !form.cardNumber || !form.expiry)) ||
@@ -44,48 +63,63 @@ export default function Payments() {
       return;
     }
 
-    setMethods((prev) => {
-      const clearedDefaults = prev.map((m) =>
-        form.isDefault ? { ...m, isDefault: false } : m
-      );
+    try {
+      const payload = {
+        type,
+        isDefault: form.isDefault,
+        ...(type === "card"
+          ? {
+            cardName: form.cardName,
+            last4: form.cardNumber.slice(-4), // Store only last 4
+            expiry: form.expiry,
+          }
+          : {
+            upiId: form.upiId,
+          }),
+      };
 
-      return [
-        ...clearedDefaults,
-        {
-          id: Date.now(),
-          type,
-          isDefault: form.isDefault,
-          ...(type === "card"
-            ? {
-                cardName: form.cardName,
-                last4: form.cardNumber.slice(-4),
-                expiry: form.expiry,
-              }
-            : {
-                upiId: form.upiId,
-              }),
-        },
-      ];
-    });
+      await axios.post("http://localhost:5000/api/payments", payload, {
+        withCredentials: true,
+      });
 
-    setForm({
-      cardName: "",
-      cardNumber: "",
-      expiry: "",
-      upiId: "",
-      isDefault: false,
-    });
+      fetchPayments();
 
-    setShowForm(false);
+      setForm({
+        cardName: "",
+        cardNumber: "",
+        expiry: "",
+        upiId: "",
+        isDefault: false,
+      });
+      setShowForm(false);
+    } catch (error) {
+      console.error("Failed to save payment method", error);
+      alert(error.response?.data?.message || "Failed to save payment method");
+    }
   };
 
-  const removeMethod = (id) =>
-    setMethods((prev) => prev.filter((m) => m.id !== id));
+  const removeMethod = async (id) => {
+    if (!window.confirm("Are you sure you want to remove this payment method?")) return;
+    try {
+      await axios.delete(`http://localhost:5000/api/payments/${id}`, {
+        withCredentials: true,
+      });
+      fetchPayments();
+    } catch (error) {
+      console.error("Failed to delete payment method", error);
+    }
+  };
 
-  const setDefault = (id) =>
-    setMethods((prev) =>
-      prev.map((m) => ({ ...m, isDefault: m.id === id }))
-    );
+  const setDefault = async (id) => {
+    try {
+      await axios.patch(`http://localhost:5000/api/payments/${id}/default`, {}, {
+        withCredentials: true,
+      });
+      fetchPayments();
+    } catch (error) {
+      console.error("Failed to set default payment method", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -117,7 +151,7 @@ export default function Payments() {
           {/* Methods */}
           {methods.map((m) => (
             <div
-              key={m.id}
+              key={m._id}
               className="relative rounded-3xl border border-white/10 bg-white/5 p-5 flex flex-col justify-between"
             >
               {m.isDefault && (
@@ -156,14 +190,14 @@ export default function Payments() {
               <div className="flex gap-4 mt-4 text-sm">
                 {!m.isDefault && (
                   <button
-                    onClick={() => setDefault(m.id)}
+                    onClick={() => setDefault(m._id)}
                     className="text-white/60 hover:text-white flex items-center gap-1"
                   >
                     <Check size={14} /> Set as default
                   </button>
                 )}
                 <button
-                  onClick={() => removeMethod(m.id)}
+                  onClick={() => removeMethod(m._id)}
                   className="text-red-400 hover:text-red-300"
                 >
                   Remove
@@ -187,11 +221,10 @@ export default function Payments() {
                   <button
                     key={t}
                     onClick={() => setType(t)}
-                    className={`flex-1 py-2 text-sm rounded-full transition ${
-                      type === t
+                    className={`flex-1 py-2 text-sm rounded-full transition ${type === t
                         ? "bg-white text-black"
                         : "text-white/60 hover:text-white"
-                    }`}
+                      }`}
                   >
                     {t === "card" ? "Card" : "UPI"}
                   </button>

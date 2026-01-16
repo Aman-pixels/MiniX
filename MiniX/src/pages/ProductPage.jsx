@@ -89,7 +89,7 @@ export default function ProductPage() {
     });
 
     setShowToast(true);
-    setTimeout(() => setShowToast(false), 800);
+    setTimeout(() => setShowToast(false), 3000);
   };
 
   const handleBuyNow = () => {
@@ -132,11 +132,10 @@ export default function ProductPage() {
                   <button
                     key={i}
                     onClick={() => setSelectedImage(i)}
-                    className={`h-20 w-20 rounded-xl overflow-hidden border ${
-                      selectedImage === i
-                        ? "border-white"
-                        : "border-white/10"
-                    }`}
+                    className={`h-20 w-20 rounded-xl overflow-hidden border ${selectedImage === i
+                      ? "border-white"
+                      : "border-white/10"
+                      }`}
                   >
                     <img src={img} className="w-full h-full object-cover" />
                   </button>
@@ -175,11 +174,10 @@ export default function ProductPage() {
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`px-4 py-2 rounded-full border text-sm transition ${
-                        selectedSize === size
-                          ? "bg-white text-black"
-                          : "border-white/10 hover:border-white/40"
-                      }`}
+                      className={`px-4 py-2 rounded-full border text-sm transition ${selectedSize === size
+                        ? "bg-white text-black"
+                        : "border-white/10 hover:border-white/40"
+                        }`}
                     >
                       {size}
                     </button>
@@ -197,11 +195,10 @@ export default function ProductPage() {
                     <button
                       key={color.name}
                       onClick={() => setSelectedColor(color)}
-                      className={`w-7 h-7 rounded-full border-2 transition ${
-                        selectedColor?.name === color.name
-                          ? "border-white scale-110"
-                          : "border-transparent"
-                      }`}
+                      className={`w-7 h-7 rounded-full border-2 transition ${selectedColor?.name === color.name
+                        ? "border-white scale-110"
+                        : "border-transparent"
+                        }`}
                       style={{ backgroundColor: color.hex }}
                     />
                   ))}
@@ -241,11 +238,10 @@ export default function ProductPage() {
                   className="rounded-full border border-white/20 p-3"
                 >
                   <Heart
-                    className={`${
-                      isInWishlist
-                        ? "fill-pink-500 text-pink-500"
-                        : "text-pink-400"
-                    }`}
+                    className={`${isInWishlist
+                      ? "fill-pink-500 text-pink-500"
+                      : "text-pink-400"
+                      }`}
                   />
                 </button>
               </div>
@@ -271,7 +267,7 @@ export default function ProductPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="fixed bottom-24 right-6 bg-white text-black px-4 py-2 rounded-full shadow-xl text-xs"
+                className="fixed bottom-24 right-6 bg-white text-black px-4 py-2 rounded-full shadow-xl text-xs z-50"
               >
                 Added to cart
               </motion.div>

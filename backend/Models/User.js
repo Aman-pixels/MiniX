@@ -16,7 +16,6 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      index: true,
     },
 
     password: {
@@ -39,6 +38,29 @@ const userSchema = new mongoose.Schema(
       },
     ],
 
+    cart: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          default: 1,
+          min: 1,
+        },
+        selectedSize: {
+          type: String,
+          required: true,
+        },
+        selectedColor: {
+          name: String,
+          hex: String,
+        },
+      },
+    ],
+
     addresses: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -56,7 +78,8 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Indexes for performance
-userSchema.index({ email: 1 });
+// Single, clean index
+// Index handled by unique: true
+
 
 module.exports = mongoose.model("User", userSchema);

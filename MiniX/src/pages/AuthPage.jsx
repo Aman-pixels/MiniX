@@ -88,7 +88,7 @@ export default function AuthPage() {
       </div>
 
       <div className="relative z-10 w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 px-4 py-10">
-        
+
         {/* LEFT: AUTH CARD */}
         <motion.div
           variants={cardVariants}
@@ -120,11 +120,10 @@ export default function AuthPage() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`flex-1 py-2 text-sm rounded-full transition ${
-                  activeTab === tab
+                className={`flex-1 py-2 text-sm rounded-full transition ${activeTab === tab
                     ? "bg-white text-black font-medium"
                     : "text-zinc-400 hover:text-zinc-100"
-                }`}
+                  }`}
               >
                 {tab === "login" ? "Log in" : "Sign up"}
               </button>
@@ -238,13 +237,19 @@ export default function AuthPage() {
         </motion.div>
 
         {/* RIGHT: VISUAL PANEL */}
-        <div className="hidden lg:flex items-center justify-center relative rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
-          <div className="relative z-10 text-center px-10">
+        <div className="hidden lg:flex items-center justify-center relative rounded-3xl border border-white/10 overflow-hidden">
+          <img
+            src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=2070&auto=format&fit=crop"
+            alt="Fashion Model"
+            className="absolute inset-0 w-full h-full object-cover opacity-60"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+
+          <div className="relative z-10 text-center px-10 mt-32">
             <h2 className="text-3xl font-semibold mb-3">
               Minimal streetwear.<br />Built for everyday.
             </h2>
-            <p className="text-sm text-zinc-400 max-w-sm mx-auto">
+            <p className="text-sm text-zinc-300 max-w-sm mx-auto">
               Join MiniX to track orders, manage addresses, and build your
               everyday fits effortlessly.
             </p>

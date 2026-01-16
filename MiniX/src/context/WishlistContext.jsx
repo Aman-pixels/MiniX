@@ -1,38 +1,71 @@
-// src/context/WishlistContext.jsx
 import { createContext, useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { useAuth } from "./AuthContext";
 
 const WishlistContext = createContext(null);
+const API_URL = "http://localhost:5000/api/wishlist";
 
 export function WishlistProvider({ children }) {
-  const [wishlist, setWishlist] = useState(() => {
-    try {
-      const stored = localStorage.getItem("minix-wishlist");
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [wishlist, setWishlist] = useState([]);
+  const { user } = useAuth();
 
   useEffect(() => {
-    localStorage.setItem("minix-wishlist", JSON.stringify(wishlist));
-  }, [wishlist]);
+    if (user) {
+      fetchWishlist();
+    } else {
+      setWishlist([]);
+    }
+  }, [user]);
 
-  const toggleWishlist = (product) => {
-    setWishlist((prev) => {
-      const exists = prev.some((item) => item.id === product.id);
-      if (exists) {
-        return prev.filter((item) => item.id !== product.id);
+  const fetchWishlist = async () => {
+    try {
+      const { data } = await axios.get(API_URL, { withCredentials: true });
+      if (data.success) {
+        setWishlist(transformWishlist(data.wishlist));
       }
-      return [...prev, product];
-    });
+    } catch (error) {
+      console.error("Failed to fetch wishlist", error);
+    }
+  };
+
+  // Transform to match frontend expectations (flat objects mostly)
+  const transformWishlist = (items) => {
+    return items.map((item) => ({
+      ...item,
+      id: item._id, // Ensure ID is consistent
+    }));
+  };
+
+  const toggleWishlist = async (product) => {
+    if (!user) {
+      alert("Please login to use wishlist");
+      return;
+    }
+
+    try {
+      const { data } = await axios.post(
+        `${API_URL}/toggle`,
+        { productId: product.id },
+        { withCredentials: true }
+      );
+
+      if (data.success) {
+        setWishlist(transformWishlist(data.wishlist));
+      }
+    } catch (error) {
+      console.error("Toggle wishlist error", error);
+    }
   };
 
   const isWishlisted = (id) => {
     return wishlist.some((item) => item.id === id);
   };
 
-  const removeFromWishlist = (id) => {
-    setWishlist((prev) => prev.filter((item) => item.id !== id));
+  const removeFromWishlist = async (id) => {
+    // Re-use toggle logic since it handles remove if exists
+    // But we need the product object or at least ID.
+    // Toggle expects `product.id`.
+    await toggleWishlist({ id });
   };
 
   return (

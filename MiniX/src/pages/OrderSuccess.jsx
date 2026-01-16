@@ -13,7 +13,7 @@ export default function OrderSuccess() {
     try {
       const raw = localStorage.getItem("minix-last-order");
       if (raw) setOrder(JSON.parse(raw));
-    } catch {}
+    } catch { }
   }, []);
 
   if (!order) {
@@ -50,7 +50,7 @@ export default function OrderSuccess() {
 
           <div className="bg-white/5 border border-white/10 rounded-lg p-4 text-left my-6">
             <p className="text-sm text-gray-400">Order ID</p>
-            <p className="font-mono font-semibold">{order.orderId}</p>
+            <p className="font-mono font-semibold">{order._id}</p>
             <p className="text-sm text-gray-400 mt-2">
               Placed on {new Date(order.createdAt).toLocaleString()}
             </p>
@@ -58,28 +58,18 @@ export default function OrderSuccess() {
 
           <div className="grid sm:grid-cols-2 gap-6 text-left mb-6">
             <div>
-              <p className="text-sm text-gray-400">Delivery Address</p>
-              <p className="mt-2">{order.address.name}</p>
-              <p className="text-sm text-gray-300">
-                {order.address.house}, {order.address.street}
-              </p>
-              <p className="text-sm text-gray-300">
-                {order.address.city}, {order.address.state} –{" "}
-                {order.address.pincode}
-              </p>
-              <p className="text-sm text-gray-300">
-                {order.address.phone}
-              </p>
+              <p className="text-sm text-gray-400">Status</p>
+              <p className="mt-2 capitalize">{order.orderStatus}</p>
             </div>
 
             <div>
               <p className="text-sm text-gray-400">Payment</p>
               <p className="mt-2 capitalize">{order.paymentMethod}</p>
               <p className="text-sm text-gray-300">
-                Status: {order.paymentStatus}
+                Payment Status: {order.paymentStatus}
               </p>
-              <p className="text-sm text-gray-300 mt-3">
-                Total: ${order.grandTotal.toFixed(2)}
+              <p className="text-sm text-gray-300 mt-3 font-semibold">
+                Total Paid: ${order.totalAmount.toFixed(2)}
               </p>
             </div>
           </div>

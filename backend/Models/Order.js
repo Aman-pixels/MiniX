@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
   {
-    userId: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -10,46 +10,49 @@ const orderSchema = new mongoose.Schema(
 
     items: [
       {
-        productId: String,
-        name: String,
-        price: Number,
-        quantity: Number,
-        selectedSize: String,
-        selectedColor: String,
-        image: String,
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+        price: {
+          type: Number,
+          required: true,
+        },
       },
     ],
 
-    address: {
-      name: String,
-      phone: String,
-      addressLine: String,
-      city: String,
-      state: String,
-      pincode: String,
+    shippingAddress: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Address",
+      required: true,
     },
 
     paymentMethod: {
       type: String,
-      enum: ["cod", "upi", "card"],
-      default: "cod",
+      default: "COD", // later Razorpay / Stripe
     },
 
     paymentStatus: {
       type: String,
-      enum: ["pending", "paid"],
+      enum: ["pending", "paid", "failed"],
       default: "pending",
     },
 
     orderStatus: {
       type: String,
-      enum: ["placed", "shipped", "delivered", "cancelled"],
+      enum: ["placed", "processing", "shipped", "delivered", "cancelled"],
       default: "placed",
     },
 
-    subtotal: Number,
-    shipping: Number,
-    total: Number,
+    totalAmount: {
+      type: Number,
+      required: true,
+    },
   },
   { timestamps: true }
 );

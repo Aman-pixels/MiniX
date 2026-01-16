@@ -23,9 +23,20 @@ const addressSchema = new mongoose.Schema(
       maxlength: 15,
     },
 
-    addressLine: {
+    house: {
       type: String,
       required: true,
+      trim: true,
+    },
+
+    street: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    landmark: {
+      type: String,
       trim: true,
     },
 

@@ -62,7 +62,7 @@ const productData = [
     },
 
     images: [
-      "https://images.unsplash.com/photo-1602810318299-eeb67d604844?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1539884051663-95fc71c48f93?auto=format&fit=crop&w=1200&q=80",
     ],
 

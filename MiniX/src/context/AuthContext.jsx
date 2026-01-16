@@ -43,7 +43,7 @@ export function AuthProvider({ children }) {
   // Update profile (name + email)
   const updateProfile = async (name, email) => {
     const res = await axios.put(
-      "/api/user/update",
+      "/api/user/profile",
       { name, email },
       { withCredentials: true }
     );
@@ -54,7 +54,7 @@ export function AuthProvider({ children }) {
   // Update password
   const updatePassword = async (oldPassword, newPassword) => {
     await axios.put(
-      "/api/user/update-password",
+      "/api/user/password",
       { oldPassword, newPassword },
       { withCredentials: true }
     );

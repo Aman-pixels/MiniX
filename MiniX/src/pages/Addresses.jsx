@@ -1,22 +1,16 @@
 // src/pages/Addresses.jsx
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, MapPin, Plus, Trash2, Check } from "lucide-react";
+import { ArrowLeft, MapPin, Plus, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
+import axios from "axios";
 
 export default function Addresses() {
   const navigate = useNavigate();
 
-  // ✅ load addresses from localStorage
-  const [addresses, setAddresses] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("minix-addresses")) || [];
-    } catch {
-      return [];
-    }
-  });
-
+  const [addresses, setAddresses] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
 
   const [form, setForm] = useState({
@@ -31,10 +25,22 @@ export default function Addresses() {
     isDefault: false,
   });
 
-  // ✅ persist to localStorage whenever addresses change
   useEffect(() => {
-    localStorage.setItem("minix-addresses", JSON.stringify(addresses));
-  }, [addresses]);
+    fetchAddresses();
+  }, []);
+
+  const fetchAddresses = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:5000/api/addresses", {
+        withCredentials: true,
+      });
+      setAddresses(data.addresses || []);
+    } catch (error) {
+      console.error("Failed to fetch addresses", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -44,7 +50,7 @@ export default function Addresses() {
     }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (
       !form.name ||
       !form.phone ||
@@ -57,43 +63,49 @@ export default function Addresses() {
       return;
     }
 
-    setAddresses((prev) => {
-      const clearedDefaults = form.isDefault
-        ? prev.map((a) => ({ ...a, isDefault: false }))
-        : prev;
-
-      return [
-        ...clearedDefaults,
-        {
-          ...form,
-          id: Date.now(),
-        },
-      ];
-    });
-
-    setForm({
-      name: "",
-      phone: "",
-      house: "",
-      street: "",
-      city: "",
-      state: "",
-      pincode: "",
-      landmark: "",
-      isDefault: false,
-    });
-
-    setShowForm(false);
+    try {
+      await axios.post("http://localhost:5000/api/addresses", form, {
+        withCredentials: true,
+      });
+      fetchAddresses();
+      setShowForm(false);
+      setForm({
+        name: "",
+        phone: "",
+        house: "",
+        street: "",
+        city: "",
+        state: "",
+        pincode: "",
+        landmark: "",
+        isDefault: false,
+      });
+    } catch (error) {
+      console.error("Failed to save address", error);
+      alert("Failed to save address");
+    }
   };
 
-  const removeAddress = (id) => {
-    setAddresses((prev) => prev.filter((a) => a.id !== id));
+  const removeAddress = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/addresses/${id}`, {
+        withCredentials: true,
+      });
+      fetchAddresses();
+    } catch (error) {
+      console.error("Failed to delete address", error);
+    }
   };
 
-  const setDefault = (id) => {
-    setAddresses((prev) =>
-      prev.map((a) => ({ ...a, isDefault: a.id === id }))
-    );
+  const setDefault = async (id) => {
+    try {
+      await axios.patch(`http://localhost:5000/api/addresses/${id}/default`, {}, {
+        withCredentials: true,
+      });
+      fetchAddresses();
+    } catch (error) {
+      console.error("Failed to set default address", error);
+    }
   };
 
   return (
@@ -101,7 +113,6 @@ export default function Addresses() {
       <Navbar />
 
       <div className="pt-32 pb-24 px-4 max-w-6xl mx-auto">
-        {/* Header */}
         <div className="flex items-center gap-3 mb-8">
           <button
             onClick={() => navigate(-1)}
@@ -112,9 +123,7 @@ export default function Addresses() {
           <h1 className="text-2xl font-semibold">My Addresses</h1>
         </div>
 
-        {/* GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* ADD ADDRESS CARD */}
           <button
             onClick={() => setShowForm(true)}
             className="border-2 border-dashed border-white/20 rounded-3xl h-56 flex flex-col items-center justify-center text-white/60 hover:border-white/40 transition"
@@ -123,10 +132,9 @@ export default function Addresses() {
             <span className="mt-2 text-sm">Add address</span>
           </button>
 
-          {/* SAVED ADDRESSES */}
           {addresses.map((addr) => (
             <div
-              key={addr.id}
+              key={addr._id}
               className="relative rounded-3xl border border-white/10 bg-white/5 p-5 flex flex-col justify-between"
             >
               {addr.isDefault && (
@@ -154,14 +162,14 @@ export default function Addresses() {
               <div className="flex gap-4 mt-4 text-sm">
                 {!addr.isDefault && (
                   <button
-                    onClick={() => setDefault(addr.id)}
+                    onClick={() => setDefault(addr._id)}
                     className="text-white/60 hover:text-white flex items-center gap-1"
                   >
                     <Check size={14} /> Set as default
                   </button>
                 )}
                 <button
-                  onClick={() => removeAddress(addr.id)}
+                  onClick={() => removeAddress(addr._id)}
                   className="text-red-400 hover:text-red-300"
                 >
                   Remove
@@ -171,12 +179,10 @@ export default function Addresses() {
           ))}
         </div>
 
-        {/* ADD FORM MODAL */}
         {showForm && (
           <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 px-4">
             <div className="w-full max-w-lg rounded-3xl bg-[#0b0b0b] border border-white/10 p-6">
               <h2 className="text-lg font-medium mb-4">Add new address</h2>
-
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <input className="input" name="name" placeholder="Full Name" value={form.name} onChange={handleChange} />
                 <input className="input" name="phone" placeholder="Phone Number" value={form.phone} onChange={handleChange} />
@@ -217,7 +223,6 @@ export default function Addresses() {
           </div>
         )}
       </div>
-
       <Footer />
     </div>
   );

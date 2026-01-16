@@ -5,6 +5,7 @@ import { useCart } from "../context/CartContext";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import { ArrowLeft, MapPin } from "lucide-react";
+import axios from "axios";
 
 export default function Checkout() {
   const { cartItems, total, clearCart } = useCart();
@@ -12,65 +13,73 @@ export default function Checkout() {
 
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [paymentMethod, setPaymentMethod] = useState("COD");
 
   useEffect(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem("minix-addresses")) || [];
-      setAddresses(saved);
-      setSelectedAddress(saved.find(a => a.isDefault) || saved[0] || null);
-    } catch {
-      setAddresses([]);
-    }
+    fetchAddresses();
   }, []);
 
-  const generateOrderId = () => {
-    const t = Date.now().toString(36).toUpperCase();
-    const r = Math.floor(1000 + Math.random() * 9000);
-    return `MINIX-${t}-${r}`;
+  const fetchAddresses = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:5000/api/addresses", {
+        withCredentials: true,
+      });
+      setAddresses(data.addresses || []);
+      setSelectedAddress(data.addresses.find(a => a.isDefault) || data.addresses[0] || null);
+    } catch (error) {
+      console.error("Failed to fetch addresses", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleOrder = () => {
+  const handleOrder = async () => {
     if (!selectedAddress) {
       alert("Please add an address before placing order.");
       navigate("/addresses");
       return;
     }
 
-    const order = {
-      orderId: generateOrderId(),
+    if (paymentMethod === "ONLINE") {
+      navigate("/payment", {
+        state: {
+          orderData: {
+            items: cartItems.map(it => ({
+              product: it.id,
+              quantity: it.quantity || 1,
+            })),
+            shippingAddress: selectedAddress._id,
+            totalPrice: total + 5, // Include shipping
+          }
+        }
+      });
+      return;
+    }
+
+    const orderData = {
       items: cartItems.map(it => ({
-        id: it.id,
-        name: it.name,
-        price: Number(it.price),
+        product: it.id,
         quantity: it.quantity || 1,
-        selectedSize: it.selectedSize || null,
-        selectedColor: it.selectedColor || null,
-        image: it.image || null,
       })),
-      amount: Number(total),
-      shipping: 5,
-      grandTotal: Number(total) + 5,
-      address: selectedAddress,
-      paymentMethod: "cod",
-      paymentStatus: "pending",
-      createdAt: new Date().toISOString(),
+      shippingAddress: selectedAddress._id,
+      paymentMethod: "COD",
     };
 
     try {
-      const existing = JSON.parse(localStorage.getItem("minix-orders")) || [];
-      localStorage.setItem(
-        "minix-orders",
-        JSON.stringify([order, ...existing])
-      );
+      const { data } = await axios.post("http://localhost:5000/api/orders", orderData, {
+        withCredentials: true,
+      });
 
-      // 🔥 REQUIRED for OrderSuccess page
-      localStorage.setItem("minix-last-order", JSON.stringify(order));
+      if (data.success) {
+        localStorage.setItem("minix-last-order", JSON.stringify(data.order));
+        clearCart();
+        navigate("/order-success");
+      }
     } catch (err) {
-      console.error("Order save failed", err);
+      console.error("Order placement failed", err);
+      alert(err.response?.data?.message || "Order placement failed");
     }
-
-    clearCart();
-    navigate("/order-success");
   };
 
   if (cartItems.length === 0) {
@@ -124,7 +133,9 @@ export default function Checkout() {
                 </button>
               </div>
 
-              {selectedAddress ? (
+              {loading ? (
+                <p className="text-gray-400">Loading addresses...</p>
+              ) : selectedAddress ? (
                 <div className="flex gap-3">
                   <MapPin size={18} className="text-white/50 mt-1" />
                   <div>
@@ -147,8 +158,33 @@ export default function Checkout() {
 
             {/* PAYMENT */}
             <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-              <h2 className="text-xl font-semibold mb-2">Payment</h2>
-              <p className="text-sm text-gray-400">Cash on Delivery</p>
+              <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
+
+              <div className="space-y-3">
+                <label className="flex items-center gap-3 p-3 rounded-lg border border-white/10 cursor-pointer hover:bg-white/5 transition">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="COD"
+                    checked={paymentMethod === "COD"}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    className="accent-white"
+                  />
+                  <span>Cash on Delivery</span>
+                </label>
+
+                <label className="flex items-center gap-3 p-3 rounded-lg border border-white/10 cursor-pointer hover:bg-white/5 transition">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="ONLINE"
+                    checked={paymentMethod === "ONLINE"}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    className="accent-white"
+                  />
+                  <span>Online Payment (Card / GPay)</span>
+                </label>
+              </div>
             </div>
           </motion.div>
 

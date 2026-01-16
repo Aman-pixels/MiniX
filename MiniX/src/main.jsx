@@ -27,8 +27,18 @@ import OrderSuccess from "./pages/OrderSuccess.jsx";
 import AuthPage from "./pages/AuthPage.jsx";
 import WishlistPage from "./pages/WishlistPage.jsx";
 
+// Duplicate removed
+
 import Addresses from "./pages/Addresses";   // ✅ ADDED
+import Payment from "./pages/Payment"; // ✅ ADDED
 import EditProfile from "./pages/EditProfile";
+
+// Admin Imports
+import AdminRoute from "./components/AdminRoute";
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminProducts from "./pages/admin/AdminProducts";
+import AdminOrders from "./pages/admin/AdminOrders";
 
 import "./index.css";
 
@@ -158,6 +168,15 @@ function AnimatedRoutes() {
           }
         />
 
+        <Route
+          path="/payment"
+          element={
+            <ProtectedRoute>
+              <PageTransition><Payment /></PageTransition>
+            </ProtectedRoute>
+          }
+        />
+
         {/* Block /auth if logged in */}
         <Route
           path="/auth"
@@ -167,6 +186,20 @@ function AnimatedRoutes() {
             </BlockAuthWhenLoggedIn>
           }
         />
+
+        {/* ADMIN ROUTES */}
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="products" element={<AdminProducts />} />
+          <Route path="orders" element={<AdminOrders />} />
+        </Route>
 
       </Routes>
     </AnimatePresence>

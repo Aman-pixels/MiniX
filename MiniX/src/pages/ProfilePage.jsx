@@ -10,8 +10,10 @@ import {
   CreditCard,
   LogOut,
   Package,
+  ArrowLeft,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import Navbar from "../Components/Navbar";
 
 export default function ProfilePage() {
   const { user, logoutUser } = useAuth();
@@ -19,6 +21,8 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#050509] text-white px-4 pt-28 pb-10 relative">
+      <Navbar />
+
       {/* Background Glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-40 -right-20 w-72 h-72 bg-purple-500/30 blur-[90px]" />
@@ -39,6 +43,10 @@ export default function ProfilePage() {
       >
         {/* Header */}
         <div className="mb-6">
+          <Link to="/" className="inline-flex items-center gap-2 text-xs text-zinc-400 hover:text-white mb-4 transition">
+            <ArrowLeft size={16} /> Back to Home
+          </Link>
+
           <h1 className="text-2xl font-semibold">My Profile</h1>
           <p className="text-sm text-zinc-400 mt-1">
             Manage your MiniX account settings and preferences.

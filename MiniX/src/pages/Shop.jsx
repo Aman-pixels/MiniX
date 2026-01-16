@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useSearchParams } from "react-router-dom";
 import { ChevronDown, Search } from "lucide-react";
+import ScrollReveal from "../Components/ScrollReveal";
 
 import ShopSkeleton from "../Components/skeletons/ShopSkeleton";
 import { useCart } from "../context/CartContext";
@@ -131,11 +132,10 @@ export default function Shop() {
                   updateURL({ category: cat });
                   setPage(1);
                 }}
-                className={`px-4 py-2 rounded-xl text-sm ${
-                  activeCategory === cat
-                    ? "bg-white text-black"
-                    : "text-gray-300 hover:bg-white/10"
-                }`}
+                className={`px-4 py-2 rounded-xl text-sm ${activeCategory === cat
+                  ? "bg-white text-black"
+                  : "text-gray-300 hover:bg-white/10"
+                  }`}
               >
                 {cat}
               </button>
@@ -218,32 +218,28 @@ export default function Shop() {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
               {pageProducts.map((product, i) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 18 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.04 }}
-                  className="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:scale-105 transition"
-                >
-                  <Link to={`/product/${product.id}`}>
-                    <img
-                      src={product.images[0]}
-                      alt={product.name}
-                      className="w-full h-72 object-cover"
-                    />
-                  </Link>
+                <ScrollReveal key={product.id} delay={i * 0.05}>
+                  <div className="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:scale-105 transition duration-300">
+                    <Link to={`/product/${product.id}`}>
+                      <img
+                        src={product.images[0]}
+                        alt={product.name}
+                        className="w-full h-72 object-cover"
+                      />
+                    </Link>
 
-                  <div className="p-5 text-center">
-                    <h3 className="font-semibold">{product.name}</h3>
-                    <p className="text-gray-400">${product.price}</p>
-                    <button
-                      onClick={() => addToCart(product)}
-                      className="mt-3 w-full py-2 bg-white text-black rounded-lg"
-                    >
-                      Add to Cart
-                    </button>
+                    <div className="p-5 text-center">
+                      <h3 className="font-semibold">{product.name}</h3>
+                      <p className="text-gray-400">${product.price}</p>
+                      <button
+                        onClick={() => addToCart(product)}
+                        className="mt-3 w-full py-2 bg-white text-black font-medium rounded-lg hover:bg-gray-200 transition"
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
                   </div>
-                </motion.div>
+                </ScrollReveal>
               ))}
             </div>
 
@@ -253,11 +249,10 @@ export default function Shop() {
                 <button
                   key={idx}
                   onClick={() => setPage(idx + 1)}
-                  className={`px-3 py-1 rounded-full ${
-                    page === idx + 1
-                      ? "bg-white text-black"
-                      : "bg-white/10"
-                  }`}
+                  className={`px-3 py-1 rounded-full ${page === idx + 1
+                    ? "bg-white text-black"
+                    : "bg-white/10"
+                    }`}
                 >
                   {idx + 1}
                 </button>

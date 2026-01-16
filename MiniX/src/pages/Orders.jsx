@@ -4,17 +4,28 @@ import Footer from "../Components/Footer";
 import { Package } from "lucide-react";
 import { Link } from "react-router-dom";
 
+import axios from "axios";
+
 export default function Orders() {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const stored = JSON.parse(localStorage.getItem("minix-orders")) || [];
-      setOrders(stored);
-    } catch {
-      setOrders([]);
-    }
+    fetchOrders();
   }, []);
+
+  const fetchOrders = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:5000/api/orders/myorders", {
+        withCredentials: true,
+      });
+      setOrders(data.orders || []);
+    } catch (error) {
+      console.error("Failed to fetch orders", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -40,14 +51,14 @@ export default function Orders() {
           <div className="space-y-6">
             {orders.map(order => (
               <Link
-                key={order.orderId}
-                to={`/orders/${order.orderId}`}
-                className="block bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition"
+                key={order._id}
+                to={`/orders/${order._id}`}
+                className="block p-6 bg-gray-800 rounded-lg shadow-md hover:bg-gray-700 transition-colors duration-200"
               >
                 <div className="flex justify-between mb-2">
                   <div>
                     <p className="text-sm text-gray-400">Order ID</p>
-                    <p className="font-mono">{order.orderId}</p>
+                    <p className="font-mono">{order._id}</p>
                   </div>
                   <p className="text-sm text-gray-400">
                     {new Date(order.createdAt).toLocaleString()}
@@ -66,10 +77,10 @@ export default function Orders() {
 
                   <div className="text-right">
                     <p className="text-lg font-semibold">
-                      ${order.grandTotal.toFixed(2)}
+                      ${order.totalAmount.toFixed(2)}
                     </p>
                     <p className="text-xs text-gray-400 capitalize">
-                      {order.paymentStatus}
+                      {order.orderStatus}
                     </p>
                   </div>
                 </div>
@@ -80,6 +91,6 @@ export default function Orders() {
       </div>
 
       <Footer />
-    </div>
+    </div >
   );
 }

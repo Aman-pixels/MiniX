@@ -1,5 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import ScrollReveal from "./Components/ScrollReveal";
 import { useCart } from "./context/CartContext";
 
 import Navbar from "./Components/Navbar";
@@ -21,8 +22,13 @@ function App() {
       {/* NEW HERO */}
       <Hero />
 
-      <FeaturedProduct />
-      <Collections />
+      <ScrollReveal>
+        <FeaturedProduct />
+      </ScrollReveal>
+
+      <ScrollReveal delay={0.2}>
+        <Collections />
+      </ScrollReveal>
       <Footer />
 
       {/* Toast */}

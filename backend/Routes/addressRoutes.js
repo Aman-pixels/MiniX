@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../Middleware/authMiddleware");
+const { protect } = require("../Middleware/authMiddleware");
 
 const {
   addAddress,
@@ -15,34 +15,34 @@ const {
  * @desc    Add new address
  * @access  Private
  */
-router.post("/", auth, addAddress);
+router.post("/", protect, addAddress);
 
 /**
  * @route   GET /api/address
  * @desc    Get all user addresses
  * @access  Private
  */
-router.get("/", auth, getAddresses);
+router.get("/", protect, getAddresses);
 
 /**
  * @route   PUT /api/address/:id
  * @desc    Update address
  * @access  Private
  */
-router.put("/:id", auth, updateAddress);
+router.put("/:id", protect, updateAddress);
 
 /**
  * @route   PATCH /api/address/:id/default
  * @desc    Set default address
  * @access  Private
  */
-router.patch("/:id/default", auth, setDefaultAddress);
+router.patch("/:id/default", protect, setDefaultAddress);
 
 /**
  * @route   DELETE /api/address/:id
  * @desc    Soft delete address
  * @access  Private
  */
-router.delete("/:id", auth, deleteAddress);
+router.delete("/:id", protect, deleteAddress);
 
 module.exports = router;
