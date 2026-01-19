@@ -10,6 +10,18 @@ export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
   const { user } = useAuth();
 
+  // 🔔 Toast state (Added as per user request)
+  const [showToastVisible, setShowToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+
+  const triggerToast = (message) => {
+    setToastMessage(message);
+    setShowToastVisible(true);
+    setTimeout(() => {
+      setShowToastVisible(false);
+    }, 1800);
+  };
+
   // Helper to format backend data for frontend
   const processCartData = (apiCartItems) => {
     return apiCartItems.map((item) => ({
@@ -46,7 +58,7 @@ export function CartProvider({ children }) {
 
   const addToCart = async (product) => {
     if (!user) {
-      alert("Please login to add items to cart");
+      triggerToast("Please login to add items");
       return;
     }
 
@@ -54,7 +66,7 @@ export function CartProvider({ children }) {
       const { data } = await axios.post(
         `${API_URL}/add`,
         {
-          productId: product.id,
+          productId: product.id || product._id, // Handle both id formats
           quantity: product.quantity || 1,
           selectedSize: product.selectedSize,
           selectedColor: product.selectedColor,
@@ -64,10 +76,12 @@ export function CartProvider({ children }) {
 
       if (data.success) {
         setCartItems(processCartData(data.cart));
+        // ✅ Trigger toast
+        triggerToast("Added to cart");
       }
     } catch (error) {
       console.error("Add to cart error", error);
-      alert("Failed to add to cart");
+      triggerToast("Failed to add to cart");
     }
   };
 
@@ -75,10 +89,6 @@ export function CartProvider({ children }) {
     if (!user) return;
 
     // Find the item in local state to get its variant details
-    // id could be just product ID, which is ambiguous if multiple variants exist.
-    // However, existing UI seems to pass product ID.
-    // We'll try to find the FIRST matching item for now, or we should fix the UI to pass more unique IDs.
-    // Best effort:
     const targetItem = cartItems.find((item) => item.id === id);
 
     if (!targetItem) return;
@@ -125,9 +135,11 @@ export function CartProvider({ children }) {
 
       if (data.success) {
         setCartItems(processCartData(data.cart));
+        triggerToast("Item removed");
       }
     } catch (error) {
       console.error("Remove from cart error", error);
+      triggerToast("Failed to remove item");
     }
   };
 
@@ -139,9 +151,11 @@ export function CartProvider({ children }) {
       });
       if (data.success) {
         setCartItems([]);
+        triggerToast("Cart cleared");
       }
     } catch (error) {
       console.error("Clear cart error", error);
+      triggerToast("Failed to clear cart");
     }
   };
 
@@ -161,6 +175,8 @@ export function CartProvider({ children }) {
         removeFromCart,
         clearCart,
         total,
+        showToastVisible,
+        toastMessage,
       }}
     >
       {children}

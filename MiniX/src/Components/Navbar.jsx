@@ -63,7 +63,7 @@ export default function Navbar() {
       className={`
         fixed top-0 left-0 w-full z-50
         transition-all duration-300
-        ${scrolled ? "bg-black/80 backdrop-blur-xl py-3" : "bg-transparent py-5"}
+        ${scrolled ? "glass py-3" : "bg-transparent py-5"}
       `}
     >
       <div className="max-w-[1250px] mx-auto px-6 flex items-center justify-between gap-6">
@@ -80,11 +80,10 @@ export default function Navbar() {
           {["shop", "about", "contact"].map((link) => (
             <NavLink
               key={link}
-              to={`/${link}`}
+              to={`/ ${link} `}
               className={({ isActive }) =>
-                `capitalize hover:text-white transition ${
-                  isActive ? "text-white font-semibold" : ""
-                }`
+                `capitalize hover: text - white transition ${isActive ? "text-white font-semibold" : ""
+                } `
               }
             >
               {link}
@@ -108,9 +107,9 @@ export default function Navbar() {
             }}
             onKeyDown={handleEnter}
             className="
-              w-full bg-white/10 border border-white/20 rounded-xl
-              py-2 pl-10 pr-3 text-sm text-white placeholder-white/50
-              focus:border-white transition
+              w-full bg-white/5 border border-white/10 rounded-xl
+              py-2 pl-10 pr-3 text-sm text-white placeholder-white/40
+              focus:border-white/40 focus:bg-white/10 transition outline-none
             "
           />
 
@@ -123,9 +122,7 @@ export default function Navbar() {
                 exit={{ opacity: 0, y: -8 }}
                 className="
                   absolute top-12 left-0 w-full
-                  bg-black/90 backdrop-blur-xl
-                  border border-white/20
-                  rounded-xl shadow-xl z-50
+                  glass-card z-50
                   overflow-hidden
                 "
               >
@@ -134,11 +131,11 @@ export default function Navbar() {
                     <button
                       key={item.id}
                       onClick={() => {
-                        navigate(`/product/${item.id}`);
+                        navigate(`/ product / ${item.id} `);
                         setQuery("");
                         setShowResults(false);
                       }}
-                      className="w-full text-left px-4 py-2 text-sm text-white/80 hover:bg-white/10"
+                      className="w-full text-left px-4 py-2 text-sm text-white/80 hover:bg-white/10 transition-colors"
                     >
                       {item.name}
                     </button>
@@ -171,8 +168,7 @@ export default function Navbar() {
                   exit={{ opacity: 0, y: -10 }}
                   className="
                     absolute right-0 mt-3 w-52
-                    bg-black/90 border border-white/20
-                    backdrop-blur-xl p-4 rounded-xl shadow-lg
+                    glass-card p-4 z-50
                   "
                 >
                   {user ? (

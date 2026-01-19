@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
+import { toast } from "react-toastify";
 
 const WishlistContext = createContext(null);
 const API_URL = "http://localhost:5000/api/wishlist";
@@ -38,7 +39,7 @@ export function WishlistProvider({ children }) {
 
   const toggleWishlist = async (product) => {
     if (!user) {
-      alert("Please login to use wishlist");
+      toast.error("Please login to use wishlist");
       return;
     }
 
@@ -51,9 +52,13 @@ export function WishlistProvider({ children }) {
 
       if (data.success) {
         setWishlist(transformWishlist(data.wishlist));
+        // Check if the item is in the new wishlist to determine message
+        const isAdded = data.wishlist.some(item => item._id === product.id);
+        toast.success(isAdded ? "Added to wishlist" : "Removed from wishlist");
       }
     } catch (error) {
       console.error("Toggle wishlist error", error);
+      toast.error("Failed to update wishlist");
     }
   };
 

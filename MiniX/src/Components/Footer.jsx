@@ -57,12 +57,11 @@ export default function Footer() {
             <li>📍 Bangalore, India</li>
           </ul>
 
-          {/* SOCIAL ICONS ONLY — COLORED */}
           <div className="flex gap-5 text-2xl">
-            <FaInstagram className="hover:scale-110 transition cursor-pointer text-[#E1306C]" />
-            <FaFacebook className="hover:scale-110 transition cursor-pointer text-[#1877F2]" />
-            <FaYoutube className="hover:scale-110 transition cursor-pointer text-[#FF0000]" />
-            <FaTwitter className="hover:scale-110 transition cursor-pointer text-[#1DA1F2]" />
+            <FaInstagram className="text-gray-400 hover:text-white hover:scale-110 transition cursor-pointer" />
+            <FaFacebook className="text-gray-400 hover:text-white hover:scale-110 transition cursor-pointer" />
+            <FaYoutube className="text-gray-400 hover:text-white hover:scale-110 transition cursor-pointer" />
+            <FaTwitter className="text-gray-400 hover:text-white hover:scale-110 transition cursor-pointer" />
           </div>
         </div>
       </div>

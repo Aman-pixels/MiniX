@@ -2,10 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "./styles/toast.css";
+
 .input {
-  @apply w-full rounded-xl bg-black/40 border border-white/15 px-3 py-2.5 
-         text-sm text-white placeholder:text-zinc-500 
-         outline-none focus:border-white/60;
+  @apply w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-zinc-500 outline-none focus:border-white/40 transition-colors duration-300;
 }
 
 
@@ -48,25 +48,28 @@ a {
    THEME
 ======================= */
 :root {
-  --bg: #0e0e0f;
-  --card: rgba(255, 255, 255, 0.06);
-  --glass-light: rgba(255, 255, 255, 0.12);
-  --text-primary: #f5f5f5;
-  --text-muted: #9ca3af;
-  --accent: #c4ff4d;
-  --radius: 16px;
-  --radius-sm: 10px;
-  --max-width: 1300px;
+  --bg: #000000;
+  --card: rgba(255, 255, 255, 0.03);
+  --glass-light: rgba(255, 255, 255, 0.1);
+  --text-primary: #ffffff;
+  --text-muted: #a1a1aa;
+  /* Zinc 400 */
+  --accent: #ffffff;
+  /* White accent for B&W theme */
+  --radius: 20px;
+  --radius-sm: 12px;
+  --max-width: 1400px;
 }
 
 /* =======================
    BODY
 ======================= */
 body {
-  background: #0e0e0f;
+  background: var(--bg);
   color: var(--text-primary);
   font-family: "Inter", sans-serif;
-  letter-spacing: 0.2px;
+  letter-spacing: -0.01em;
+  /* Tighter modern tracking */
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 
@@ -91,21 +94,24 @@ body {
    HEADINGS
 ======================= */
 .h1 {
-  font-size: clamp(2.6rem, 6vw, 4.5rem);
-  font-weight: 700;
-  line-height: 1.12;
-  margin-bottom: 0.6rem;
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.03em;
 }
 
 .h2 {
-  font-size: clamp(2rem, 5vw, 3.3rem);
-  font-weight: 600;
-  margin-bottom: 1.4rem;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
 }
 
 .h3 {
-  font-size: clamp(1.1rem, 2vw, 1.6rem);
-  font-weight: 500;
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 /* =======================
@@ -123,19 +129,24 @@ body {
    BUTTON
 ======================= */
 .btn {
-  display: inline-block;
-  padding: 0.75rem 1.6rem;
-  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.8rem;
+  background: rgba(255, 255, 255, 0.05);
   color: var(--text-primary);
-  border: 1px solid var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease !important;
+  font-weight: 500;
 }
 
 .btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
 }
 
 /* =======================
@@ -151,32 +162,39 @@ body {
    GLASS
 ======================= */
 .glass {
-  background: var(--card);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: 0 0 24px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
 /* Premium glass */
 .glass-card {
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(25px) saturate(180%);
+  background: rgba(20, 20, 20, 0.6);
+  /* Darker base for legibility */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px) saturate(180%);
   border-radius: var(--radius);
-  box-shadow:
-    0 8px 32px rgba(31, 38, 135, 0.3),
-    inset 0 0 25px rgba(255, 255, 255, 0.04);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.glass-card:hover {
+  background: rgba(30, 30, 30, 0.7);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.4);
 }
 
 /* =======================
    SCROLLBAR
 ======================= */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
 }
 
@@ -185,16 +203,18 @@ body {
 }
 
 .input-box {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-size: 0.9rem;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.95rem;
   color: white;
   width: 100%;
+  transition: all 0.3s ease !important;
 }
 
 .input-box:focus {
-  border: 1px solid white;
-  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
 }

@@ -47,6 +47,7 @@ import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
 import { WishlistProvider } from "./context/WishlistContext.jsx";
 
 import PageTransition from "./Components/PageTransition.jsx";
+import GlobalToast from "./components/GlobalToast.jsx";
 
 
 // -------- Protected Route Wrapper --------
@@ -213,6 +214,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <AuthProvider>
         <CartProvider>
           <WishlistProvider>
+            <GlobalToast />
             <AnimatedRoutes />
           </WishlistProvider>
         </CartProvider>

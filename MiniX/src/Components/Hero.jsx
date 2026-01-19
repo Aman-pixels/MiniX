@@ -10,7 +10,10 @@ export default function Hero() {
   };
 
   return (
-    <section className="w-full bg-gradient-to-r from-[#050505] to-[#f6f5f3] py-20">
+    // Reverted background to gradient as requested
+    <section className="w-full bg-gradient-to-r from-[#050505] to-[#f6f5f3] py-20 relative overflow-hidden">
+      {/* Decorative gradient blob - keep or remove based on "as it was earlier". Keeping it as a nice touch unless it conflicts. */}
+      {/* <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/5 blur-[120px] rounded-full pointer-events-none" /> */}
       <div className="max-w-[1250px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
         {/* LEFT */}
         <div className="text-white">
@@ -60,7 +63,7 @@ export default function Hero() {
 
         {/* RIGHT */}
         <div className="relative flex justify-center lg:justify-end">
-          <div className="bg-white/90 backdrop-blur-xl border border-black/10 rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.35)] overflow-hidden w-full max-w-[440px] transition duration-300 hover:scale-[1.02]">
+          <div className="relative rounded-2xl shadow-2xl overflow-hidden w-full max-w-[440px] transition duration-500 hover:scale-[1.02] border border-black/5">
             <img
               src="/Hero.jpg"
               alt="hero"
@@ -69,16 +72,16 @@ export default function Hero() {
           </div>
 
           {/* FLOATING CARD */}
-          <div className="hidden lg:block absolute bottom-6 right-6 bg-white/95 p-4 rounded-xl shadow-md text-right">
-            <h4 className="font-bold text-gray-800 text-sm">
+          <div className="hidden lg:block absolute bottom-6 right-6 glass p-4 rounded-xl border border-white/10 shadow-lg text-right backdrop-blur-md">
+            <h4 className="font-bold text-white text-sm">
               New Drop
             </h4>
-            <p className="text-gray-600 text-xs mb-2">
+            <p className="text-gray-400 text-xs mb-2">
               Premium streetwear — limited run
             </p>
             <button
               onClick={() => navigate("/shop")}
-              className="font-semibold text-gray-900 text-sm hover:underline"
+              className="font-semibold text-white text-sm hover:underline"
             >
               Discover Now →
             </button>
