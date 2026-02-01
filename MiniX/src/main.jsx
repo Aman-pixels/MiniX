@@ -37,7 +37,7 @@ import Payment from "./pages/Payment"; // ✅ ADDED
 import EditProfile from "./pages/EditProfile";
 
 // Admin Imports
-import AdminRoute from "./components/AdminRoute";
+import AdminRoute from "./Components/AdminRoute";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminProducts from "./pages/admin/AdminProducts";
@@ -50,7 +50,7 @@ import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
 import { WishlistProvider } from "./context/WishlistContext.jsx";
 
 import PageTransition from "./Components/PageTransition.jsx";
-import GlobalToast from "./components/GlobalToast.jsx";
+import GlobalToast from "./Components/GlobalToast.jsx";
 
 
 // -------- Protected Route Wrapper --------
