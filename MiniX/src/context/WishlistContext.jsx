@@ -1,10 +1,13 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
+import API_BASE_URL from "../config";
+
 import { toast } from "react-toastify";
 
 const WishlistContext = createContext(null);
-const API_URL = "http://localhost:5000/api/wishlist";
+const API_URL = `${API_BASE_URL}/api/wishlist`;
+
 
 export function WishlistProvider({ children }) {
   const [wishlist, setWishlist] = useState([]);

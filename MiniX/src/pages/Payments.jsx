@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import axios from "axios";
+import API_BASE_URL from "../config";
 
 export default function Payments() {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ export default function Payments() {
 
   const fetchPayments = async () => {
     try {
-      const { data } = await axios.get("http://localhost:5000/api/payments", {
+      const { data } = await axios.get(`${API_BASE_URL}/api/payments`, {
         withCredentials: true,
       });
       setMethods(data.methods || []);
@@ -78,7 +79,7 @@ export default function Payments() {
           }),
       };
 
-      await axios.post("http://localhost:5000/api/payments", payload, {
+      await axios.post(`${API_BASE_URL}/api/payments`, payload, {
         withCredentials: true,
       });
 
@@ -101,7 +102,7 @@ export default function Payments() {
   const removeMethod = async (id) => {
     if (!window.confirm("Are you sure you want to remove this payment method?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/payments/${id}`, {
+      await axios.delete(`${API_BASE_URL}/api/payments/${id}`, {
         withCredentials: true,
       });
       fetchPayments();
@@ -112,7 +113,7 @@ export default function Payments() {
 
   const setDefault = async (id) => {
     try {
-      await axios.patch(`http://localhost:5000/api/payments/${id}/default`, {}, {
+      await axios.patch(`${API_BASE_URL}/api/payments/${id}/default`, {}, {
         withCredentials: true,
       });
       fetchPayments();
@@ -222,8 +223,8 @@ export default function Payments() {
                     key={t}
                     onClick={() => setType(t)}
                     className={`flex-1 py-2 text-sm rounded-full transition ${type === t
-                        ? "bg-white text-black"
-                        : "text-white/60 hover:text-white"
+                      ? "bg-white text-black"
+                      : "text-white/60 hover:text-white"
                       }`}
                   >
                     {t === "card" ? "Card" : "UPI"}

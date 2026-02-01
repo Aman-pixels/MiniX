@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import axios from "axios";
+import API_BASE_URL from "../config";
 
 export default function Addresses() {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export default function Addresses() {
 
   const fetchAddresses = async () => {
     try {
-      const { data } = await axios.get("http://localhost:5000/api/addresses", {
+      const { data } = await axios.get(`${API_BASE_URL}/api/addresses`, {
         withCredentials: true,
       });
       setAddresses(data.addresses || []);
@@ -64,7 +65,7 @@ export default function Addresses() {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/addresses", form, {
+      await axios.post(`${API_BASE_URL}/api/addresses`, form, {
         withCredentials: true,
       });
       fetchAddresses();
@@ -88,7 +89,7 @@ export default function Addresses() {
 
   const removeAddress = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/addresses/${id}`, {
+      await axios.delete(`${API_BASE_URL}/api/addresses/${id}`, {
         withCredentials: true,
       });
       fetchAddresses();
@@ -99,7 +100,7 @@ export default function Addresses() {
 
   const setDefault = async (id) => {
     try {
-      await axios.patch(`http://localhost:5000/api/addresses/${id}/default`, {}, {
+      await axios.patch(`${API_BASE_URL}/api/addresses/${id}/default`, {}, {
         withCredentials: true,
       });
       fetchAddresses();

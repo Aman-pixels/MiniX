@@ -4,23 +4,35 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link, useSearchParams } from "react-router-dom";
 import { ChevronDown, Search } from "lucide-react";
 import ScrollReveal from "../Components/ScrollReveal";
+import axios from "axios";
 
 import ShopSkeleton from "../Components/skeletons/ShopSkeleton";
 import { useCart } from "../context/CartContext";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import Collections from "../Components/Collections";
-import productData from "../data/productData";
+import API_BASE_URL from "../config";
 
 export default function Shop() {
   const { addToCart } = useCart();
   const [searchParams] = useSearchParams();
 
-  /* ---------------- Skeleton loading ---------------- */
+  /* ---------------- Products from Backend ---------------- */
+  const [productData, setProductData] = useState([]);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 700);
-    return () => clearTimeout(t);
+    const fetchProducts = async () => {
+      try {
+        const { data } = await axios.get(`${API_BASE_URL}/api/product/all`);
+        setProductData(data.products || []);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
   }, []);
 
   /* ---------------- URL → STATE ---------------- */
@@ -58,13 +70,14 @@ export default function Shop() {
   /* ---------------- Categories ---------------- */
   const categories = [
     "All",
-    ...new Set(productData.map((p) => p.category || "Uncategorized")),
+    ...new Set(productData.map((p) => p.category?.slug || "uncategorized")),
   ];
 
   /* ---------------- Filtering ---------------- */
   const filteredProducts = productData.filter((p) => {
+    const productCategory = p.category?.slug || "uncategorized";
     const matchesCategory =
-      activeCategory === "All" || p.category === activeCategory;
+      activeCategory === "All" || productCategory === activeCategory;
     const matchesSearch = p.name
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
@@ -117,7 +130,7 @@ export default function Shop() {
 
       {/* FILTERS */}
       <div className="max-w-[1250px] mx-auto px-6 mt-8 mb-12">
-        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-6">
           {/* Categories */}
           <motion.div
             initial={{ opacity: 0, y: -8 }}
@@ -143,9 +156,9 @@ export default function Shop() {
           </motion.div>
 
           {/* Search + Sort */}
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
             {/* Search */}
-            <div className="relative w-[280px]">
+            <div className="relative flex-1 max-w-full sm:max-w-[320px]">
               <Search
                 size={18}
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
@@ -160,7 +173,7 @@ export default function Shop() {
                   updateURL({ search: value });
                   setPage(1);
                 }}
-                className="bg-black border border-white/10 rounded-lg pl-10 pr-3 py-2 text-sm"
+                className="w-full bg-black border border-white/10 rounded-lg pl-10 pr-3 py-2 text-sm"
               />
             </div>
 
@@ -168,7 +181,7 @@ export default function Shop() {
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen((s) => !s)}
-                className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-lg text-sm"
+                className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-lg text-sm w-full sm:w-auto justify-between sm:justify-start"
               >
                 Sort
                 <ChevronDown size={16} />
@@ -218,9 +231,9 @@ export default function Shop() {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
               {pageProducts.map((product, i) => (
-                <ScrollReveal key={product.id} delay={i * 0.05}>
+                <ScrollReveal key={product._id || product.slug} delay={i * 0.05}>
                   <div className="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:scale-105 transition duration-300">
-                    <Link to={`/product/${product.id}`}>
+                    <Link to={`/product/${product.slug}`}>
                       <img
                         src={product.images[0]}
                         alt={product.name}

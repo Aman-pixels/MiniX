@@ -3,8 +3,8 @@ import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import { Package } from "lucide-react";
 import { Link } from "react-router-dom";
-
 import axios from "axios";
+import API_BASE_URL from "../config";
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
@@ -16,7 +16,7 @@ export default function Orders() {
 
   const fetchOrders = async () => {
     try {
-      const { data } = await axios.get("http://localhost:5000/api/orders/myorders", {
+      const { data } = await axios.get(`${API_BASE_URL}/api/orders/myorders`, {
         withCredentials: true,
       });
       setOrders(data.orders || []);

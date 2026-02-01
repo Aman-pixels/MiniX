@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Plus, Edit2, Trash2, Search } from "lucide-react";
 import AdminProductForm from "./AdminProductForm";
+import API_BASE_URL from "../../config";
 
 export default function AdminProducts() {
     const [products, setProducts] = useState([]);
@@ -17,7 +18,7 @@ export default function AdminProducts() {
     const fetchProducts = async () => {
         try {
             const { data } = await axios.get(
-                "http://localhost:5000/api/products/admin/all",
+                `${API_BASE_URL}/api/products/admin/all`,
                 { withCredentials: true }
             );
             setProducts(data.products || []);
@@ -31,7 +32,7 @@ export default function AdminProducts() {
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this product?")) return;
         try {
-            await axios.delete(`http://localhost:5000/api/products/${id}`, {
+            await axios.delete(`${API_BASE_URL}/api/products/${id}`, {
                 withCredentials: true,
             });
             setProducts(products.filter((p) => p._id !== id));

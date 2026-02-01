@@ -6,6 +6,7 @@ import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import { ArrowLeft, MapPin } from "lucide-react";
 import axios from "axios";
+import API_BASE_URL from "../config";
 
 export default function Checkout() {
   const { cartItems, total, clearCart } = useCart();
@@ -22,7 +23,7 @@ export default function Checkout() {
 
   const fetchAddresses = async () => {
     try {
-      const { data } = await axios.get("http://localhost:5000/api/addresses", {
+      const { data } = await axios.get(`${API_BASE_URL}/api/addresses`, {
         withCredentials: true,
       });
       setAddresses(data.addresses || []);
@@ -50,6 +51,7 @@ export default function Checkout() {
               quantity: it.quantity || 1,
             })),
             shippingAddress: selectedAddress._id,
+            paymentMethod: "Card",
             totalPrice: total + 5, // Include shipping
           }
         }
@@ -67,7 +69,7 @@ export default function Checkout() {
     };
 
     try {
-      const { data } = await axios.post("http://localhost:5000/api/orders", orderData, {
+      const { data } = await axios.post(`${API_BASE_URL}/api/orders`, orderData, {
         withCredentials: true,
       });
 

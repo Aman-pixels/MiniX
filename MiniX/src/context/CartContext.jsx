@@ -1,10 +1,12 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
+import API_BASE_URL from "../config";
 
 const CartContext = createContext(null);
 
-const API_URL = "http://localhost:5000/api/cart";
+const API_URL = `${API_BASE_URL}/api/cart`;
+
 
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);

@@ -6,49 +6,123 @@ const Category = require("./Models/Category"); // We'll need to create/ensure ca
 dotenv.config();
 
 const productData = [
+    // --- HOODIES ---
     {
-        id: "tee-001",
-        name: "Classic Oversized Tee",
-        category: "tees",
-        price: 29,
-        rating: 4.5,
-        reviewCount: 2,
-        stock: 6,
-        description:
-            "Premium oversized tee made from 240 GSM cotton. Slightly dropped shoulders for relaxed streetwear fit.",
-        images: [
-            "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=1200&q=80",
-            "https://images.unsplash.com/photo-1512499617640-c2f999098c01?auto=format&fit=crop&w=1200&q=80",
-            "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?auto=format&fit=crop&w=1200&q=80",
-        ],
-    },
-    {
-        id: "hoodie-001",
-        name: "Minimal Hoodie",
+        id: "hoodie-noir-001",
+        name: "Noir Oversized Hoodie",
         category: "hoodies",
-        price: 49,
-        rating: 4.3,
-        reviewCount: 0,
-        stock: 10,
-        description:
-            "Soft fleece hoodie with minimal chest print. Designed for everyday comfort.",
+        price: 55,
+        rating: 4.8,
+        reviewCount: 12,
+        stock: 20,
+        description: "Heavyweight 400gsm cotton fleece hoodie in pitch black. Drop shoulder fit for that perfect streetwear silhouette.",
         images: [
-            "https://images.unsplash.com/photo-1602810318299-eeb67d604844?auto=format&fit=crop&w=1200&q=80",
-            "https://images.unsplash.com/photo-1539884051663-95fc71c48f93?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1622332436170-9ca4389d3781?fm=jpg&q=80&w=1000",
+            "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?fm=jpg&q=80&w=1000"
         ],
     },
     {
-        id: "bottom-001",
-        name: "Streetwear Denim",
-        category: "bottoms",
-        price: 59,
-        rating: 4.6,
-        reviewCount: 0,
-        stock: 4,
-        description:
-            "Relaxed tapered denim with Japanese streetwear influence.",
+        id: "hoodie-distressed-002",
+        name: "Distressed Grunge Hoodie",
+        category: "hoodies",
+        price: 65,
+        rating: 4.5,
+        reviewCount: 8,
+        stock: 15,
+        description: "Vintage washed grey hoodie with manual distressing details. Soft interior, rugged exterior.",
         images: [
-            "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1641735563696-020765b93506?fm=jpg&q=80&w=1000",
+            "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?fm=jpg&q=80&w=1000"
+        ],
+    },
+
+    // --- TEES ---
+    {
+        id: "tee-essential-001",
+        name: "Essential Arc Tee",
+        category: "tees",
+        price: 35,
+        rating: 4.9,
+        reviewCount: 45,
+        stock: 50,
+        description: "The perfect boxy fit t-shirt using premium supima cotton. Anti-shrink, anti-fade.",
+        images: [
+            "https://images.unsplash.com/photo-1627225793904-a2f900a6e4cf?fm=jpg&q=80&w=1000",
+            "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?fm=jpg&q=80&w=1000"
+        ],
+    },
+    {
+        id: "tee-graphic-002",
+        name: "Urban Graphic Tee",
+        category: "tees",
+        price: 40,
+        rating: 4.6,
+        reviewCount: 18,
+        stock: 30,
+        description: "Oversized graphic tee featuring abstract noir artwork. Puff print technique.",
+        images: [
+            "https://images.unsplash.com/photo-1706550632237-24b904d8097a?fm=jpg&q=80&w=1000",
+            "https://images.unsplash.com/photo-1503341455253-b2e72333dbdb?fm=jpg&q=80&w=1000"
+        ],
+    },
+
+    // --- BOTTOMS ---
+    {
+        id: "bottom-cargo-001",
+        name: "Tech Utility Cargos",
+        category: "bottoms",
+        price: 75,
+        rating: 4.7,
+        reviewCount: 22,
+        stock: 18,
+        description: "Functional cargo pants with 6 pockets and adjustable ankle toggles. Water-resistant matte finish.",
+        images: [
+            "https://images.unsplash.com/photo-1666899462970-40dfe2ef3a70?fm=jpg&q=80&w=1000",
+            "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?fm=jpg&q=80&w=1000"
+        ],
+    },
+    {
+        id: "bottom-denim-002",
+        name: "90s Baggy Denim",
+        category: "bottoms",
+        price: 68,
+        rating: 4.4,
+        reviewCount: 15,
+        stock: 25,
+        description: "Authentic heavy rigid denim with a wide leg silhouette. Light stone wash finish.",
+        images: [
+            "https://images.unsplash.com/photo-1542272604-787c3835535d?fm=jpg&q=80&w=1000",
+            "https://images.unsplash.com/photo-1582552938357-32b906df40cb?fm=jpg&q=80&w=1000"
+        ],
+    },
+
+    // --- ACCESSORIES ---
+    {
+        id: "acc-chain-001",
+        name: "Cuban Link Chain",
+        category: "accessories",
+        price: 45,
+        rating: 4.8,
+        reviewCount: 30,
+        stock: 40,
+        description: "8mm Stainless Steel Cuban Chain. Polished silver finish, will not tarnish or fade.",
+        images: [
+            "https://images.unsplash.com/photo-1679973299383-7a60160b03a2?fm=jpg&q=80&w=1000",
+            "https://images.unsplash.com/photo-1611085583191-a3b181a88401?fm=jpg&q=80&w=1000"
+        ],
+    },
+    {
+        id: "acc-ring-002",
+        name: "Minimal Signet Ring",
+        category: "accessories",
+        price: 25,
+        rating: 4.5,
+        reviewCount: 10,
+        stock: 35,
+        description: "Classic signet ring with a brutalist texture. Solid feel and premium weight.",
+        images: [
+            "https://images.unsplash.com/photo-1680068099053-81f58fff58a1?fm=jpg&q=80&w=1000",
+            "https://images.unsplash.com/photo-1605100804763-247f67b3557e?fm=jpg&q=80&w=1000"
         ],
     },
 ];

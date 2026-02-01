@@ -3,35 +3,48 @@ import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
+import API_BASE_URL from "../config";
 
 export default function Contact() {
   const form = useRef();
   const [status, setStatus] = useState({ type: "", message: "" });
 
   // ✉️ Function to send email
-  const sendEmail = (e) => {
+  const sendEmail = async (e) => {
     e.preventDefault();
     setStatus({ type: "loading", message: "Sending your message..." });
 
-    emailjs
-      .sendForm(
-        "service_6yoganp", // <-- your EmailJS service ID
-        "template_xxxxxx", // <-- replace with your template ID
-        form.current,
-        "your_public_key_here" // <-- replace with your EmailJS public key
-      )
-      .then(
-        () => {
-          setStatus({ type: "success", message: "✅ Message sent successfully!" });
-          form.current.reset();
+    const formData = new FormData(form.current);
+    const data = {
+      user_name: formData.get("user_name"),
+      user_email: formData.get("user_email"),
+      message: formData.get("message"),
+    };
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/contact`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        () => {
-          setStatus({
-            type: "error",
-            message: "❌ Failed to send message. Try again later.",
-          });
-        }
-      );
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setStatus({ type: "success", message: "✅ Message sent successfully!" });
+        form.current.reset();
+      } else {
+        throw new Error(result.message || "Failed to send");
+      }
+    } catch (error) {
+      console.error("Email Error:", error);
+      setStatus({
+        type: "error",
+        message: "❌ Failed to send message. Please try again.",
+      });
+    }
   };
 
   return (
@@ -107,13 +120,12 @@ export default function Contact() {
 
             {status.message && (
               <p
-                className={`text-center mt-4 ${
-                  status.type === "success"
-                    ? "text-green-400"
-                    : status.type === "error"
+                className={`text-center mt-4 ${status.type === "success"
+                  ? "text-green-400"
+                  : status.type === "error"
                     ? "text-red-400"
                     : "text-gray-400"
-                }`}
+                  }`}
               >
                 {status.message}
               </p>

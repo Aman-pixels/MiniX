@@ -26,6 +26,9 @@ import Checkout from "./pages/Checkout.jsx";
 import OrderSuccess from "./pages/OrderSuccess.jsx";
 import AuthPage from "./pages/AuthPage.jsx";
 import WishlistPage from "./pages/WishlistPage.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
+
 
 // Duplicate removed
 
@@ -187,6 +190,10 @@ function AnimatedRoutes() {
             </BlockAuthWhenLoggedIn>
           }
         />
+
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+
 
         {/* ADMIN ROUTES */}
         <Route

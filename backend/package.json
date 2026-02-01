@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "start": "node server.js"
   },
   "type": "commonjs",
   "dependencies": {
@@ -14,6 +15,7 @@
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.20.1",
+    "nodemailer": "^7.0.12",
     "slugify": "^1.6.6",
     "stripe": "^20.1.2"
   },

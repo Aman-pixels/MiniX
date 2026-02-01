@@ -11,6 +11,7 @@ import axios from "axios";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import { useCart } from "../context/CartContext";
+import API_BASE_URL from "../config";
 
 // Initialize Stripe outside component to avoid recreation
 // Initialize Stripe outside component to avoid recreation
@@ -39,7 +40,7 @@ const MockPaymentForm = ({ orderData, onSuccess }) => {
             // Create Order in Backend
             try {
                 const { data } = await axios.post(
-                    "http://localhost:5000/api/orders",
+                    `${API_BASE_URL}/api/orders`,
                     {
                         ...orderData,
                         paymentInfo: {
@@ -170,10 +171,9 @@ const CheckoutForm = ({ clientSecret, orderData }) => {
             setMessage(error.message);
             setIsProcessing(false);
         } else if (paymentIntent && paymentIntent.status === "succeeded") {
-            // Create Order in Backend
             try {
                 const { data } = await axios.post(
-                    "http://localhost:5000/api/orders",
+                    `${API_BASE_URL}/api/orders`,
                     {
                         ...orderData,
                         paymentInfo: {
@@ -190,8 +190,9 @@ const CheckoutForm = ({ clientSecret, orderData }) => {
                     navigate("/order-success");
                 }
             } catch (err) {
-                setMessage("Payment successful but order creation failed. Please contact support.");
-                console.error(err);
+                const errorMsg = err.response?.data?.message || err.message || "Order creation failed";
+                setMessage(`Payment success, but Order failed: ${errorMsg}`);
+                console.error("Order Creation Error:", err);
             }
             setIsProcessing(false);
         }
@@ -214,6 +215,8 @@ const CheckoutForm = ({ clientSecret, orderData }) => {
             >
                 {isProcessing ? "Processing..." : "Pay Now"}
             </button>
+
+
         </form>
     );
 };
@@ -237,23 +240,28 @@ export default function Payment() {
         const createIntent = async () => {
             try {
                 const { data } = await axios.post(
-                    "http://localhost:5000/api/payments/create-payment-intent",
+                    `${API_BASE_URL}/api/payments/create-payment-intent`,
                     {
-                        amount: orderData.totalPrice,
+                        items: orderData.items,
                         currency: "usd",
                     },
                     { withCredentials: true }
                 );
 
-                if (data.mode === 'mock') {
-                    setPaymentMode('mock');
-                } else {
+                if (data.clientSecret) {
                     setClientSecret(data.clientSecret);
+                } else {
+                    // Fallback or error if no secret
+                    console.error("No client secret returned");
                 }
 
             } catch (error) {
                 console.error("Failed to init payment", error);
-                alert("Found issue connecting to payment gateway");
+                const msg = error.response?.data?.message || "Found issue connecting to payment gateway";
+                alert(msg);
+                if (error.response?.status === 400 || error.response?.status === 404) {
+                    navigate("/cart"); // Go back if stock issue
+                }
             }
         };
 
@@ -273,20 +281,12 @@ export default function Payment() {
                         <p className="text-4xl font-bold">${orderData?.totalPrice?.toFixed(2)}</p>
                     </div>
 
-                    {paymentMode === 'mock' ? (
-                        <MockPaymentForm
-                            orderData={orderData}
-                            onSuccess={() => {
-                                clearCart();
-                                navigate("/order-success");
-                            }}
-                        />
+                    {clientSecret ? (
+                        <Elements stripe={stripePromise} options={{ clientSecret, theme: 'night', appearance: { theme: 'night', variables: { colorPrimary: '#ffffff', colorBackground: '#1a1a1a', colorText: '#ffffff' } } }}>
+                            <CheckoutForm clientSecret={clientSecret} orderData={orderData} />
+                        </Elements>
                     ) : (
-                        clientSecret && (
-                            <Elements stripe={stripePromise} options={{ clientSecret, theme: 'night', appearance: { theme: 'night', variables: { colorPrimary: '#ffffff', colorBackground: '#1a1a1a', colorText: '#ffffff' } } }}>
-                                <CheckoutForm clientSecret={clientSecret} orderData={orderData} />
-                            </Elements>
-                        )
+                        <p className="text-center text-gray-400">Loading Payment Gateway...</p>
                     )}
                 </div>
             </div>

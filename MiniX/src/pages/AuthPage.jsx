@@ -121,8 +121,8 @@ export default function AuthPage() {
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`flex-1 py-2 text-sm rounded-full transition ${activeTab === tab
-                    ? "bg-white text-black font-medium"
-                    : "text-zinc-400 hover:text-zinc-100"
+                  ? "bg-white text-black font-medium"
+                  : "text-zinc-400 hover:text-zinc-100"
                   }`}
               >
                 {tab === "login" ? "Log in" : "Sign up"}
@@ -188,9 +188,9 @@ export default function AuthPage() {
 
             {activeTab === "login" && (
               <div className="text-right">
-                <span className="text-xs text-zinc-400 hover:text-white cursor-pointer">
+                <Link to="/forgot-password" className="text-xs text-zinc-400 hover:text-white cursor-pointer transition">
                   Forgot password?
-                </span>
+                </Link>
               </div>
             )}
 

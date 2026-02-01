@@ -1,37 +1,61 @@
 const PaymentMethod = require("../Models/PaymentMethod");
 const asyncHandler = require("../Middleware/asyncHandler");
 
-// Initialize Stripe conditionally to prevent server crash if key is missing
-let stripe;
-if (process.env.STRIPE_SECRET_KEY) {
-    stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-} else {
-    console.warn("⚠️ STRIPE_SECRET_KEY is missing in .env. Payment features will fail.");
-}
+// Initialize Stripe
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // @desc    Create Payment Intent
 // @route   POST /api/payments/create-payment-intent
 // @access  Private
+// @desc    Create Payment Intent
+// @route   POST /api/payments/create-payment-intent
+// @access  Private
 exports.createPaymentIntent = asyncHandler(async (req, res) => {
-    // CONDITIONAL: If Stripe keys are missing, switch to MOCK MODE
-    if (!stripe) {
-        console.warn("⚠️ Using Mock Payment Mode (Stripe not configured)");
-        return res.json({
-            success: true,
-            clientSecret: "mock_secret_key_12345",
-            mode: "mock",
-        });
-    }
 
-    const { amount, currency = "usd" } = req.body;
+    const { items, currency = "usd" } = req.body;
 
-    if (!amount) {
+    if (!items || items.length === 0) {
         res.status(400);
-        throw new Error("Amount is required");
+        throw new Error("No items in checkout");
     }
+
+    // Calculate total & Check Stock based on DB
+    const Product = require("../Models/Product"); // Ensure model is imported
+    let totalAmount = 0;
+    const SHIPPING_COST = 5; // Fixed shipping cost
+
+    console.log("[PAYMENT] Processing Payment for items:", items.length);
+
+    for (const item of items) {
+        // Find product
+        const product = await Product.findById(item.product);
+        if (!product) {
+            res.status(404);
+            throw new Error(`Product not found: ${item.product}`);
+        }
+
+        // Check Stock
+        if (product.stock < item.quantity) {
+            res.status(400);
+            throw new Error(`Not enough stock for ${product.name}. Available: ${product.stock}`);
+        }
+
+        // Add to total (Use DB price)
+        totalAmount += product.price * item.quantity;
+    }
+
+    // Add Shipping
+    totalAmount += SHIPPING_COST;
+
+    if (!totalAmount || totalAmount < 1) {
+        res.status(400);
+        throw new Error("Invalid total amount");
+    }
+
+    console.log("[PAYMENT] Total Calculated:", totalAmount);
 
     const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(amount * 100), // Stripe expects cents
+        amount: Math.round(totalAmount * 100), // Stripe expects cents
         currency,
         automatic_payment_methods: {
             enabled: true,

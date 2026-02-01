@@ -6,6 +6,7 @@ backend/node_modules/
 # Env
 .env
 backend/.env
+MiniX/.env
 
 # Logs
 npm-debug.log*

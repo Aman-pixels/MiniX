@@ -1,170 +1,269 @@
-MiniX – Modern Fashion E-Commerce Store (Full-Stack MERN App)
+# MiniX – Modern Fashion E-Commerce Platform 🛍️
 
-MiniX is a high-end, modern e-commerce fashion store built using React, Vite, Tailwind CSS, Node.js, Express, MongoDB, and JWT authentication.
-Designed with glassmorphism, smooth Framer Motion animations, and a clean UI that feels premium.
+A full-stack MERN e-commerce application with modern UI, admin dashboard, secure payments, and complete order management.
 
-🔥 Features
-🛒 Frontend (React + Vite + Tailwind + Framer Motion)
+## ✨ Features
 
-Fully responsive modern UI
+### 🎨 **Frontend (React + Vite + Tailwind)**
+- Modern glassmorphism UI with smooth Framer Motion animations
+- Fully responsive design for all devices
+- Product browsing with search, filters, and pagination
+- Shopping cart with variant selection (size, color)
+- Wishlist functionality
+- User authentication (Login/Register/Forgot Password)
+- Order tracking and history
+- Payment method and address management
+- Stripe payment integration
 
-Glassmorphism Navbar, product cards, buttons
+### 🔐 **Authentication & Security**
+- JWT-based authentication with HTTP-only cookies
+- Password recovery via email
+- Protected routes and role-based access
+- Secure password hashing with bcrypt
 
-Smooth page transitions using Framer Motion
+### 👤 **User Features**
+- Profile management
+- Multiple shipping addresses
+- Saved payment methods
+- Order history and tracking
+- Wishlist management
 
-Fully working:
+### 🛠️ **Admin Dashboard**
+- Product management (CRUD operations)
+- Order management with status updates
+- Analytics and statistics
+- Category management
+- User overview
 
-Home page
+### 💳 **Payment & Checkout**
+- Stripe payment integration
+- Cash on Delivery (COD) option
+- Secure payment intent handling
+- Order confirmation emails
 
-Collections
+## 🚀 Deployment Guide
 
-Shop page
+### Prerequisites
+- Node.js (v14 or higher)
+- MongoDB Atlas account (or local MongoDB)
+- Stripe account (for payments)
+- Email service credentials (for password recovery)
 
-Product details page
+### Backend Deployment
 
-Cart & Wishlist system
+#### 1. Environment Variables
+Create a `.env` file in `/backend` with the following variables:
 
-Toast + animation
+```bash
+# MongoDB Configuration
+MONGO_URI=your_mongodb_connection_string
 
-User authentication UI (Login / Register)
+# JWT Secret
+JWT_SECRET=your_jwt_secret_key
 
-🔐 Authentication System
+# Stripe Configuration
+STRIPE_SECRET_KEY=your_stripe_secret_key
 
-Cookie-based JWT authentication
+# Email Configuration (for password recovery)
+EMAIL_USER=your_email@example.com
+EMAIL_PASS=your_email_app_password
 
-Auto-login on refresh
+# Deployment Configuration
+FRONTEND_URL=https://your-frontend-url.com
+PORT=5000
+NODE_ENV=production
+```
 
-Protected routes
+#### 2. Install Dependencies
+```bash
+cd backend
+npm install
+```
 
-Login / logout animations
+#### 3. Deploy to Hosting Platform
 
-❤️ User Features
+**Option A: Deploy to Render**
+1. Create a new Web Service on [Render](https://render.com)
+2. Connect your GitHub repository
+3. Set the following:
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+  - **Environment Variables**: Add all variables from `.env`
 
-Add to cart (works with localStorage persistence)
+**Option B: Deploy to Railway**
+1. Create a new project on [Railway](https://railway.app)
+2. Connect your repository
+3. Add environment variables
+4. Deploy automatically
 
-Add to wishlist
+**Option C: Deploy to Heroku**
+```bash
+heroku create your-app-name
+heroku config:set MONGO_URI=your_mongo_uri
+# ... set other environment variables
+git push heroku main
+```
 
-View saved items
+### Frontend Deployment
 
-Profile dropdown menu
+#### 1. Environment Variables
+Create a `.env` file in `/MiniX` with:
 
-Planned pages:
+```bash
+# Stripe Publishable Key
+VITE_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
 
-Profile page
+# API Base URL (Your deployed backend URL)
+VITE_API_BASE_URL=https://your-backend-api-url.com
+```
 
-Orders
+#### 2. Install Dependencies
+```bash
+cd MiniX
+npm install
+```
 
-Addresses
+#### 3. Deploy to Vercel (Recommended)
+```bash
+npm install -g vercel
+vercel
+```
 
-Payment methods
+Or use the [Vercel Dashboard](https://vercel.com):
+1. Import your GitHub repository
+2. Set environment variables in project settings
+3. Deploy
 
-🖥️ Backend (Node + Express + MongoDB + JWT)
+**vercel.json** is already configured for SPA routing.
 
-User registration
+#### 4. Alternative: Deploy to Netlify
+```bash
+npm run build
+# Upload 'dist' folder to Netlify
+```
 
-Login with JWT
+## 🏃 Local Development
 
-Protected route /api/auth/me
-
-Secure HTTP-only cookies
-
-Bcrypt password hashing
-
-CORS configured for Vite frontend
-
-🗂️ Project Structure
-MiniX/
-│
-├── MiniX/                   # Frontend (React)
-│   ├── src/
-│   ├── public/
-│   └── package.json
-│
-├── backend/                 # Backend (Node + Express)
-│   ├── Controllers/
-│   ├── Middleware/
-│   ├── Models/
-│   ├── Routes/
-│   ├── server.js
-│   └── package.json
-│
-├── .gitignore
-├── README.md
-└── package.json
-
-⚙️ Installation & Setup
-1️⃣ Clone the Repo
+### 1. Clone Repository
+```bash
 git clone https://github.com/Aman-pixels/MiniX.git
 cd MiniX
+```
 
-2️⃣ Install Frontend
+### 2. Setup Backend
+```bash
+cd backend
+npm install
+cp .env.example .env
+# Edit .env with your credentials
+npm run dev
+```
+
+Backend runs on `http://localhost:5000`
+
+### 3. Setup Frontend
+```bash
 cd MiniX
 npm install
+cp .env.example .env
+# Edit .env with your credentials
 npm run dev
+```
 
-3️⃣ Install Backend
-cd ../backend
-npm install
-node server.js
+Frontend runs on `http://localhost:5173`
 
-🔑 Environment Variables
+## 🛠️ Tech Stack
 
-Create a .env file in /backend:
+### Frontend
+- **React** - UI library
+- **Vite** - Build tool
+- **Tailwind CSS** - Styling
+- **Framer Motion** - Animations
+- **Axios** - API requests
+- **React Router** - Navigation
+- **Stripe** - Payment processing
 
-MONGO_URI=your_mongo_atlas_url
-JWT_SECRET=your_secret_key
+### Backend
+- **Node.js** - Runtime
+- **Express** - Web framework
+- **MongoDB** - Database
+- **Mongoose** - ODM
+- **JWT** - Authentication
+- **Bcrypt** - Password hashing
+- **Nodemailer** - Email service
+- **Stripe** - Payment processing
 
-🛠️ Tech Stack
-Frontend
+## 📁 Project Structure
 
-React
+```
+MiniX/
+├── MiniX/                    # Frontend
+│   ├── src/
+│   │   ├── Components/      # Reusable components
+│   │   ├── context/        # React context providers
+│   │   ├── pages/          # Page components
+│   │   │   └── admin/      # Admin dashboard pages
+│   │   ├── config.js       # API configuration
+│   │   └── App.jsx
+│   ├── .env.example
+│   ├── vercel.json
+│   └── package.json
+│
+├── backend/                  # Backend
+│   ├── Controllers/         # Route controllers
+│   ├── Middleware/          # Auth & error handling
+│   ├── Models/             # Mongoose models
+│   ├── Routes/             # API routes
+│   ├── Config/             # Database config
+│   ├── server.js
+│   ├── .env.example
+│   └── package.json
+│
+└── README.md
+```
 
-Vite
+## 🔑 API Endpoints
 
-Tailwind CSS
+### Authentication
+- `POST /api/auth/register` - Register user
+- `POST /api/auth/login` - Login user
+- `POST /api/auth/logout` - Logout user
+- `GET /api/auth/me` - Get current user
+- `POST /api/auth/forgotpassword` - Request password reset
+- `PUT /api/auth/resetpassword/:token` - Reset password
 
-Framer Motion
+### Products
+- `GET /api/product/all` - Get all products
+- `GET /api/product/:slug` - Get single product
+- `POST /api/products/create` - Create product (Admin)
+- `PUT /api/products/:id` - Update product (Admin)
+- `DELETE /api/products/:id` - Delete product (Admin)
 
-Lucide Icons
+### Orders
+- `POST /api/orders` - Create order
+- `GET /api/orders/myorders` - Get user orders
+- `GET /api/orders/admin/all` - Get all orders (Admin)
+- `PUT /api/orders/admin/:id/status` - Update order status (Admin)
 
-Backend
+### Cart & Wishlist
+- `GET /api/cart` - Get user cart
+- `POST /api/cart/add` - Add to cart
+- `PUT /api/cart/update` - Update cart item
+- `POST /api/cart/remove` - Remove from cart
+- `DELETE /api/cart/clear` - Clear cart
 
-Node.js
+## 🤝 Contributing
 
-Express
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 
-MongoDB + Mongoose
+## 📄 License
 
-JWT
+MIT License - feel free to use this project for learning or commercial purposes.
 
-Bcrypt
+## ⭐ Support
 
-Cookie-Parser
+If you find this project helpful, please give it a star on GitHub!
 
-📸 Screenshots
-![MiniX Screenshot](https://github.com/user-attachments/assets/45adef96-6d3e-43af-b0b1-1f14aee65744)
+---
 
-
-
-
-📅 Roadmap
-
- Profile Page
-
- Orders Page
-
- Saved Addresses Page
-
- Payment Methods Page
-
- Admin dashboard
-
- Full checkout + Stripe/UPI payment
-
-🤝 Contributing
-
-Pull requests are welcome!
-
-⭐ Support
-
-If you like this project, consider giving the repo a star ⭐ on GitHub!
+**Developed with ❤️ by [Aman](https://github.com/Aman-pixels)**

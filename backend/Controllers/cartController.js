@@ -5,6 +5,15 @@ const asyncHandler = require("../Middleware/asyncHandler");
 
 // Helper to calculate cart totals or other logic if needed later
 
+// Helper to resolve product ID from slug or ObjectId
+const resolveProductId = async (idOrSlug) => {
+    if (mongoose.Types.ObjectId.isValid(idOrSlug)) {
+        return idOrSlug;
+    }
+    const product = await Product.findOne({ slug: idOrSlug });
+    return product ? product._id : null;
+};
+
 /**
  * GET CART
  * GET /api/cart
@@ -38,6 +47,18 @@ exports.addToCart = asyncHandler(async (req, res) => {
     if (!resolvedProductId) {
         res.status(404);
         throw new Error("Product not found");
+    }
+
+    // Fetch product to check stock
+    const product = await Product.findById(resolvedProductId);
+    if (!product) {
+        res.status(404);
+        throw new Error("Product not found");
+    }
+
+    if (product.stock < quantity) {
+        res.status(400);
+        throw new Error(`Not enough stock. Available: ${product.stock}`);
     }
 
     let cart = await Cart.findOne({ user: req.user.id });
@@ -92,6 +113,13 @@ exports.updateCartItem = asyncHandler(async (req, res) => {
     if (!cart) {
         res.status(404);
         throw new Error("Cart not found");
+    }
+
+    // Check stock
+    const product = await Product.findById(resolvedProductId);
+    if (product && quantity > product.stock) {
+        res.status(400);
+        throw new Error(`Not enough stock. Available: ${product.stock}`);
     }
 
     const itemIndex = cart.items.findIndex(
@@ -158,14 +186,7 @@ exports.removeFromCart = asyncHandler(async (req, res) => {
     res.json({ success: true, cart: updatedCart.items });
 });
 
-// Helper to resolve product ID from slug or ObjectId
-const resolveProductId = async (idOrSlug) => {
-    if (mongoose.Types.ObjectId.isValid(idOrSlug)) {
-        return idOrSlug;
-    }
-    const product = await Product.findOne({ slug: idOrSlug });
-    return product ? product._id : null;
-};
+
 
 /**
  * CLEAR CART

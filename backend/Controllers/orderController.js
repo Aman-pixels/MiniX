@@ -2,6 +2,8 @@ const Order = require("../Models/Order");
 const Product = require("../Models/Product");
 const mongoose = require("mongoose");
 const asyncHandler = require("../Middleware/asyncHandler");
+const sendEmail = require("../utils/sendEmail");
+
 
 // Helper to resolve product ID
 const resolveProductId = async (idOrSlug) => {
@@ -13,7 +15,7 @@ const resolveProductId = async (idOrSlug) => {
 };
 
 exports.createOrder = asyncHandler(async (req, res) => {
-  const { items, shippingAddress, paymentMethod } = req.body;
+  const { items, shippingAddress, paymentMethod, paymentInfo } = req.body;
 
   if (!items || items.length === 0) {
     res.status(400);
@@ -25,7 +27,8 @@ exports.createOrder = asyncHandler(async (req, res) => {
     throw new Error("Shipping address is required");
   }
 
-  let totalAmount = 0;
+  const SHIPPING_COST = 5;
+  let totalAmount = SHIPPING_COST;
   const finalItems = [];
 
   // Verify stock & snapshot price from DB
@@ -64,11 +67,17 @@ exports.createOrder = asyncHandler(async (req, res) => {
     });
   }
 
+  let paymentStatus = "pending";
+  if (paymentInfo && paymentInfo.status === "succeeded") {
+    paymentStatus = "paid";
+  }
+
   const order = await Order.create({
     user: req.user.id,
     items: finalItems,
     shippingAddress,
     paymentMethod: paymentMethod || "COD",
+    paymentStatus,
     totalAmount,
   });
 
@@ -77,6 +86,21 @@ exports.createOrder = asyncHandler(async (req, res) => {
     message: "Order placed successfully",
     order,
   });
+
+  // Send Order Confirmation Email
+  await sendEmail({
+    email: req.user.email,
+    subject: `Order Confirmation - Order #${order._id}`,
+    message: `Thank you for your order! Total: $${totalAmount}`,
+    html: `
+      <h2>Thank you for your order!</h2>
+      <p>Your order ID is: <strong>${order._id}</strong></p>
+      <p>Total Amount: <strong>$${totalAmount}</strong></p>
+      <p>We will notify you when your items are shipped.</p>
+      <a href="http://localhost:5173/orders/${order._id}">View Order Details</a>
+    `,
+  });
+
 });
 
 exports.getMyOrders = asyncHandler(async (req, res) => {

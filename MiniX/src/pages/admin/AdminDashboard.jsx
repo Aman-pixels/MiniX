@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { DollarSign, ShoppingBag, Users, Package } from "lucide-react";
+import API_BASE_URL from "../../config";
 
 export default function AdminDashboard() {
     const [stats, setStats] = useState(null);
@@ -12,7 +13,7 @@ export default function AdminDashboard() {
 
     const fetchStats = async () => {
         try {
-            const { data } = await axios.get("http://localhost:5000/api/admin/stats", {
+            const { data } = await axios.get(`${API_BASE_URL}/api/admin/stats`, {
                 withCredentials: true,
             });
             setStats(data);
@@ -85,10 +86,10 @@ export default function AdminDashboard() {
                                     <td className="px-6 py-4">
                                         <span
                                             className={`px-3 py-1 rounded-full text-xs ${order.orderStatus === "Delivered"
-                                                    ? "bg-green-500/20 text-green-400"
-                                                    : order.orderStatus === "Cancelled"
-                                                        ? "bg-red-500/20 text-red-400"
-                                                        : "bg-yellow-500/20 text-yellow-400"
+                                                ? "bg-green-500/20 text-green-400"
+                                                : order.orderStatus === "Cancelled"
+                                                    ? "bg-red-500/20 text-red-400"
+                                                    : "bg-yellow-500/20 text-yellow-400"
                                                 }`}
                                         >
                                             {order.orderStatus}

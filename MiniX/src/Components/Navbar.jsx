@@ -15,6 +15,8 @@ import {
   CreditCard,
   Package,
   HelpCircle,
+  Menu,
+  X,
 } from "lucide-react";
 import productData from "../data/productData";
 
@@ -26,6 +28,7 @@ export default function Navbar() {
 
   const [profileOpen, setProfileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // 🔍 Search state
   const [query, setQuery] = useState("");
@@ -80,10 +83,10 @@ export default function Navbar() {
           {["shop", "about", "contact"].map((link) => (
             <NavLink
               key={link}
-              to={`/ ${link} `}
+              to={`/${link}`}
               className={({ isActive }) =>
-                `capitalize hover: text - white transition ${isActive ? "text-white font-semibold" : ""
-                } `
+                `capitalize hover:text-white transition ${isActive ? "text-white font-semibold" : ""
+                }`
               }
             >
               {link}
@@ -243,8 +246,171 @@ export default function Navbar() {
               </span>
             )}
           </div>
+
+          {/* MOBILE MENU BUTTON */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden text-white hover:text-gray-300 transition"
+            aria-label="Toggle mobile menu"
+          >
+            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
         </div>
       </div>
+
+      {/* MOBILE MENU DRAWER */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+            />
+
+            {/* Drawer */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 h-full w-[280px] bg-[#0a0a0a] border-l border-white/10 z-50 lg:hidden overflow-y-auto"
+            >
+              <div className="p-6">
+                {/* Close Button */}
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="absolute top-6 right-6 text-white/60 hover:text-white"
+                >
+                  <X size={24} />
+                </button>
+
+                {/* Logo */}
+                <div className="text-2xl font-bold mb-8">MiniX</div>
+
+                {/* Navigation Links */}
+                <div className="space-y-4 mb-8">
+                  <h3 className="text-xs uppercase text-white/40 font-semibold mb-3">
+                    Navigation
+                  </h3>
+                  {["shop", "about", "contact"].map((link) => (
+                    <NavLink
+                      key={link}
+                      to={`/${link}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={({ isActive }) =>
+                        `block text-lg capitalize hover:text-white transition ${isActive ? "text-white font-semibold" : "text-white/70"
+                        }`
+                      }
+                    >
+                      {link}
+                    </NavLink>
+                  ))}
+                </div>
+
+                {/* User Menu */}
+                <div className="border-t border-white/10 pt-6">
+                  {user ? (
+                    <>
+                      <p className="text-white/60 text-xs mb-1">Logged in as</p>
+                      <p className="text-white font-medium mb-6">{user.name}</p>
+
+                      <div className="space-y-3">
+                        <button
+                          onClick={() => {
+                            navigate("/profile");
+                            setMobileMenuOpen(false);
+                          }}
+                          className="flex items-center gap-3 text-white/80 hover:text-white w-full"
+                        >
+                          <User size={18} /> My Profile
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            navigate("/orders");
+                            setMobileMenuOpen(false);
+                          }}
+                          className="flex items-center gap-3 text-white/80 hover:text-white w-full"
+                        >
+                          <Package size={18} /> Orders
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            navigate("/wishlist");
+                            setMobileMenuOpen(false);
+                          }}
+                          className="flex items-center gap-3 text-white/80 hover:text-white w-full"
+                        >
+                          <Heart size={18} /> Wishlist
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            navigate("/addresses");
+                            setMobileMenuOpen(false);
+                          }}
+                          className="flex items-center gap-3 text-white/80 hover:text-white w-full"
+                        >
+                          <MapPin size={18} /> Addresses
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            navigate("/payments");
+                            setMobileMenuOpen(false);
+                          }}
+                          className="flex items-center gap-3 text-white/80 hover:text-white w-full"
+                        >
+                          <CreditCard size={18} /> Payments
+                        </button>
+
+                        <div className="border-t border-white/10 my-4" />
+
+                        <button
+                          onClick={() => {
+                            logoutUser();
+                            setMobileMenuOpen(false);
+                          }}
+                          className="flex items-center gap-3 text-red-400 hover:text-red-300 w-full"
+                        >
+                          <LogOut size={18} /> Logout
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => {
+                          navigate("/auth");
+                          setMobileMenuOpen(false);
+                        }}
+                        className="flex items-center gap-3 text-white hover:text-gray-300 mb-4 w-full"
+                      >
+                        <LogIn size={18} /> Login / Sign Up
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          navigate("/help");
+                          setMobileMenuOpen(false);
+                        }}
+                        className="flex items-center gap-3 text-white/80 hover:text-white w-full"
+                      >
+                        <HelpCircle size={18} /> Help & Support
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }

@@ -1,6 +1,7 @@
 // src/context/AuthContext.jsx
-import { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
+import API_BASE_URL from "../config";
 
 const AuthContext = createContext();
 
@@ -8,7 +9,8 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  axios.defaults.baseURL = "http://localhost:5000";
+  axios.defaults.baseURL = API_BASE_URL;
+
 
   // Auto fetch user on page refresh
   useEffect(() => {

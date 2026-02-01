@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Search, Eye, Filter } from "lucide-react";
+import API_BASE_URL from "../../config";
 
 export default function AdminOrders() {
     const [orders, setOrders] = useState([]);
@@ -14,7 +15,7 @@ export default function AdminOrders() {
 
     const fetchOrders = async () => {
         try {
-            const { data } = await axios.get("http://localhost:5000/api/orders/admin/all", {
+            const { data } = await axios.get(`${API_BASE_URL}/api/orders/admin/all`, {
                 withCredentials: true,
             });
             setOrders(data.orders || []);
@@ -28,7 +29,7 @@ export default function AdminOrders() {
     const handleStatusChange = async (id, newStatus) => {
         try {
             await axios.put(
-                `http://localhost:5000/api/orders/admin/${id}/status`,
+                `${API_BASE_URL}/api/orders/admin/${id}/status`,
                 { status: newStatus },
                 { withCredentials: true }
             );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { X, Save, Image as ImageIcon } from "lucide-react";
+import API_BASE_URL from "../../config";
 
 export default function AdminProductForm({
     product,
@@ -37,7 +38,7 @@ export default function AdminProductForm({
 
     const fetchCategories = async () => {
         try {
-            const { data } = await axios.get("http://localhost:5000/api/category/all");
+            const { data } = await axios.get(`${API_BASE_URL}/api/category/all`);
             setCategories(data.categories || []);
         } catch (error) {
             console.error("Failed to fetch categories");
@@ -65,13 +66,13 @@ export default function AdminProductForm({
             if (product) {
                 // Update
                 await axios.put(
-                    `http://localhost:5000/api/products/${product._id}`,
+                    `${API_BASE_URL}/api/products/${product._id}`,
                     payload,
                     { withCredentials: true }
                 );
             } else {
                 // Create
-                await axios.post("http://localhost:5000/api/products/create", payload, {
+                await axios.post(`${API_BASE_URL}/api/products/create`, payload, {
                     withCredentials: true,
                 });
             }
