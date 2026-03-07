@@ -7,6 +7,7 @@ const sendEmail = require("../utils/sendEmail");
 
 
 exports.register = asyncHandler(async (req, res) => {
+  console.log("[Auth] Register attempt:", req.body?.email);
   const { name, email, password } = req.body;
 
   const exist = await User.findOne({ email });
@@ -23,10 +24,12 @@ exports.register = asyncHandler(async (req, res) => {
     password: hashed,
   });
 
+  console.log("[Auth] User registered safely:", user.email);
   res.json({ message: "User registered", user });
 });
 
 exports.login = asyncHandler(async (req, res) => {
+  console.log("[Auth] Login attempt:", req.body?.email);
   const { email, password } = req.body;
 
   const user = await User.findOne({ email }).select("+password");
@@ -45,12 +48,16 @@ exports.login = asyncHandler(async (req, res) => {
     expiresIn: "7d",
   });
 
+  const isProduction = process.env.NODE_ENV === "production";
+
   res.cookie("token", token, {
     httpOnly: true,
-    secure: false, // Set to true in production with HTTPS
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
+
+  console.log("[Auth] Login successful via email:", user.email);
 
   res.json({
     message: "Login successful",
@@ -67,7 +74,13 @@ exports.me = asyncHandler(async (req, res) => {
 });
 
 exports.logout = asyncHandler(async (req, res) => {
-  res.clearCookie("token");
+  const isProduction = process.env.NODE_ENV === "production";
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax"
+  });
+  console.log("[Auth] Logged out user");
   res.json({ message: "Logged out" });
 });
 
@@ -147,10 +160,12 @@ exports.resetPassword = asyncHandler(async (req, res) => {
     expiresIn: "7d",
   });
 
+  const isProduction = process.env.NODE_ENV === "production";
+
   res.cookie("token", token, {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 

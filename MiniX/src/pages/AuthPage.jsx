@@ -1,9 +1,9 @@
 // src/pages/AuthPage.jsx
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useAuth } from "../context/AuthContext";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import Loader from "../Components/Loader";
+import AuthButton from "../Components/AuthButton";
+import { toast } from "react-toastify";
 
 import { FcGoogle } from "react-icons/fc";
 import { FaApple } from "react-icons/fa";
@@ -20,7 +20,7 @@ export default function AuthPage() {
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const { user, loading, registerUser, loginUser } = useAuth();
+  const { user, loading, registerUser, loginUser, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -67,6 +67,30 @@ export default function AuthPage() {
       setSubmitting(false);
     }
   };
+
+  const handleGoogleSuccess = async (tokenResponse) => {
+    try {
+      setSubmitting(true);
+      setErrorMsg("");
+      const userData = await loginWithGoogle(tokenResponse.access_token);
+      localStorage.setItem("user", JSON.stringify(userData));
+      toast.success("Effectively logged in with Google!");
+      navigate(location.state?.from || "/", { replace: true });
+    } catch {
+      setErrorMsg("Google authentication failed. Please try again.");
+      toast.error("Google authentication failed.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: handleGoogleSuccess,
+    onError: () => {
+      setErrorMsg("Google authentication failed.");
+      toast.error("Google authentication failed.");
+    }
+  });
 
   if (loading) {
     return (
@@ -214,21 +238,18 @@ export default function AuthPage() {
 
           {/* Social auth */}
           <div className="space-y-3">
-            <button
-              type="button"
-              className="w-full flex items-center justify-center gap-3 rounded-full border border-white/15 bg-black/40 py-2.5 text-sm hover:bg-white/10 transition"
-            >
-              <FcGoogle size={18} />
-              <span className="text-white/90">Continue with Google</span>
-            </button>
-
-            <button
-              type="button"
-              className="w-full flex items-center justify-center gap-3 rounded-full border border-white/15 bg-black/40 py-2.5 text-sm hover:bg-white/10 transition"
-            >
-              <FaApple size={18} />
-              <span className="text-white/90">Continue with Apple</span>
-            </button>
+            <AuthButton 
+              icon={FcGoogle} 
+              text="Continue with Google" 
+              onClick={() => googleLogin()} 
+              disabled={submitting} 
+            />
+            <AuthButton 
+              icon={FaApple} 
+              text="Continue with Apple" 
+              onClick={() => toast.error("Apple login not configured")} 
+              disabled={submitting} 
+            />
           </div>
 
           <p className="mt-4 text-[11px] text-zinc-500 text-center">

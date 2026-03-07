@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const { register, login, me, logout, forgotPassword, resetPassword } = require("../Controllers/authController");
+const { googleAuth } = require("../Controllers/googleAuthController");
 const { protect } = require("../Middleware/authMiddleware");
 
 router.post("/register", register);
@@ -10,5 +11,6 @@ router.get("/me", protect, me);
 router.post("/logout", protect, logout);
 router.post("/forgotpassword", forgotPassword);
 router.put("/resetpassword/:resettoken", resetPassword);
+router.post("/google", googleAuth);
 
 module.exports = router;

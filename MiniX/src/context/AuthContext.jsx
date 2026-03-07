@@ -42,6 +42,17 @@ export function AuthProvider({ children }) {
     return res.data.user;
   };
 
+  // Google Login
+  const loginWithGoogle = async (access_token) => {
+    const res = await axios.post(
+      "/api/auth/google",
+      { access_token },
+      { withCredentials: true }
+    );
+    setUser(res.data.user);
+    return res.data.user;
+  };
+
   // Update profile (name + email)
   const updateProfile = async (name, email) => {
     const res = await axios.put(
@@ -75,6 +86,7 @@ export function AuthProvider({ children }) {
         loading,
         registerUser,
         loginUser,
+        loginWithGoogle,
         logoutUser,
         updateProfile,
         updatePassword,
