@@ -39,6 +39,7 @@ export default function FeaturedProduct() {
               <img
                 src={p.images?.[0]}
                 alt={p.name}
+                loading="lazy"
                 className="w-full h-64 object-cover group-hover:scale-110 transition duration-500"
               />
 

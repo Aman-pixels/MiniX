@@ -98,7 +98,7 @@ export default function Cart() {
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => updateQuantity(item.id, -1)}
-                      className="px-3 py-1 rounded bg-white/10 hover:bg-white/20 transition"
+                      className="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition text-lg"
                     >
                       −
                     </button>
@@ -107,7 +107,7 @@ export default function Cart() {
                     </span>
                     <button
                       onClick={() => updateQuantity(item.id, 1)}
-                      className="px-3 py-1 rounded bg-white/10 hover:bg-white/20 transition"
+                      className="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition text-lg"
                     >
                       +
                     </button>

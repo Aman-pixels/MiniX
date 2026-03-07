@@ -123,6 +123,7 @@ export default function ProductPage() {
                 <img
                   src={product.images[selectedImage]}
                   alt={product.name}
+                  loading="lazy"
                   className="w-full h-[420px] object-cover"
                 />
               </div>
@@ -137,7 +138,7 @@ export default function ProductPage() {
                       : "border-white/10"
                       }`}
                   >
-                    <img src={img} className="w-full h-full object-cover" />
+                    <img src={img} loading="lazy" className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
@@ -206,12 +207,18 @@ export default function ProductPage() {
               </div>
 
               {/* Quantity */}
-              <div className="flex items-center gap-4">
-                <button onClick={() => setQuantity((q) => Math.max(1, q - 1))}>
+              <div className="flex items-center gap-4 mt-2 mb-2">
+                <button 
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                  className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"
+                >
                   <Minus size={16} />
                 </button>
-                <span>{quantity}</span>
-                <button onClick={() => setQuantity((q) => q + 1)}>
+                <span className="w-6 text-center font-medium">{quantity}</span>
+                <button 
+                  onClick={() => setQuantity((q) => q + 1)}
+                  className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"
+                >
                   <Plus size={16} />
                 </button>
               </div>

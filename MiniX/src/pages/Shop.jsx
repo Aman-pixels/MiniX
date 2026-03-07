@@ -237,6 +237,7 @@ export default function Shop() {
                       <img
                         src={product.images[0]}
                         alt={product.name}
+                        loading="lazy"
                         className="w-full h-72 object-cover"
                       />
                     </Link>
