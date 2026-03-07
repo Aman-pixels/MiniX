@@ -7,9 +7,9 @@ import ScrollReveal from "../Components/ScrollReveal";
 import axios from "axios";
 
 import ShopSkeleton from "../Components/skeletons/ShopSkeleton";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import Collections from "../components/Collections";
+import Navbar from "../Components/Navbar";
+import Footer from "../Components/Footer";
+import Collections from "../Components/Collections";
 import ProductCard from "../Components/ProductCard";
 import API_BASE_URL from "../config";
 

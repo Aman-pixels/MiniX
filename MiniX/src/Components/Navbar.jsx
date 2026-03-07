@@ -64,9 +64,9 @@ export default function Navbar() {
   return (
     <nav
       className={`
-        sticky top-0 left-0 w-full z-50
+        fixed top-0 left-0 w-full z-50
         transition-all duration-300
-        ${scrolled ? "bg-black/60 backdrop-blur-md border-b border-white/10 py-3" : "bg-transparent py-5"}
+        ${scrolled ? "glass py-3" : "bg-transparent py-5"}
       `}
     >
       <div className="max-w-[1250px] mx-auto px-6 flex items-center justify-between gap-6">
@@ -228,7 +228,7 @@ export default function Navbar() {
           </div>
 
           {/* WISHLIST */}
-          <div className="relative cursor-pointer hover:scale-110 transition-transform duration-200" onClick={() => navigate(user ? "/wishlist" : "/auth")}>
+          <div className="relative cursor-pointer" onClick={() => navigate(user ? "/wishlist" : "/auth")}>
             <Heart size={24} />
             {wishlist.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
@@ -238,10 +238,10 @@ export default function Navbar() {
           </div>
 
           {/* CART */}
-          <div className="relative cursor-pointer hover:scale-110 transition-transform duration-200" onClick={() => user ? setIsCartOpen(true) : navigate("/auth")}>
+          <div className="relative cursor-pointer" onClick={() => user ? setIsCartOpen(true) : navigate("/auth")}>
             <ShoppingBag size={24} />
             {cartItems.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-white text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-200">
+              <span className="absolute -top-2 -right-2 bg-white text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                 {cartItems.length}
               </span>
             )}

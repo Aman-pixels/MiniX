@@ -1,6 +1,9 @@
 // src/pages/AuthPage.jsx
 import React, { useState, useEffect } from "react";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
 import Loader from "../Components/Loader";
 import AuthButton from "../Components/AuthButton";
 import { toast } from "react-toastify";
