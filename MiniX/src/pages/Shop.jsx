@@ -7,10 +7,10 @@ import ScrollReveal from "../Components/ScrollReveal";
 import axios from "axios";
 
 import ShopSkeleton from "../Components/skeletons/ShopSkeleton";
-import { useCart } from "../context/CartContext";
-import Navbar from "../Components/Navbar";
-import Footer from "../Components/Footer";
-import Collections from "../Components/Collections";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import Collections from "../components/Collections";
+import ProductCard from "../Components/ProductCard";
 import API_BASE_URL from "../config";
 
 export default function Shop() {
@@ -229,31 +229,9 @@ export default function Shop() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-              {pageProducts.map((product, i) => (
-                <ScrollReveal key={product._id || product.slug} delay={i * 0.05}>
-                  <div className="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:scale-105 transition duration-300">
-                    <Link to={`/product/${product.slug}`}>
-                      <img
-                        src={product.images[0]}
-                        alt={product.name}
-                        loading="lazy"
-                        className="w-full h-72 object-cover"
-                      />
-                    </Link>
-
-                    <div className="p-5 text-center">
-                      <h3 className="font-semibold">{product.name}</h3>
-                      <p className="text-gray-400">${product.price}</p>
-                      <button
-                        onClick={() => addToCart(product)}
-                        className="mt-3 w-full py-2 bg-white text-black font-medium rounded-lg hover:bg-gray-200 transition"
-                      >
-                        Add to Cart
-                      </button>
-                    </div>
-                  </div>
-                </ScrollReveal>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {pageProducts.map((product) => (
+                <ProductCard key={product._id || product.slug} product={product} />
               ))}
             </div>
 

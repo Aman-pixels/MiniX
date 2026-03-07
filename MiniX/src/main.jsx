@@ -52,6 +52,7 @@ import { WishlistProvider } from "./context/WishlistContext.jsx";
 
 import PageTransition from "./Components/PageTransition.jsx";
 import GlobalToast from "./Components/GlobalToast.jsx";
+import CartDrawer from "./Components/CartDrawer.jsx";
 
 
 // -------- Protected Route Wrapper --------
@@ -224,6 +225,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <CartProvider>
             <WishlistProvider>
               <GlobalToast />
+              <CartDrawer />
               <AnimatedRoutes />
             </WishlistProvider>
           </CartProvider>

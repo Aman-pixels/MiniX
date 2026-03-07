@@ -12,9 +12,12 @@ export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
   const { user } = useAuth();
 
-  // 🔔 Toast state (Added as per user request)
+  // 🔔 Toast state
   const [showToastVisible, setShowToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+
+  // 🛒 Cart Drawer state
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const triggerToast = (message) => {
     setToastMessage(message);
@@ -78,8 +81,9 @@ export function CartProvider({ children }) {
 
       if (data.success) {
         setCartItems(processCartData(data.cart));
-        // ✅ Trigger toast
+        // ✅ Trigger toast & open drawer
         triggerToast("Added to cart");
+        setIsCartOpen(true);
       }
     } catch (error) {
       console.error("Add to cart error", error);
@@ -179,6 +183,8 @@ export function CartProvider({ children }) {
         total,
         showToastVisible,
         toastMessage,
+        isCartOpen,
+        setIsCartOpen,
       }}
     >
       {children}
