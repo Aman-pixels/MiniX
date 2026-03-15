@@ -66,13 +66,13 @@ export default function AdminProductForm({
             if (product) {
                 // Update
                 await axios.put(
-                    `${API_BASE_URL}/api/products/${product._id}`,
+                    `${API_BASE_URL}/api/product/${product._id}`,
                     payload,
                     { withCredentials: true }
                 );
             } else {
                 // Create
-                await axios.post(`${API_BASE_URL}/api/products/create`, payload, {
+                await axios.post(`${API_BASE_URL}/api/product/create`, payload, {
                     withCredentials: true,
                 });
             }

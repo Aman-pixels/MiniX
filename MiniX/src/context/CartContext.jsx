@@ -31,7 +31,8 @@ export function CartProvider({ children }) {
   const processCartData = (apiCartItems) => {
     return apiCartItems.map((item) => ({
       ...item.product, // Spread product details (name, price, images, slug)
-      id: item.product._id, // Ensure ID matches what frontend expects
+      id: item.product?._id || item.product?.id, // Ensure ID matches what frontend expects
+      cartItemId: `${item.product?._id || item.product?.id}-${item.selectedSize || ''}-${item.selectedColor?.name || item.selectedColor || ''}`,
       // We might need to keep the original item structure for some logic, but flattening is safer for existing UI
       quantity: item.quantity,
       selectedSize: item.selectedSize,
@@ -91,11 +92,11 @@ export function CartProvider({ children }) {
     }
   };
 
-  const updateQuantity = async (id, delta) => {
+  const updateQuantity = async (cartItemId, delta) => {
     if (!user) return;
 
     // Find the item in local state to get its variant details
-    const targetItem = cartItems.find((item) => item.id === id);
+    const targetItem = cartItems.find((item) => item.cartItemId === cartItemId);
 
     if (!targetItem) return;
 
@@ -122,10 +123,10 @@ export function CartProvider({ children }) {
   };
 
   // Original UI calls removeFromCart(item.id)
-  const removeFromCart = async (id) => {
+  const removeFromCart = async (cartItemId) => {
     if (!user) return;
 
-    const targetItem = cartItems.find((item) => item.id === id);
+    const targetItem = cartItems.find((item) => item.cartItemId === cartItemId);
     if (!targetItem) return;
 
     try {

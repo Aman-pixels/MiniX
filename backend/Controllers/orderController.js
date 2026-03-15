@@ -87,19 +87,41 @@ exports.createOrder = asyncHandler(async (req, res) => {
     order,
   });
 
-  // Send Order Confirmation Email
-  await sendEmail({
-    email: req.user.email,
-    subject: `Order Confirmation - Order #${order._id}`,
-    message: `Thank you for your order! Total: $${totalAmount}`,
-    html: `
-      <h2>Thank you for your order!</h2>
-      <p>Your order ID is: <strong>${order._id}</strong></p>
-      <p>Total Amount: <strong>$${totalAmount}</strong></p>
-      <p>We will notify you when your items are shipped.</p>
-      <a href="http://localhost:5173/orders/${order._id}">View Order Details</a>
-    `,
-  });
+  // Send Order Confirmation Email to Customer
+  try {
+    await sendEmail({
+      email: req.user.email,
+      subject: `Order Confirmation - Order #${order._id}`,
+      message: `Thank you for your order! Total: $${totalAmount}`,
+      html: `
+        <h2>Thank you for your order!</h2>
+        <p>Your order ID is: <strong>${order._id}</strong></p>
+        <p>Total Amount: <strong>$${totalAmount}</strong></p>
+        <p>We will notify you when your items are shipped.</p>
+        <a href="http://localhost:5173/orders/${order._id}">View Order Details</a>
+      `,
+    });
+  } catch (err) {
+    console.error("[Email] Failed to send customer order confirmation", err);
+  }
+
+  // Send Order Notification Email to Admin
+  try {
+    await sendEmail({
+      email: process.env.EMAIL_USER, // Send to Admin
+      subject: `New Order Received - #${order._id}`,
+      message: `A new order has been placed!\nOrder ID: ${order._id}\nTotal Amount: $${totalAmount}\nCustomer: ${req.user.name} (${req.user.email})`,
+      html: `
+        <h2>New Order Placed!</h2>
+        <p><strong>Order ID:</strong> ${order._id}</p>
+        <p><strong>Customer:</strong> ${req.user.name} (${req.user.email})</p>
+        <p><strong>Total Amount:</strong> $${totalAmount}</p>
+        <p>Review the order details in your admin dashboard.</p>
+      `,
+    });
+  } catch (err) {
+    console.error("[Email] Failed to send admin order notification", err);
+  }
 
 });
 

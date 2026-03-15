@@ -24,6 +24,22 @@ exports.register = asyncHandler(async (req, res) => {
     password: hashed,
   });
 
+  // Notify Admin about new user signup
+  try {
+    await sendEmail({
+      email: process.env.EMAIL_USER, // Send to Admin
+      subject: `New User Signup: ${name}`,
+      message: `A new user has registered.\nName: ${name}\nEmail: ${email}`,
+      html: `
+        <h3>New User Registration</h3>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+      `,
+    });
+  } catch (err) {
+    console.error("[Email] Failed to send admin notification for signup", err);
+  }
+
   console.log("[Auth] User registered safely:", user.email);
   res.json({ message: "User registered", user });
 });

@@ -92,11 +92,11 @@ export default function CartDrawer() {
                       {/* Controls */}
                       <div className="flex items-center justify-between mt-2">
                         <div className="flex items-center gap-3 bg-black/40 rounded-full px-2 py-1 border border-white/10">
-                          <button onClick={() => updateQuantity(item.id, -1)} className="text-white/70 hover:text-white px-1">−</button>
+                          <button onClick={() => updateQuantity(item.cartItemId, -1)} className="text-white/70 hover:text-white px-1">−</button>
                           <span className="text-xs w-4 text-center text-white">{item.quantity}</span>
-                          <button onClick={() => updateQuantity(item.id, 1)} className="text-white/70 hover:text-white px-1">+</button>
+                          <button onClick={() => updateQuantity(item.cartItemId, 1)} className="text-white/70 hover:text-white px-1">+</button>
                         </div>
-                        <button onClick={() => removeFromCart(item.id)} className="text-white/40 hover:text-red-400 transition pr-1">
+                        <button onClick={() => removeFromCart(item.cartItemId)} className="text-white/40 hover:text-red-400 transition pr-1">
                           <Trash2 size={16} />
                         </button>
                       </div>

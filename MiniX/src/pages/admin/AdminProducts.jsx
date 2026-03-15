@@ -18,7 +18,7 @@ export default function AdminProducts() {
     const fetchProducts = async () => {
         try {
             const { data } = await axios.get(
-                `${API_BASE_URL}/api/products/admin/all`,
+                `${API_BASE_URL}/api/product/admin/all`,
                 { withCredentials: true }
             );
             setProducts(data.products || []);
@@ -32,7 +32,7 @@ export default function AdminProducts() {
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this product?")) return;
         try {
-            await axios.delete(`${API_BASE_URL}/api/products/${id}`, {
+            await axios.delete(`${API_BASE_URL}/api/product/${id}`, {
                 withCredentials: true,
             });
             setProducts(products.filter((p) => p._id !== id));

@@ -134,7 +134,7 @@ export default function Navbar() {
                     <button
                       key={item.id}
                       onClick={() => {
-                        navigate(`/ product / ${item.id} `);
+                        navigate(`/product/${item.id}`);
                         setQuery("");
                         setShowResults(false);
                       }}

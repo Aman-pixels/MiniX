@@ -97,7 +97,7 @@ export default function Cart() {
                   {/* Quantity */}
                   <div className="flex items-center gap-3">
                     <button
-                      onClick={() => updateQuantity(item.id, -1)}
+                      onClick={() => updateQuantity(item.cartItemId, -1)}
                       className="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition text-lg"
                     >
                       −
@@ -106,7 +106,7 @@ export default function Cart() {
                       {item.quantity}
                     </span>
                     <button
-                      onClick={() => updateQuantity(item.id, 1)}
+                      onClick={() => updateQuantity(item.cartItemId, 1)}
                       className="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition text-lg"
                     >
                       +
@@ -115,7 +115,7 @@ export default function Cart() {
 
                   {/* Remove */}
                   <button
-                    onClick={() => removeFromCart(item.id)}
+                    onClick={() => removeFromCart(item.cartItemId)}
                     className="text-gray-400 hover:text-red-500 transition"
                   >
                     <Trash2 size={18} />

@@ -36,3 +36,11 @@ exports.updatePassword = asyncHandler(async (req, res) => {
 
   res.json({ message: "Password updated" });
 });
+
+// @desc    Get all users (Admin)
+// @route   GET /api/user/admin/all
+// @access  Private/Admin
+exports.getAllUsers = asyncHandler(async (req, res) => {
+  const users = await User.find({}).select("-password").sort({ createdAt: -1 });
+  res.json({ success: true, count: users.length, users });
+});
