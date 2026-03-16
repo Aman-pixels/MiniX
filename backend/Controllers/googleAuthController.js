@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const axios = require("axios");
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 
 exports.googleAuth = asyncHandler(async (req, res) => {
   const { access_token } = req.body;

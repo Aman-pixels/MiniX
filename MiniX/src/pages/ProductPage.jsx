@@ -15,9 +15,10 @@ import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import ProductSkeleton from "../Components/skeletons/ProductSkeleton";
 
-import productData from "../data/productData";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
+import axios from "axios";
+import API_BASE_URL from "../config";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -26,18 +27,44 @@ export default function ProductPage() {
   const { addToCart } = useCart();
   const { toggleWishlist, isWishlisted } = useWishlist();
 
-  /* ---------------- Loading skeleton ---------------- */
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 500);
-    return () => clearTimeout(t);
-  }, []);
-
   /* ---------------- Product lookup ---------------- */
-  const product = useMemo(
-    () => productData.find((p) => p.id === id),
-    [id]
-  );
+  const [dbProduct, setDbProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const { data } = await axios.get(`${API_BASE_URL}/api/product/${id}`);
+        setDbProduct(data.product);
+      } catch (err) {
+        console.error("Failed to load product", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [id]);
+
+  const product = useMemo(() => {
+    if (!dbProduct) return null;
+    return {
+      ...dbProduct,
+      category: dbProduct.category?.name || "Product",
+      rating: 4.8,
+      reviewCount: 15,
+      variants: {
+        sizes: ["S", "M", "L", "XL"],
+        colors: [
+          { name: "Black", hex: "#111111" },
+          { name: "White", hex: "#eaeaea" },
+        ],
+      },
+      details: {
+        material: "Premium Material",
+        fit: "Standard Fit",
+      }
+    };
+  }, [dbProduct]);
 
   /* ---------------- Safe defaults (HOOK SAFE) ---------------- */
   const [selectedImage, setSelectedImage] = useState(0);

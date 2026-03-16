@@ -14,7 +14,6 @@ import ProductCard from "../Components/ProductCard";
 import API_BASE_URL from "../config";
 
 export default function Shop() {
-  const { addToCart } = useCart();
   const [searchParams] = useSearchParams();
 
   /* ---------------- Products from Backend ---------------- */

@@ -54,6 +54,7 @@ import { WishlistProvider } from "./context/WishlistContext.jsx";
 import PageTransition from "./Components/PageTransition.jsx";
 import GlobalToast from "./Components/GlobalToast.jsx";
 import CartDrawer from "./Components/CartDrawer.jsx";
+import { Analytics } from "@vercel/analytics/react";
 
 
 // -------- Protected Route Wrapper --------
@@ -194,6 +195,8 @@ function AnimatedRoutes() {
           }
         />
 
+        <Route path="/login" element={<BlockAuthWhenLoggedIn><PageTransition><AuthPage /></PageTransition></BlockAuthWhenLoggedIn>} />
+
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
 
@@ -229,6 +232,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               <GlobalToast />
               <CartDrawer />
               <AnimatedRoutes />
+              <Analytics />
             </WishlistProvider>
           </CartProvider>
         </AuthProvider>
