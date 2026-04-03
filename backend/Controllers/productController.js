@@ -120,6 +120,28 @@ exports.deleteProduct = asyncHandler(async (req, res) => {
 });
 
 /**
+ * SEARCH PRODUCTS
+ */
+exports.getSearchProducts = asyncHandler(async (req, res) => {
+  const { q } = req.query;
+  if (!q) {
+    return res.json({ success: true, products: [] });
+  }
+
+  const products = await Product.find({
+    name: { $regex: q, $options: "i" },
+  })
+    .populate("category", "name slug")
+    .limit(5);
+
+  res.json({
+    success: true,
+    count: products.length,
+    products,
+  });
+});
+
+/**
  * ADMIN: GET ALL PRODUCTS
  */
 exports.getAllProductsAdmin = asyncHandler(async (req, res) => {

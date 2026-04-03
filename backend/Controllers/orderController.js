@@ -98,7 +98,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
         <p>Your order ID is: <strong>${order._id}</strong></p>
         <p>Total Amount: <strong>$${totalAmount}</strong></p>
         <p>We will notify you when your items are shipped.</p>
-        <a href="http://localhost:5173/orders/${order._id}">View Order Details</a>
+        <a href="${process.env.FRONTEND_URL || "http://localhost:5173"}/orders/${order._id}">View Order Details</a>
       `,
     });
   } catch (err) {

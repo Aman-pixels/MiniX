@@ -6,6 +6,7 @@ const { protect, isAdmin } = require("../Middleware/authMiddleware");
 const {
   createProduct,
   getAllProducts,
+  getSearchProducts,
   getFeaturedProducts,
   getProductBySlug,
   updateProduct,
@@ -15,8 +16,10 @@ const {
 
 // Public
 router.get("/all", getAllProducts);
+router.get("/search", getSearchProducts);
 router.get("/featured", getFeaturedProducts);
 router.get("/:slug", getProductBySlug);
+
 
 // Admin
 router.post("/create", protect, isAdmin, createProduct);

@@ -51,7 +51,12 @@ app.use(
 const orderRoutes = require("./Routes/orderRoutes");
 const paymentRoutes = require("./Routes/paymentRoutes");
 
+// Health Check / API Root
+app.get("/", (req, res) => res.send("MiniX API is running..."));
+app.get("/api", (req, res) => res.json({ message: "Welcome to MiniX API" }));
+
 app.use("/api/auth", authRoutes);
+
 app.use("/api/user", userRoutes);
 app.use("/api/addresses", addressRoutes);
 app.use("/api/category", categoryRoutes);

@@ -30,26 +30,47 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // 🔍 Search state
-  const [query, setQuery] = useState("");
-  const [showResults, setShowResults] = useState(false);
-
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 🔎 Search logic (only existing products)
-  const suggestions = useMemo(() => {
-    if (!query.trim()) return [];
+  // 🔍 Search state
+  const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showResults, setShowResults] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
-    const q = query.toLowerCase();
+  useEffect(() => {
+    if (!query.trim()) {
+      setSuggestions([]);
+      return;
+    }
 
-    return productData
-      .filter((p) => p.name.toLowerCase().includes(q))
-      .slice(0, 5);
+    const fetchSuggestions = async () => {
+      setIsSearching(true);
+      try {
+        const { data } = await axios.get(`${API_BASE_URL}/api/product/search?q=${query}`);
+        if (data.success) {
+          // Convert backend 'slug' to 'id' for frontend compatibility if needed
+          const mapped = data.products.map(p => ({
+            ...p,
+            id: p.slug // Navbar uses .id for navigation
+          }));
+          setSuggestions(mapped);
+        }
+      } catch (err) {
+        console.error("Search failed", err);
+      } finally {
+        setIsSearching(false);
+      }
+    };
+
+    const timeoutId = setTimeout(fetchSuggestions, 300); // 300ms debounce
+    return () => clearTimeout(timeoutId);
   }, [query]);
+
 
   const handleEnter = (e) => {
     if (e.key === "Enter") {
@@ -60,6 +81,7 @@ export default function Navbar() {
       }
     }
   };
+
 
   return (
     <nav
