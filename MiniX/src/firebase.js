@@ -14,7 +14,14 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+
+// Conditionally initialize Analytics to prevent crashes in blocked/dev environments
+import { isSupported } from "firebase/analytics";
+isSupported().then((supported) => {
+  if (supported) {
+    getAnalytics(app);
+  }
+});
 
 // Initialize Firebase Auth
 export const auth = getAuth(app);
