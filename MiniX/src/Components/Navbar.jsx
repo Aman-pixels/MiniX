@@ -28,7 +28,7 @@ export default function Navbar() {
 
   const [profileOpen, setProfileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -92,12 +92,21 @@ export default function Navbar() {
       `}
     >
       <div className="max-w-[1250px] mx-auto px-6 flex items-center justify-between gap-6">
-        {/* LOGO */}
-        <div
-          onClick={() => navigate("/")}
-          className="text-2xl font-bold tracking-wide cursor-pointer"
-        >
-          MiniX
+        {/* LOGO & SIDEBAR MENU */}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="text-white hover:text-gray-300 transition flex items-center justify-center pt-1"
+            aria-label="Toggle sidebar menu"
+          >
+            {sidebarOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+          <div
+            onClick={() => navigate("/")}
+            className="text-2xl font-bold tracking-wide cursor-pointer"
+          >
+            MiniX
+          </div>
         </div>
 
         {/* MID LINKS */}
@@ -269,42 +278,34 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* MOBILE MENU BUTTON */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden text-white hover:text-gray-300 transition"
-            aria-label="Toggle mobile menu"
-          >
-            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
         </div>
       </div>
 
-      {/* MOBILE MENU DRAWER */}
+      {/* SIDEBAR DRAWER */}
       <AnimatePresence>
-        {mobileMenuOpen && (
+        {sidebarOpen && (
           <>
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+              onClick={() => setSidebarOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
             />
 
             {/* Drawer */}
             <motion.div
-              initial={{ x: "100%" }}
+              initial={{ x: "-100%" }}
               animate={{ x: 0 }}
-              exit={{ x: "100%" }}
+              exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-[280px] bg-[#0a0a0a] border-l border-white/10 z-50 lg:hidden overflow-y-auto"
+              className="fixed top-0 left-0 h-full w-[280px] bg-[#0a0a0a] border-r border-white/10 z-50 overflow-y-auto"
             >
               <div className="p-6">
                 {/* Close Button */}
                 <button
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => setSidebarOpen(false)}
                   className="absolute top-6 right-6 text-white/60 hover:text-white"
                 >
                   <X size={24} />
@@ -322,7 +323,7 @@ export default function Navbar() {
                     <NavLink
                       key={link}
                       to={`/${link}`}
-                      onClick={() => setMobileMenuOpen(false)}
+                      onClick={() => setSidebarOpen(false)}
                       className={({ isActive }) =>
                         `block text-lg capitalize hover:text-white transition ${isActive ? "text-white font-semibold" : "text-white/70"
                         }`
@@ -344,7 +345,7 @@ export default function Navbar() {
                         <button
                           onClick={() => {
                             navigate("/profile");
-                            setMobileMenuOpen(false);
+                            setSidebarOpen(false);
                           }}
                           className="flex items-center gap-3 text-white/80 hover:text-white w-full"
                         >
@@ -353,8 +354,19 @@ export default function Navbar() {
 
                         <button
                           onClick={() => {
+                            setIsCartOpen(true);
+                            setSidebarOpen(false);
+                          }}
+                          className="flex items-center w-full gap-3 text-white/80 hover:text-white"
+                        >
+                          <ShoppingBag size={18} /> 
+                          Cart {cartItems.length > 0 && <span className="bg-white text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full">{cartItems.length}</span>}
+                        </button>
+
+                        <button
+                          onClick={() => {
                             navigate("/orders");
-                            setMobileMenuOpen(false);
+                            setSidebarOpen(false);
                           }}
                           className="flex items-center gap-3 text-white/80 hover:text-white w-full"
                         >
@@ -364,17 +376,18 @@ export default function Navbar() {
                         <button
                           onClick={() => {
                             navigate("/wishlist");
-                            setMobileMenuOpen(false);
+                            setSidebarOpen(false);
                           }}
-                          className="flex items-center gap-3 text-white/80 hover:text-white w-full"
+                          className="flex items-center w-full gap-3 text-white/80 hover:text-white"
                         >
-                          <Heart size={18} /> Wishlist
+                          <Heart size={18} /> 
+                          Wishlist {wishlist.length > 0 && <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{wishlist.length}</span>}
                         </button>
 
                         <button
                           onClick={() => {
                             navigate("/addresses");
-                            setMobileMenuOpen(false);
+                            setSidebarOpen(false);
                           }}
                           className="flex items-center gap-3 text-white/80 hover:text-white w-full"
                         >
@@ -384,7 +397,7 @@ export default function Navbar() {
                         <button
                           onClick={() => {
                             navigate("/payments");
-                            setMobileMenuOpen(false);
+                            setSidebarOpen(false);
                           }}
                           className="flex items-center gap-3 text-white/80 hover:text-white w-full"
                         >
@@ -396,7 +409,7 @@ export default function Navbar() {
                         <button
                           onClick={() => {
                             logoutUser();
-                            setMobileMenuOpen(false);
+                            setSidebarOpen(false);
                           }}
                           className="flex items-center gap-3 text-red-400 hover:text-red-300 w-full"
                         >
@@ -409,7 +422,7 @@ export default function Navbar() {
                       <button
                         onClick={() => {
                           navigate("/auth");
-                          setMobileMenuOpen(false);
+                          setSidebarOpen(false);
                         }}
                         className="flex items-center gap-3 text-white hover:text-gray-300 mb-4 w-full"
                       >
@@ -419,7 +432,7 @@ export default function Navbar() {
                       <button
                         onClick={() => {
                           navigate("/help");
-                          setMobileMenuOpen(false);
+                          setSidebarOpen(false);
                         }}
                         className="flex items-center gap-3 text-white/80 hover:text-white w-full"
                       >
