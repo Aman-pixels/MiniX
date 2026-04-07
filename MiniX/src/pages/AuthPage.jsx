@@ -94,9 +94,11 @@ export default function AuthPage() {
       );
       toast.success("Successfully logged in with Google!");
       navigate(location.state?.from || "/", { replace: true });
-    } catch {
-      setErrorMsg("Google authentication failed. Please try again.");
-      toast.error("Google authentication failed.");
+    } catch (err) {
+      console.error("[Google Auth Error]:", err);
+      // Give more specific error details to the user
+      setErrorMsg(err.message || "Google authentication failed. Please try again.");
+      toast.error(err.message || "Google authentication failed.");
     } finally {
       setSubmitting(false);
     }
