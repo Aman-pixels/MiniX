@@ -1,4 +1,5 @@
 // src/pages/Shop.jsx
+import useSEO from "../hooks/useSEO";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useSearchParams } from "react-router-dom";
@@ -14,6 +15,13 @@ import ProductCard from "../Components/ProductCard";
 import API_BASE_URL from "../config";
 
 export default function Shop() {
+  useSEO({
+    title: "Shop All Products",
+    description:
+      "Browse MiniX's full range of premium streetwear. Filter by category, search, and sort by price to find your perfect style.",
+    url: "/shop",
+  });
+
   const [searchParams] = useSearchParams();
 
   /* ---------------- Products from Backend ---------------- */

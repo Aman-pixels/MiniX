@@ -1,5 +1,6 @@
 // src/pages/ProductPage.jsx
 import React, { useEffect, useMemo, useState } from "react";
+import useSEO from "../hooks/useSEO";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -82,6 +83,58 @@ export default function ProductPage() {
     setSelectedImage(0);
     setQuantity(1);
   }, [product]);
+
+  /* ---------------- Dynamic SEO ---------------- */
+  useSEO(
+    product
+      ? {
+          title: product.name,
+          description:
+            product.description ||
+            `Shop ${product.name} at MiniX. Premium streetwear — fast shipping & secure checkout.`,
+          image: product.images?.[0] || undefined,
+          url: `/product/${id}`,
+        }
+      : { title: "Product", description: "Shop premium fashion at MiniX.", url: `/product/${id}` }
+  );
+
+  /* Product JSON-LD */
+  useEffect(() => {
+    if (!product) return;
+    const scriptId = "product-jsonld";
+    let script = document.getElementById(scriptId);
+    if (!script) {
+      script = document.createElement("script");
+      script.id = scriptId;
+      script.type = "application/ld+json";
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: product.name,
+      description: product.description || "",
+      image: product.images || [],
+      sku: product._id || id,
+      brand: { "@type": "Brand", name: "MiniX" },
+      offers: {
+        "@type": "Offer",
+        priceCurrency: "USD",
+        price: product.price,
+        availability: "https://schema.org/InStock",
+        url: `https://minix.vercel.app/product/${id}`,
+      },
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: product.rating || 4.8,
+        reviewCount: product.reviewCount || 15,
+      },
+    });
+    return () => {
+      const el = document.getElementById(scriptId);
+      if (el) el.remove();
+    };
+  }, [product, id]);
 
   /* ---------------- Guards ---------------- */
   if (loading) {

@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import useSEO from "../hooks/useSEO";
 
 import { motion } from "framer-motion";
 import Navbar from "../Components/Navbar";
@@ -6,6 +7,12 @@ import Footer from "../Components/Footer";
 import API_BASE_URL from "../config";
 
 export default function Contact() {
+  useSEO({
+    title: "Contact Us",
+    description:
+      "Get in touch with the MiniX team. Have a question about your order, a product, or just want to say hello? We'd love to hear from you.",
+    url: "/contact",
+  });
   const form = useRef();
   const [status, setStatus] = useState({ type: "", message: "" });
 

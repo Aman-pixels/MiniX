@@ -1,5 +1,6 @@
 // src/pages/AuthPage.jsx
 import React, { useState, useEffect } from "react";
+import useSEO from "../hooks/useSEO";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,6 +20,13 @@ const cardVariants = {
 
 export default function AuthPage() {
   const [activeTab, setActiveTab] = useState("login");
+
+  useSEO({
+    title: activeTab === "login" ? "Sign In" : "Create Account",
+    description:
+      "Log in or create your MiniX account to shop, track orders, manage your wishlist, and access exclusive deals.",
+    url: "/auth",
+  });
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");

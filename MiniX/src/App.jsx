@@ -1,7 +1,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollReveal from "./Components/ScrollReveal";
-// import { useCart } from "./context/CartContext"; // Removed unused import if no longer needed, or keep if used elsewhere
+import useSEO from "./hooks/useSEO";
 
 import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
@@ -12,7 +12,12 @@ import FeaturedProduct from "./Components/FeaturedProduct";
 
 
 function App() {
-  // const { showToastVisible, toastMessage } = useCart();
+  useSEO({
+    title: "Premium Fashion & Streetwear",
+    description:
+      "Discover MiniX's exclusive streetwear collections. Shop men's and women's premium clothing, accessories, and limited drops. Fast shipping & secure checkout.",
+    url: "/",
+  });
 
   return (
     <div className="min-h-screen bg-black text-white font-inter overflow-x-hidden">

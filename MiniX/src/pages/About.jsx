@@ -1,9 +1,16 @@
 import React from "react";
+import useSEO from "../hooks/useSEO";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import { motion } from "framer-motion";
 
 export default function About() {
+  useSEO({
+    title: "About Us",
+    description:
+      "MiniX is a minimalist streetwear brand crafted with precision, premium materials, and timeless design. We are a community of creators redefining modern fashion.",
+    url: "/about",
+  });
   return (
     <div className="bg-black text-white min-h-screen flex flex-col">
       <Navbar />
