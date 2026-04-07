@@ -2,6 +2,17 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
 import API_BASE_URL from "../config";
+import { auth } from "../firebase";
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
+  updateProfile as firebaseUpdateProfile,
+  updatePassword as firebaseUpdatePassword 
+} from "firebase/auth";
 
 const AuthContext = createContext();
 
@@ -11,71 +22,79 @@ export function AuthProvider({ children }) {
 
   axios.defaults.baseURL = API_BASE_URL;
 
-
-  // Auto fetch user on page refresh
+  // Auto fetch user on page refresh via Firebase
   useEffect(() => {
-    axios
-      .get("/api/auth/me", { withCredentials: true })
-      .then((res) => setUser(res.data.user || null))
-      .catch(() => setUser(null))
-      .finally(() => setLoading(false));
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        // Securely sync Firebase login state with Express Backend Cookie layer
+        try {
+          const idToken = await currentUser.getIdToken();
+          await axios.post("/api/auth/firebase", { idToken }, { withCredentials: true });
+        } catch (err) {
+          console.error("Backend auth sync failed:", err);
+        }
+
+        setUser({
+          uid: currentUser.uid,
+          name: currentUser.displayName || "User",
+          email: currentUser.email,
+          photoURL: currentUser.photoURL
+        });
+      } else {
+        setUser(null);
+        // Clean backend session cookie as well
+        await axios.post("/api/auth/logout", {}, { withCredentials: true }).catch(() => null);
+      }
+      setLoading(false);
+    });
+    return () => unsubscribe();
   }, []);
 
   // Register
   const registerUser = async (name, email, password) => {
-    await axios.post(
-      "/api/auth/register",
-      { name, email, password },
-      { withCredentials: true }
-    );
-    return loginUser(email, password);
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    await firebaseUpdateProfile(userCredential.user, { displayName: name });
+    setUser({
+      uid: userCredential.user.uid,
+      name,
+      email,
+      photoURL: userCredential.user.photoURL
+    });
+    return userCredential.user;
   };
 
   // Login
   const loginUser = async (email, password) => {
-    const res = await axios.post(
-      "/api/auth/login",
-      { email, password },
-      { withCredentials: true }
-    );
-    setUser(res.data.user);
-    return res.data.user;
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return userCredential.user;
   };
 
   // Google Login
-  const loginWithGoogle = async (access_token) => {
-    const res = await axios.post(
-      "/api/auth/google",
-      { access_token },
-      { withCredentials: true }
-    );
-    setUser(res.data.user);
-    return res.data.user;
+  const loginWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    const userCredential = await signInWithPopup(auth, provider);
+    return userCredential.user;
   };
 
-  // Update profile (name + email)
+  // Update profile
   const updateProfile = async (name, email) => {
-    const res = await axios.put(
-      "/api/user/profile",
-      { name, email },
-      { withCredentials: true }
-    );
-    setUser(res.data.user);
-    return res.data.user;
+    if (auth.currentUser) {
+      await firebaseUpdateProfile(auth.currentUser, { displayName: name });
+      setUser((prev) => ({ ...prev, name }));
+      return auth.currentUser;
+    }
   };
 
   // Update password
   const updatePassword = async (oldPassword, newPassword) => {
-    await axios.put(
-      "/api/user/password",
-      { oldPassword, newPassword },
-      { withCredentials: true }
-    );
+    if (auth.currentUser) {
+      await firebaseUpdatePassword(auth.currentUser, newPassword);
+    }
   };
 
   // Logout
   const logoutUser = async () => {
-    await axios.post("/api/auth/logout", {}, { withCredentials: true });
+    await signOut(auth);
     setUser(null);
   };
 

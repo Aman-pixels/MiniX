@@ -1,7 +1,7 @@
 // src/pages/AuthPage.jsx
 import React, { useState, useEffect } from "react";
 import useSEO from "../hooks/useSEO";
-import { useGoogleLogin } from "@react-oauth/google";
+// Removed react-oauth/google import
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
@@ -79,13 +79,20 @@ export default function AuthPage() {
     }
   };
 
-  const handleGoogleSuccess = async (tokenResponse) => {
+  const handleGoogleSuccess = async () => {
     try {
       setSubmitting(true);
       setErrorMsg("");
-      const userData = await loginWithGoogle(tokenResponse.access_token);
-      localStorage.setItem("user", JSON.stringify(userData));
-      toast.success("Effectively logged in with Google!");
+      const userData = await loginWithGoogle();
+      localStorage.setItem(
+        "user", 
+        JSON.stringify({ 
+          uid: userData.uid, 
+          name: userData.displayName || "User", 
+          email: userData.email 
+        })
+      );
+      toast.success("Successfully logged in with Google!");
       navigate(location.state?.from || "/", { replace: true });
     } catch {
       setErrorMsg("Google authentication failed. Please try again.");
@@ -94,14 +101,6 @@ export default function AuthPage() {
       setSubmitting(false);
     }
   };
-
-  const googleLogin = useGoogleLogin({
-    onSuccess: handleGoogleSuccess,
-    onError: () => {
-      setErrorMsg("Google authentication failed.");
-      toast.error("Google authentication failed.");
-    }
-  });
 
   if (loading) {
     return (
@@ -252,7 +251,7 @@ export default function AuthPage() {
             <AuthButton 
               icon={FcGoogle} 
               text="Continue with Google" 
-              onClick={() => googleLogin()} 
+              onClick={() => handleGoogleSuccess()} 
               disabled={submitting} 
             />
             <AuthButton 

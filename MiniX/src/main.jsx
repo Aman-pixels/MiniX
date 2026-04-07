@@ -1,6 +1,6 @@
 // src/main.jsx - Deployment Fix Attempt 2
 import React from "react";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+// Removed GoogleOAuthProvider import
 import ReactDOM from "react-dom/client";
 import {
   BrowserRouter,
@@ -224,8 +224,7 @@ function AnimatedRoutes() {
 // -------------------------
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || "not_set"}>
-      <BrowserRouter>
+    <BrowserRouter>
         <AuthProvider>
           <CartProvider>
             <WishlistProvider>
@@ -237,6 +236,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           </CartProvider>
         </AuthProvider>
       </BrowserRouter>
-    </GoogleOAuthProvider>
   </React.StrictMode>
 );
