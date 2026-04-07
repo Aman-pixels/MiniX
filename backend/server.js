@@ -29,6 +29,7 @@ const allowedOrigins = [
   "http://localhost:5174",
   "http://localhost:5175",
   "http://localhost:3000",
+  "https://mini-x-pearl.vercel.app", // The deployed Vercel Frontend URL
   process.env.FRONTEND_URL, // Production frontend URL
 ].filter(Boolean); // Remove undefined values
 
