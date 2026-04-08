@@ -49,11 +49,12 @@ const Chatbot = () => {
       ]);
     } catch (error) {
       console.error("Chat error:", error);
+      const serverMessage = error.response?.data?.error || error.message;
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: "Oops! I'm having trouble connecting right now. Please check if your API keys are configured.",
+          content: `Connection Error: ${serverMessage}`,
         },
       ]);
     } finally {
