@@ -56,7 +56,10 @@ const paymentRoutes = require("./Routes/paymentRoutes");
 app.get("/", (req, res) => res.send("MiniX API is running..."));
 app.get("/api", (req, res) => res.json({ message: "Welcome to MiniX API" }));
 
+const chatRoutes = require("./Routes/chatRoutes");
+
 app.use("/api/auth", authRoutes);
+app.use("/api/chat", chatRoutes);
 
 app.use("/api/user", userRoutes);
 app.use("/api/addresses", addressRoutes);

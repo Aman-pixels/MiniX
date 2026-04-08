@@ -8,6 +8,7 @@
   },
   "type": "commonjs",
   "dependencies": {
+    "@google/genai": "^1.48.0",
     "axios": "^1.13.6",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
@@ -19,6 +20,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.20.1",
     "nodemailer": "^7.0.12",
+    "openai": "^6.33.0",
     "slugify": "^1.6.6",
     "stripe": "^20.1.2"
   },
