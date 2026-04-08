@@ -33,8 +33,10 @@ const Chatbot = () => {
     setIsTyping(true);
 
     try {
+      const { default: API_BASE_URL } = await import("../../config.js");
+      const baseURL = API_BASE_URL || "";
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL || "http://localhost:5000"}/api/chat/ask`,
+        `${baseURL}/api/chat/ask`,
         {
           messages: [...messages, userMessage],
           modelType,
