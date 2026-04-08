@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "build": "cd MiniX && npm install && npm run build"
+  },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@google/genai": "^1.48.0",
