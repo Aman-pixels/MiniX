@@ -72,9 +72,9 @@ const Chatbot = () => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-6 right-6 p-4 rounded-full glass-card flex items-center justify-center z-50 group border hover:border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-colors duration-300"
+            className="fixed bottom-6 right-6 p-4 rounded-full bg-white flex items-center justify-center z-50 group shadow-[0_8px_30px_rgba(255,255,255,0.2)] hover:shadow-[0_8px_40px_rgba(255,255,255,0.4)] transition-all duration-300"
           >
-            <Sparkles className="w-7 h-7 text-white" />
+            <MessageSquare className="w-7 h-7 text-black" />
           </motion.button>
         )}
       </AnimatePresence>
