@@ -1,8 +1,10 @@
 {
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
+    "@google/genai": "^1.48.0",
     "emailjs-com": "^3.2.0",
     "firebase": "^12.11.0",
+    "openai": "^6.33.0",
     "react-router-dom": "^7.9.5"
   }
 }
