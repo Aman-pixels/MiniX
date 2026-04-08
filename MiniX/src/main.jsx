@@ -54,7 +54,7 @@ import { WishlistProvider } from "./context/WishlistContext.jsx";
 import PageTransition from "./Components/PageTransition.jsx";
 import GlobalToast from "./Components/GlobalToast.jsx";
 import CartDrawer from "./Components/CartDrawer.jsx";
-import Chatbot from "./components/Chatbot/Chatbot.jsx";
+import Chatbot from "./Components/Chatbot/Chatbot.jsx";
 import { Analytics } from "@vercel/analytics/react";
 
 // -------- Protected Route Wrapper --------
