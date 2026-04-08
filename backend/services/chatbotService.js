@@ -62,8 +62,16 @@ async function handleOpenAI(systemPrompt, messages) {
 
 async function handleGemini(systemPrompt, messages) {
   const geminiClient = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-  // Map our generic message format to Gemini's format
-  const formattedContents = messages.map((m) => ({
+  
+  // Gemini strictly requires the first message to be from a 'user'.
+  // It also dislikes consecutive identical roles. 
+  // Let's filter leading assistant messages and ensure valid flow.
+  let validMessages = [...messages];
+  while (validMessages.length > 0 && validMessages[0].role === "assistant") {
+    validMessages.shift();
+  }
+
+  const formattedContents = validMessages.map((m) => ({
     role: m.role === "assistant" ? "model" : "user",
     parts: [{ text: m.content }],
   }));
