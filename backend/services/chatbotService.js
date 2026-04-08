@@ -2,16 +2,7 @@ const { OpenAI } = require("openai");
 const { GoogleGenAI } = require("@google/genai");
 const Product = require("../Models/Product");
 
-// Initialize clients conditionally so they don't break if keys are missing on startup
-let openaiClient = null;
-if (process.env.OPENAI_API_KEY) {
-  openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-}
 
-let geminiClient = null;
-if (process.env.GEMINI_API_KEY) {
-  geminiClient = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-}
 
 /**
  * Generates a chat response using either OpenAI or Gemini.
@@ -40,10 +31,10 @@ Guidelines:
 
   // 2. Call the appropriate AI model
   if (modelType === "chatgpt") {
-    if (!openaiClient) throw new Error("OpenAI API Key is not configured.");
+    if (!process.env.OPENAI_API_KEY) throw new Error("OpenAI API Key is not configured in environment variables.");
     return await handleOpenAI(systemPrompt, messages);
   } else if (modelType === "gemini") {
-    if (!geminiClient) throw new Error("Gemini API Key is not configured.");
+    if (!process.env.GEMINI_API_KEY) throw new Error("Gemini API Key is not configured in environment variables.");
     return await handleGemini(systemPrompt, messages);
   } else {
     throw new Error("Invalid model type. Choose 'chatgpt' or 'gemini'.");
@@ -51,6 +42,7 @@ Guidelines:
 };
 
 async function handleOpenAI(systemPrompt, messages) {
+  const openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const formattedMessages = [
     { role: "system", content: systemPrompt },
     ...messages.map((m) => ({
@@ -69,6 +61,7 @@ async function handleOpenAI(systemPrompt, messages) {
 }
 
 async function handleGemini(systemPrompt, messages) {
+  const geminiClient = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
   // Map our generic message format to Gemini's format
   const formattedContents = messages.map((m) => ({
     role: m.role === "assistant" ? "model" : "user",
