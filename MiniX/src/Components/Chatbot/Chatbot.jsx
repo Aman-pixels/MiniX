@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, X, Send, Bot, User, Sparkles } from "lucide-react";
 import axios from "axios";
+import API_BASE_URL from "../../config.js";
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +34,6 @@ const Chatbot = () => {
     setIsTyping(true);
 
     try {
-      const { default: API_BASE_URL } = await import("../../config.js");
       const baseURL = API_BASE_URL || "";
       const response = await axios.post(
         `${baseURL}/api/chat/ask`,
