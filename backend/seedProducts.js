@@ -7,40 +7,31 @@ dotenv.config();
 
 const productData = [
     {
-        id: "tee-001",
-        name: "Classic Oversized Tee",
-        category: "tees",
-        price: 29,
-        stock: 6,
-        description: "Premium oversized tee made from 240 GSM cotton. Slightly dropped shoulders for relaxed streetwear fit.",
-        images: [
-            "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=1200",
-            "https://images.unsplash.com/photo-1512499617640-c2f999098c01?auto=format&fit=crop&w=1200",
-            "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?auto=format&fit=crop&w=1200",
-        ],
-    },
-    {
-        id: "hoodie-001",
-        name: "Minimal Hoodie",
+        id: "hoodie-002",
+        name: "Y2K Grunge Star Hoodie",
         category: "hoodies",
-        price: 49,
-        stock: 10,
-        description: "Soft fleece hoodie with minimal chest print. Designed for everyday comfort.",
-        images: [
-            "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=1200",
-            "https://images.unsplash.com/photo-1539884051663-95fc71c48f93?auto=format&fit=crop&w=1200",
-        ],
+        price: 89,
+        stock: 15,
+        description: "Heavy oversized ivory white hoodie with a distressed dark faded star graphic on the chest. Pure Y2K streetwear aesthetic.",
+        images: ["/products/y2k_star_hoodie.png"],
     },
     {
-        id: "bottom-001",
-        name: "Streetwear Denim",
+        id: "bottom-002",
+        name: "Techwear Cargo Pants",
         category: "bottoms",
-        price: 59,
-        stock: 4,
-        description: "Relaxed tapered denim with Japanese streetwear influence.",
-        images: [
-            "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?auto=format&fit=crop&w=1200",
-        ],
+        price: 120,
+        stock: 8,
+        description: "Futuristic tactical cargo pants with dynamic utility straps and deep pockets. Engineered for premium cyber-streetwear fits.",
+        images: ["/products/techwear_cargo_pants.png"],
+    },
+    {
+        id: "tee-002",
+        name: "Washed Vintage Graphic Tee",
+        category: "tees",
+        price: 45,
+        stock: 20,
+        description: "Premium washed dark grey graphic tee with a distressed minimalist typography design. The ultimate vintage fit.",
+        images: ["/products/vintage_washed_tee.png"],
     },
 ];
 
