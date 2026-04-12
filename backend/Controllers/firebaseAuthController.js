@@ -8,7 +8,7 @@ const crypto = require("crypto");
 // Initialize Firebase Admin securely using Project ID
 if (!admin.apps.length) {
   admin.initializeApp({
-    projectId: "minix-e7f33" // Passed directly since we know the Firebase config
+    projectId: process.env.FIREBASE_PROJECT_ID
   });
 }
 

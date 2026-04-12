@@ -1,5 +1,8 @@
 {
   "scripts": {
+    "dev": "concurrently \"npm run client\" \"npm run server\"",
+    "client": "npm run dev --prefix MiniX",
+    "server": "npm run dev --prefix backend",
     "build": "cd MiniX && npm install && npm run build"
   },
   "dependencies": {
@@ -22,5 +25,8 @@
     "react-router-dom": "^7.9.5",
     "slugify": "^1.6.6",
     "stripe": "^20.1.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }

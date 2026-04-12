@@ -1,8 +1,7 @@
+@import "./styles/toast.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import "./styles/toast.css";
 
 .input {
   @apply w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-sm text-white placeholder:text-zinc-500 outline-none focus:border-white/40 transition-colors duration-300;
