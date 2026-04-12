@@ -29,6 +29,7 @@ import AuthPage from "./pages/AuthPage.jsx";
 import WishlistPage from "./pages/WishlistPage.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 
 // Duplicate removed
@@ -215,6 +216,9 @@ function AnimatedRoutes() {
           <Route path="orders" element={<AdminOrders />} />
           <Route path="users" element={<AdminUsers />} />
         </Route>
+
+        {/* 404 Catch-All */}
+        <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
 
       </Routes>
     </AnimatePresence>

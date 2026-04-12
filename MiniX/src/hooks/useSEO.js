@@ -9,7 +9,7 @@
 import { useEffect } from "react";
 
 const SITE_NAME = "MiniX";
-const BASE_URL = "https://minix.vercel.app";
+const BASE_URL = "https://mini-x-pearl.vercel.app";
 const DEFAULT_IMAGE = `${BASE_URL}/og-image.jpg`;
 
 function setMeta(selector, attr, value) {

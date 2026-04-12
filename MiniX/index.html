@@ -6,34 +6,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Primary Meta Tags (defaults — overridden per-page by useSEO hook) -->
-  <title>MiniX – Premium Fashion & Streetwear</title>
-  <meta name="title" content="MiniX – Premium Fashion & Streetwear" />
-  <meta name="description" content="Discover MiniX's exclusive streetwear collections. Shop men's and women's premium clothing, accessories, and limited drops. Fast shipping & secure checkout." />
-  <meta name="keywords" content="streetwear, fashion, premium clothing, accessories, online shopping, MiniX, men fashion, women fashion" />
+  <title>MiniX – Premium Streetwear & Fashion | Shop Hoodies, Tees & Accessories</title>
+  <meta name="title" content="MiniX – Premium Streetwear & Fashion | Shop Hoodies, Tees & Accessories" />
+  <meta name="description" content="Shop MiniX for premium streetwear hoodies, graphic tees, cargo pants & accessories. Minimalist fashion with fast shipping & secure checkout. Explore new drops now." />
+  <meta name="keywords" content="streetwear, premium hoodies, graphic tees, cargo pants, fashion accessories, online streetwear shop, MiniX, minimalist fashion, men streetwear, women streetwear, limited edition clothing" />
   <meta name="author" content="MiniX" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://minix.vercel.app/" />
+  <link rel="canonical" href="https://mini-x-pearl.vercel.app/" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="MiniX" />
-  <meta property="og:url" content="https://minix.vercel.app/" />
-  <meta property="og:title" content="MiniX – Premium Fashion & Streetwear" />
-  <meta property="og:description" content="Discover MiniX's exclusive streetwear collections. Shop premium clothing, accessories, and limited drops." />
-  <meta property="og:image" content="https://minix.vercel.app/og-image.jpg" />
+  <meta property="og:url" content="https://mini-x-pearl.vercel.app/" />
+  <meta property="og:title" content="MiniX – Premium Streetwear & Fashion | Shop Hoodies, Tees & Accessories" />
+  <meta property="og:description" content="Shop MiniX for premium streetwear hoodies, graphic tees, cargo pants & accessories. Minimalist fashion with fast shipping." />
+  <meta property="og:image" content="https://mini-x-pearl.vercel.app/og-image.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@minixfashion" />
-  <meta name="twitter:url" content="https://minix.vercel.app/" />
-  <meta name="twitter:title" content="MiniX – Premium Fashion & Streetwear" />
-  <meta name="twitter:description" content="Discover MiniX's exclusive streetwear collections. Shop premium clothing, accessories, and limited drops." />
-  <meta name="twitter:image" content="https://minix.vercel.app/og-image.jpg" />
+  <meta name="twitter:url" content="https://mini-x-pearl.vercel.app/" />
+  <meta name="twitter:title" content="MiniX – Premium Streetwear & Fashion | Shop Hoodies, Tees & Accessories" />
+  <meta name="twitter:description" content="Shop MiniX for premium streetwear hoodies, graphic tees, cargo pants & accessories. Minimalist fashion with fast shipping." />
+  <meta name="twitter:image" content="https://mini-x-pearl.vercel.app/og-image.jpg" />
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/x-icon" href="/favicon.svg" />
   <link rel="apple-touch-icon" href="/favicon.svg" />
   <link rel="manifest" href="/site.webmanifest" />
 
@@ -42,10 +43,14 @@
   <meta name="msapplication-TileColor" content="#000000" />
   <meta name="color-scheme" content="dark" />
 
-  <!-- Fonts -->
+  <!-- Fonts (non-render-blocking) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+  </noscript>
 
   <!-- JSON-LD: Organization + WebSite Structured Data -->
   <script type="application/ld+json">
@@ -54,29 +59,29 @@
     "@graph": [
       {
         "@type": "Organization",
-        "@id": "https://minix.vercel.app/#organization",
+        "@id": "https://mini-x-pearl.vercel.app/#organization",
         "name": "MiniX",
-        "url": "https://minix.vercel.app/",
+        "url": "https://mini-x-pearl.vercel.app/",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://minix.vercel.app/favicon.svg"
+          "url": "https://mini-x-pearl.vercel.app/favicon.svg"
         },
         "description": "MiniX is a premium streetwear and fashion brand offering exclusive clothing and accessories.",
         "sameAs": []
       },
       {
         "@type": "WebSite",
-        "@id": "https://minix.vercel.app/#website",
-        "url": "https://minix.vercel.app/",
+        "@id": "https://mini-x-pearl.vercel.app/#website",
+        "url": "https://mini-x-pearl.vercel.app/",
         "name": "MiniX",
         "publisher": {
-          "@id": "https://minix.vercel.app/#organization"
+          "@id": "https://mini-x-pearl.vercel.app/#organization"
         },
         "potentialAction": {
           "@type": "SearchAction",
           "target": {
             "@type": "EntryPoint",
-            "urlTemplate": "https://minix.vercel.app/shop?search={search_term_string}"
+            "urlTemplate": "https://mini-x-pearl.vercel.app/shop?search={search_term_string}"
           },
           "query-input": "required name=search_term_string"
         }

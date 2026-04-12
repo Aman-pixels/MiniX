@@ -21,4 +21,4 @@ Disallow: /wishlist
 Disallow: /reset-password/
 Disallow: /forgot-password
 
-Sitemap: https://minix.vercel.app/sitemap.xml
+Sitemap: https://mini-x-pearl.vercel.app/sitemap.xml

@@ -13,9 +13,9 @@ import FeaturedProduct from "./Components/FeaturedProduct";
 
 function App() {
   useSEO({
-    title: "Premium Fashion & Streetwear",
+    title: "Premium Streetwear & Fashion | Shop Hoodies, Tees & Accessories",
     description:
-      "Discover MiniX's exclusive streetwear collections. Shop men's and women's premium clothing, accessories, and limited drops. Fast shipping & secure checkout.",
+      "Shop MiniX for premium streetwear hoodies, graphic tees, cargo pants & accessories. Minimalist fashion with fast shipping & secure checkout. Explore new drops now.",
     url: "/",
   });
 
