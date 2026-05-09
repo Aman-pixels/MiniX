@@ -120,10 +120,10 @@ export default function Navbar() {
       <AnimatePresence>
         {menuOpen && (
           <motion.div 
-            initial={{ opacity: 0, y: "-100%" }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: "-100%" }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
             className="fixed inset-0 z-[100] bg-[#1e2023] text-white flex flex-col selection:bg-[#4c4e51] selection:text-white overflow-y-auto"
           >
             <div className="flex justify-between items-center p-6 lg:p-12 shrink-0">
@@ -157,31 +157,31 @@ export default function Navbar() {
                 </form>
 
                 {menuLinks.map((link, i) => (
-                  <div key={link.name} className="overflow-hidden py-2">
-                    <motion.div
-                      initial={{ y: "100%", opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 * i }}
+                  <motion.div 
+                    key={link.name} 
+                    className="py-2"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 + (i * 0.1), duration: 0.4 }}
+                  >
+                    <NavLink 
+                      to={link.path}
+                      onClick={() => setMenuOpen(false)}
+                      className="group flex items-center gap-6 text-4xl sm:text-5xl md:text-[5rem] font-black uppercase tracking-tighter leading-none hover:text-[#4c4e51] transition-colors"
                     >
-                      <NavLink 
-                        to={link.path}
-                        onClick={() => setMenuOpen(false)}
-                        className="group flex items-center gap-6 text-4xl sm:text-5xl md:text-[5rem] font-black uppercase tracking-tighter leading-none hover:text-[#4c4e51] transition-colors"
-                      >
-                        <span className="text-sm font-mono text-[#4c4e51] mb-4 md:mb-8 hidden md:block">0{i + 1}</span>
-                        {link.name}
-                        <ArrowRight size={48} className="opacity-0 -translate-x-10 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 ease-[0.16,1,0.3,1] hidden md:block" />
-                      </NavLink>
-                    </motion.div>
-                  </div>
+                      <span className="text-sm font-mono text-[#4c4e51] mb-4 md:mb-8 hidden md:block">0{i + 1}</span>
+                      {link.name}
+                      <ArrowRight size={48} className="opacity-0 -translate-x-10 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 ease-[0.16,1,0.3,1] hidden md:block" />
+                    </NavLink>
+                  </motion.div>
                 ))}
               </div>
 
               {/* Utility Nav */}
               <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4, duration: 0.8 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
                 className="flex flex-col justify-end pb-12 gap-12 lg:ml-auto w-full lg:w-1/3"
               >
                 <div className="flex flex-col gap-6">
