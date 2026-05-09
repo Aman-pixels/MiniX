@@ -9,7 +9,16 @@ import {
   User,
   ShoppingBag,
   X,
-  ArrowRight
+  ArrowRight,
+  ArrowUpRight,
+  ChevronRight,
+  Heart,
+  Bookmark,
+  Instagram,
+  Twitter,
+  Youtube,
+  Mail,
+  Barcode
 } from "lucide-react";
 
 export default function Navbar() {
@@ -43,11 +52,12 @@ export default function Navbar() {
     }
   };
 
-  const menuLinks = [
-    { name: "Home", path: "/" },
-    { name: "Collections", path: "/shop" },
-    { name: "Archive", path: "/about" },
-    { name: "Support", path: "/contact" }
+  const mainLinks = [
+    { name: "HOME", path: "/", desc: "Return to the\nmain universe." },
+    { name: "COLLECTIONS", path: "/shop", desc: "Explore all\ndrops & pieces." },
+    { name: "ESSENTIALS", path: "/shop?search=essentials", desc: "Everyday staples.\nAlways on rotation." },
+    { name: "THE JOURNAL", path: "/about", desc: "Stories, thoughts\n& creative logs." },
+    { name: "ABOUT MINIX", path: "/about", desc: "Our story, our vision\n& what we stand for." }
   ];
 
   return (
@@ -124,132 +134,160 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="fixed inset-0 z-[100] bg-[#050505] text-white selection:bg-[#4c4e51] selection:text-white overflow-hidden"
+            className="fixed inset-0 z-[100] bg-[#0c0c0c] text-white selection:bg-[#4c4e51] selection:text-white overflow-hidden flex flex-col"
           >
-            {/* Pure CSS Animations for bulletproof staggering */}
+            {/* Pure CSS Animations */}
             <style>{`
               @keyframes fadeSlideUp {
-                from { opacity: 0; transform: translateY(30px); }
+                from { opacity: 0; transform: translateY(20px); }
                 to { opacity: 1; transform: translateY(0); }
               }
               .animate-stagger {
                 opacity: 0;
-                animation: fadeSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
               }
             `}</style>
 
-            {/* Cinematic Noise & Background Blur */}
-            <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">
-              <img src="/Hero.jpg" alt="Atmosphere" className="w-full h-full object-cover mix-blend-luminosity blur-[100px] scale-110" />
-            </div>
-            <div className="absolute inset-0 z-0 opacity-[0.03] mix-blend-overlay pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
+            <div className="flex flex-col lg:flex-row w-full flex-grow h-[calc(100vh-50px)]">
+              
+              {/* LEFT PANEL */}
+              <div className="relative w-full lg:w-[65%] h-full border-r border-[#1a1a1a] flex flex-col justify-between p-8 lg:p-12 overflow-y-auto">
+                {/* Background Image / Blur */}
+                <div className="absolute top-0 right-0 bottom-0 w-3/4 z-0 pointer-events-none overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#0c0c0c] to-transparent z-10" />
+                  <img src="/Hero.jpg" alt="" className="w-full h-full object-cover object-right opacity-[0.15] mix-blend-luminosity grayscale scale-105" />
+                </div>
 
-            <div className="relative z-10 min-h-screen flex flex-col w-full overflow-y-auto">
-              {/* Header properly aligned to the 1400px grid */}
-              <div className="w-full max-w-[1400px] mx-auto px-6 lg:px-12 py-6 lg:py-12 flex justify-between items-center shrink-0">
-                <span className="text-2xl font-black tracking-tighter uppercase cursor-pointer hover:opacity-70 transition-opacity animate-stagger" style={{ animationDelay: '0.1s' }} onClick={() => { setMenuOpen(false); navigate("/"); }}>
-                  MiniX
-                </span>
-                <button 
-                  onClick={() => setMenuOpen(false)}
-                  className="text-xs font-mono uppercase tracking-[0.2em] flex items-center gap-3 hover:text-zinc-400 transition-colors animate-stagger" style={{ animationDelay: '0.1s' }}
-                >
-                  Close <X size={20} strokeWidth={1}/>
-                </button>
-              </div>
+                {/* Left Panel Header */}
+                <div className="relative z-10 flex gap-6 items-start animate-stagger shrink-0" style={{ animationDelay: '0.1s' }}>
+                  <span className="text-3xl font-black tracking-tighter uppercase cursor-pointer" onClick={() => { setMenuOpen(false); navigate("/"); }}>
+                    MiniX
+                  </span>
+                  <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest leading-relaxed mt-1 hidden sm:block">
+                    Minimal outside.<br/>Loud inside.
+                  </span>
+                  <button onClick={() => setMenuOpen(false)} className="lg:hidden ml-auto text-[10px] font-bold font-mono uppercase tracking-[0.2em] flex items-center gap-3 hover:text-zinc-400 transition-colors">
+                    Close <X size={16} strokeWidth={1.5} />
+                  </button>
+                </div>
 
-              <div className="flex-grow flex flex-col lg:flex-row max-w-[1400px] w-full mx-auto px-6 lg:px-12 pb-12 lg:pb-20 gap-16 lg:gap-24">
-                
-                {/* Main Nav Links */}
-                <div className="flex flex-col justify-center gap-4 w-full lg:w-3/5">
-                  <div 
-                    className="mb-6 hidden lg:block animate-stagger"
-                    style={{ animationDelay: '0.1s' }}
-                  >
-                    <p className="text-xs font-mono uppercase tracking-[0.2em] text-zinc-500">
-                      Minimal outside. Loud inside.
-                    </p>
-                  </div>
-
-                  <form 
-                    onSubmit={handleSearchSubmit} 
-                    className="flex lg:hidden items-center relative mb-8 animate-stagger"
-                    style={{ animationDelay: '0.1s' }}
-                  >
-                    <input
-                      type="text"
-                      placeholder="Search..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full bg-transparent border-b border-zinc-800 text-white text-sm font-mono uppercase tracking-widest px-2 py-3 focus:border-white focus:outline-none transition-colors"
-                    />
-                    <button type="submit" className="absolute right-0 px-4 text-zinc-500 hover:text-white transition-colors">
-                      <Search size={18} strokeWidth={1} />
-                    </button>
-                  </form>
-
-                  {[
-                    { name: "Collections", path: "/shop" },
-                    { name: "Essentials", path: "/shop?search=essentials" },
-                    { name: "The Journal", path: "/about" },
-                    { name: "Everyday Uniform", path: "/shop" }
-                  ].map((link, i) => (
-                    <div 
-                      key={link.name} 
-                      className="py-1 overflow-hidden animate-stagger"
-                      style={{ animationDelay: `${0.2 + (i * 0.1)}s` }}
-                    >
-                      <NavLink 
-                        to={link.path}
-                        onClick={() => setMenuOpen(false)}
-                        className="group flex items-center gap-6 text-4xl sm:text-5xl md:text-[5.5rem] font-medium tracking-tighter leading-none text-zinc-400 hover:text-white transition-colors duration-500"
-                      >
-                        <span className="text-[10px] font-mono text-zinc-600 mb-6 hidden md:block group-hover:text-white transition-colors duration-500">0{i + 1}</span>
+                {/* Main Links */}
+                <div className="relative z-10 flex flex-col gap-6 lg:gap-10 my-10 shrink-0">
+                  {mainLinks.map((link, i) => (
+                    <div key={link.name} className="flex items-center gap-6 lg:gap-12 group cursor-pointer animate-stagger" style={{ animationDelay: `${0.15 + (i * 0.08)}s` }} onClick={() => { setMenuOpen(false); navigate(link.path); }}>
+                      <span className="text-xs font-mono text-zinc-600 w-6 hidden md:block">0{i + 1}</span>
+                      <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-[6rem] font-bold tracking-tighter text-zinc-400 group-hover:text-white transition-colors duration-300 m-0 leading-none">
                         {link.name}
-                      </NavLink>
+                      </h2>
+                      <div className="hidden lg:flex items-center gap-2 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-zinc-500">
+                        <span className="text-[10px] font-mono whitespace-pre-line leading-tight">
+                          {link.desc}
+                        </span>
+                        <ArrowUpRight size={14} className="ml-1" />
+                      </div>
                     </div>
                   ))}
                 </div>
 
-                {/* Right Panel / Emotional Lifestyle */}
-                <div 
-                  className="flex flex-col justify-end pb-8 gap-16 lg:ml-auto w-full lg:w-2/5 mt-auto lg:mt-0 lg:pl-12 animate-stagger"
-                  style={{ animationDelay: '0.5s' }}
-                >
-                  <div className="flex flex-col gap-6">
-                    <h4 className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-600 border-b border-zinc-800 pb-2">
-                      Personal Space
-                    </h4>
-                    {user ? (
-                      <div className="flex flex-col gap-3">
-                        <button onClick={() => { setMenuOpen(false); navigate("/profile"); }} className="text-sm font-light tracking-wide text-zinc-400 hover:text-white text-left transition-colors">Your Profile</button>
-                        <button onClick={() => { setMenuOpen(false); navigate("/orders"); }} className="text-sm font-light tracking-wide text-zinc-400 hover:text-white text-left transition-colors">Past Orders</button>
-                        <button onClick={() => { setMenuOpen(false); navigate("/wishlist"); }} className="text-sm font-light tracking-wide text-zinc-400 hover:text-white text-left transition-colors">Saved Pieces</button>
-                        <button onClick={() => { setMenuOpen(false); logoutUser(); }} className="text-sm font-light tracking-wide text-zinc-600 hover:text-red-400 text-left transition-colors mt-2">Sign Out</button>
-                      </div>
-                    ) : (
-                      <button onClick={() => { setMenuOpen(false); navigate("/auth"); }} className="text-sm font-light tracking-wide text-zinc-400 hover:text-white text-left transition-colors">Sign In / Register</button>
-                    )}
-                  </div>
-
-                  <div className="flex flex-col gap-6">
-                    <h4 className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-600 border-b border-zinc-800 pb-2">
-                      Community
-                    </h4>
-                    <div className="flex flex-col gap-3">
-                      <a href="#" className="text-sm font-light tracking-wide text-zinc-400 hover:text-white transition-colors">Instagram</a>
-                      <a href="#" className="text-sm font-light tracking-wide text-zinc-400 hover:text-white transition-colors">Pinterest</a>
-                      <a href="mailto:studio@minix.com" className="text-sm font-light tracking-wide text-zinc-400 hover:text-white transition-colors mt-2">studio@minix.com</a>
+                {/* Left Panel Footer */}
+                <div className="relative z-10 flex justify-between items-end animate-stagger shrink-0" style={{ animationDelay: '0.5s' }}>
+                  <div className="flex gap-6 items-center">
+                    <div className="w-32 h-20 rounded border border-zinc-800 overflow-hidden relative opacity-70">
+                      <img src="/Hero.jpg" className="w-full h-full object-cover" alt="Thumbnail" />
+                    </div>
+                    <div className="hidden md:flex flex-col">
+                      <span className="text-zinc-500 font-serif text-2xl leading-none">“</span>
+                      <p className="text-xs text-zinc-400 max-w-[200px] leading-relaxed -mt-2">
+                        Built for people who feel everything deeply, but say very little.
+                      </p>
                     </div>
                   </div>
-
-                  <div className="mt-4">
-                    <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-600 leading-relaxed">
-                      Designed for people who feel <br/> everything deeply.
-                    </p>
+                  
+                  <div className="flex flex-col items-end gap-1 text-zinc-500 opacity-60">
+                    <Barcode size={32} strokeWidth={1} />
+                    <span className="text-[9px] font-mono tracking-[0.3em]">M N X 2 0 2 6</span>
                   </div>
                 </div>
               </div>
+
+              {/* RIGHT PANEL */}
+              <div className="w-full lg:w-[35%] h-full bg-[#121212] flex flex-col p-8 lg:p-12 overflow-y-auto">
+                <div className="hidden lg:flex justify-end mb-12 lg:mb-16 shrink-0 animate-stagger" style={{ animationDelay: '0.1s' }}>
+                  <button onClick={() => setMenuOpen(false)} className="text-[10px] font-bold font-mono uppercase tracking-[0.2em] flex items-center gap-3 hover:text-zinc-400 transition-colors">
+                    Close <X size={16} strokeWidth={1.5} />
+                  </button>
+                </div>
+
+                <div className="flex flex-col gap-12 shrink-0">
+                  {/* MY SPACE */}
+                  <div className="animate-stagger" style={{ animationDelay: '0.2s' }}>
+                    <h4 className="text-[9px] font-mono uppercase tracking-[0.2em] text-zinc-500 mb-6 border-b border-[#222] pb-3">My Space</h4>
+                    <div className="flex flex-col gap-1">
+                      <div className="group flex items-center justify-between py-2 cursor-pointer text-zinc-400 hover:text-white transition-colors" onClick={() => { setMenuOpen(false); navigate("/profile"); }}>
+                        <div className="flex items-center gap-4"><User size={16} strokeWidth={1.5} /> <span className="text-sm">Profile</span></div>
+                        <ChevronRight size={14} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                      </div>
+                      <div className="group flex items-center justify-between py-2 cursor-pointer text-zinc-400 hover:text-white transition-colors" onClick={() => { setMenuOpen(false); navigate("/orders"); }}>
+                        <div className="flex items-center gap-4"><ShoppingBag size={16} strokeWidth={1.5} /> <span className="text-sm">Orders</span></div>
+                        <ChevronRight size={14} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                      </div>
+                      <div className="group flex items-center justify-between py-2 cursor-pointer text-zinc-400 hover:text-white transition-colors" onClick={() => { setMenuOpen(false); navigate("/wishlist"); }}>
+                        <div className="flex items-center gap-4"><Heart size={16} strokeWidth={1.5} /> <span className="text-sm">Wishlist</span></div>
+                        <ChevronRight size={14} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                      </div>
+                      <div className="group flex items-center justify-between py-2 cursor-pointer text-zinc-400 hover:text-white transition-colors" onClick={() => { setMenuOpen(false); navigate("/wishlist"); }}>
+                        <div className="flex items-center gap-4"><Bookmark size={16} strokeWidth={1.5} /> <span className="text-sm">Saved Pieces</span></div>
+                        <ChevronRight size={14} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* FEATURED DROP */}
+                  <div className="animate-stagger" style={{ animationDelay: '0.3s' }}>
+                    <h4 className="text-[9px] font-mono uppercase tracking-[0.2em] text-zinc-500 mb-6 border-b border-[#222] pb-3">Featured Drop</h4>
+                    <div className="group relative w-full h-40 rounded bg-zinc-900 overflow-hidden cursor-pointer" onClick={() => { setMenuOpen(false); navigate("/shop"); }}>
+                      <img src="/Hero.jpg" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-700" alt="Drop" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent p-6 flex flex-col justify-center">
+                        <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest mb-1">Chapter 02</span>
+                        <span className="text-xl font-medium text-white leading-tight mb-4">Shadow<br/>Uniform</span>
+                        <span className="text-[9px] font-mono text-zinc-300 uppercase tracking-widest flex items-center gap-2">Explore Drop <ArrowUpRight size={12} /></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* CONNECT */}
+                  <div className="animate-stagger" style={{ animationDelay: '0.4s' }}>
+                    <h4 className="text-[9px] font-mono uppercase tracking-[0.2em] text-zinc-500 mb-6 border-b border-[#222] pb-3">Connect</h4>
+                    <div className="flex flex-wrap gap-6 text-zinc-400">
+                      <a href="#" className="flex items-center gap-2 hover:text-white transition-colors"><Instagram size={14} /> <span className="text-xs">Instagram</span></a>
+                      <a href="#" className="flex items-center gap-2 hover:text-white transition-colors"><Twitter size={14} /> <span className="text-xs">Twitter / X</span></a>
+                      <a href="#" className="flex items-center gap-2 hover:text-white transition-colors"><Youtube size={14} /> <span className="text-xs">YouTube</span></a>
+                    </div>
+                  </div>
+
+                  {/* JOIN LIST */}
+                  <div className="animate-stagger mt-auto" style={{ animationDelay: '0.5s' }}>
+                    <div className="border border-[#222] rounded p-4 flex items-center justify-between hover:bg-[#1a1a1a] transition-colors cursor-pointer">
+                      <div className="flex items-center gap-4">
+                        <Mail size={16} className="text-zinc-400" />
+                        <div className="flex flex-col">
+                          <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-300">Join the MiniX List</span>
+                          <span className="text-[10px] text-zinc-500 mt-0.5">Early access. First drops. No noise.</span>
+                        </div>
+                      </div>
+                      <ArrowRight size={14} className="text-zinc-500" />
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            {/* GLOBAL FOOTER BAR */}
+            <div className="hidden lg:flex h-[50px] border-t border-[#1a1a1a] items-center justify-between px-6 lg:px-12 text-[9px] font-mono uppercase tracking-widest text-zinc-600 shrink-0">
+              <span>© 2026 MINIX. All rights reserved.</span>
+              <span className="text-zinc-500">Comfort is everything.</span>
+              <span>Worldwide</span>
             </div>
           </motion.div>
         )}
