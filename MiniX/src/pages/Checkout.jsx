@@ -16,6 +16,8 @@ export default function Checkout() {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [loading, setLoading] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState("COD");
+  const [couponCode, setCouponCode] = useState("");
+  const [discount, setDiscount] = useState(0);
 
   useEffect(() => {
     fetchAddresses();
@@ -81,6 +83,16 @@ export default function Checkout() {
     } catch (err) {
       console.error("Order placement failed", err);
       alert(err.response?.data?.message || "Order placement failed");
+    }
+  };
+
+  const handleApplyCoupon = () => {
+    if (couponCode.toUpperCase() === "MINIX10") {
+      setDiscount(total * 0.10);
+      alert("Coupon applied! 10% discount.");
+    } else {
+      setDiscount(0);
+      alert("Invalid coupon code.");
     }
   };
 
@@ -212,9 +224,47 @@ export default function Checkout() {
 
             <div className="border-t border-white/10 my-4"></div>
 
-            <div className="flex justify-between text-gray-300">
-              <p>Total</p>
-              <p>${(total + 5).toFixed(2)}</p>
+            <div className="mb-6 space-y-2">
+              <p className="text-sm text-gray-400 mb-2">Have a coupon?</p>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Enter code"
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value)}
+                  className="flex-1 bg-transparent border border-white/20 px-3 py-2 text-sm text-white focus:outline-none focus:border-white uppercase"
+                />
+                <button
+                  onClick={handleApplyCoupon}
+                  className="bg-white/10 px-4 py-2 text-sm text-white hover:bg-white/20 transition"
+                >
+                  Apply
+                </button>
+              </div>
+            </div>
+
+            <div className="flex justify-between text-gray-300 mb-2">
+              <p>Subtotal</p>
+              <p>${total.toFixed(2)}</p>
+            </div>
+            
+            <div className="flex justify-between text-gray-300 mb-2">
+              <p>Shipping</p>
+              <p>$5.00</p>
+            </div>
+
+            {discount > 0 && (
+              <div className="flex justify-between text-green-400 mb-2">
+                <p>Discount</p>
+                <p>-${discount.toFixed(2)}</p>
+              </div>
+            )}
+
+            <div className="border-t border-white/10 my-4"></div>
+
+            <div className="flex justify-between text-white font-bold text-lg">
+              <p>Grand Total</p>
+              <p>${(total + 5 - discount).toFixed(2)}</p>
             </div>
 
             <button

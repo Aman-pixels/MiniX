@@ -7,6 +7,7 @@ import { ArrowLeft, ShoppingBag, Heart } from "lucide-react";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import ProductSkeleton from "../Components/skeletons/ProductSkeleton";
+import ProductCard from "../Components/ProductCard";
 
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
@@ -61,6 +62,19 @@ export default function ProductPage() {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState(null);
   const [showToast, setShowToast] = useState(false);
+  const [recentlyViewed, setRecentlyViewed] = useState([]);
+
+  useEffect(() => {
+    if (!product) return;
+    try {
+      const stored = JSON.parse(localStorage.getItem('minix_recently_viewed') || '[]');
+      const filtered = stored.filter(item => (item._id || item.id) !== (product._id || id));
+      setRecentlyViewed(filtered.slice(0, 4));
+
+      const updated = [product, ...filtered].slice(0, 5);
+      localStorage.setItem('minix_recently_viewed', JSON.stringify(updated));
+    } catch(e) {}
+  }, [product, id]);
 
   useEffect(() => {
     if (!product) return;
@@ -265,6 +279,19 @@ export default function ProductPage() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* RECENTLY VIEWED SECTION */}
+        {recentlyViewed.length > 0 && (
+          <div className="mt-32 border-t border-[#47484c] pt-16">
+            <h3 className="text-2xl font-black uppercase tracking-tighter mb-8 text-white">Recently Viewed</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {recentlyViewed.map(item => (
+                <ProductCard key={item._id || item.id} product={item} />
+              ))}
+            </div>
+          </div>
+        )}
+
       </main>
 
       <Footer />

@@ -58,7 +58,33 @@ export default function OrderDetails() {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-6">
+          {/* ORDER TRACKING STEPPER */}
+          <div className="py-6 border-y border-white/10 my-4">
+            <h3 className="text-sm text-gray-400 mb-6 uppercase tracking-wider font-bold">Track Order</h3>
+            <div className="flex items-center justify-between relative">
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-white/10 z-0" />
+              
+              {["Processing", "Shipped", "Out for Delivery", "Delivered"].map((step, idx) => {
+                const statuses = ["Processing", "Shipped", "Out for Delivery", "Delivered"];
+                const currentIdx = statuses.indexOf(order.status || "Processing");
+                const isCompleted = idx <= currentIdx;
+                const isActive = idx === currentIdx;
+
+                return (
+                  <div key={step} className="relative z-10 flex flex-col items-center gap-2">
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${isCompleted ? 'bg-white text-black' : 'bg-[#1e1f22] border-2 border-white/20 text-white/20'}`}>
+                      {isCompleted ? "✓" : idx + 1}
+                    </div>
+                    <span className={`text-[10px] uppercase tracking-widest absolute -bottom-6 w-max text-center ${isActive ? 'text-white font-bold' : 'text-gray-500'}`}>
+                      {step}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-6 mt-12">
             <div>
               <p className="text-sm text-gray-400 mb-1">Delivery Address</p>
               <p>{order.address.name}</p>

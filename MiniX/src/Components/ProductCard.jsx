@@ -45,6 +45,13 @@ export default function ProductCard({ product }) {
           <Heart size={16} strokeWidth={2} className={`transition-colors ${inWishlist ? 'fill-white' : ''}`} />
         </button>
 
+        {/* Stock Badge - Top Left */}
+        {product.stock !== undefined && product.stock <= 5 && (
+          <div className={`absolute top-4 left-4 z-10 px-3 py-1 text-[10px] font-bold tracking-widest uppercase backdrop-blur-md ${product.stock === 0 ? 'bg-zinc-800/90 text-white' : 'bg-red-600/90 text-white'}`}>
+            {product.stock === 0 ? "Out of Stock" : `Only ${product.stock} left!`}
+          </div>
+        )}
+
         {/* Quick Add Overlay */}
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center pointer-events-none">
           <button
