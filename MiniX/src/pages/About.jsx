@@ -60,7 +60,7 @@ export default function About() {
               className="aspect-[3/4] bg-[#111] overflow-hidden relative"
             >
               <img 
-                src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop" 
+                src="/Hero.jpg" 
                 alt="Editorial Mood"
                 className="w-full h-full object-cover mix-blend-luminosity opacity-80"
               />
@@ -132,7 +132,7 @@ export default function About() {
               className="md:col-span-7 aspect-square md:aspect-[4/5] bg-[#111] overflow-hidden"
             >
               <img 
-                src="https://images.unsplash.com/photo-1618090584126-129cd1f3f38f?q=80&w=1000&auto=format&fit=crop" 
+                src="/products/vintage_washed_tee.png" 
                 alt="City Lifestyle"
                 className="w-full h-full object-cover mix-blend-luminosity opacity-70 hover:opacity-100 transition-opacity duration-[2s]"
               />
