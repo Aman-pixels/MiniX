@@ -1,41 +1,13 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import useSEO from "../hooks/useSEO";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { Terminal, Lock, Unlock, Database } from "lucide-react";
-
-const ARCHIVE_DATA = [
-  {
-    id: "01",
-    title: "Transmission 02 // Fabric Memory Corrupted",
-    status: "DECRYPTED",
-    content: "The original garments were never intended for civilian use. They were designed as environmental shields against the encroaching signal. The threads contain microscopic woven data. We wear the archive."
-  },
-  {
-    id: "02",
-    title: "Archive Locked Until Sequence Completion",
-    status: "ENCRYPTED",
-    content: "WARNING: Unauthorized access to MINIX core systems. The 2026 collection is still rendering in the subterranean servers. Only those with the physical garments can access the offline drops."
-  },
-  {
-    id: "03",
-    title: "Signal Detected Beneath Sector-9",
-    status: "DECRYPTED",
-    content: "We found the source of the minimalist mutation. It wasn't a design choice; it was a physical necessity. The excessive logos were stripped to avoid automated facial recognition. Blank is safe. Black is invisible."
-  },
-  {
-    id: "04",
-    title: "MINIX Was Never Meant For Mass Production",
-    status: "CORRUPTED",
-    content: "ERR_READ_FAULT: [DATA EXPUNGED]... They thought it was fashion. It is survival gear for the post-modern digital wasteland. Proceed with caution."
-  }
-];
+import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function About() {
   useSEO({
-    title: "Archive // MiniX",
-    description: "Access the classified digital archive of MINIX. Explore the lore behind the cyber-fashion movement.",
+    title: "Our Story // MiniX",
+    description: "Built for slow mornings and loud headphones. MiniX is an emotional extension of your identity.",
     url: "/about",
   });
 
@@ -45,120 +17,141 @@ export default function About() {
     offset: ["start start", "end end"]
   });
 
-  const yBackground = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const opacityFade = useTransform(scrollYProgress, [0.8, 1], [1, 0]);
-
-  const [activeArchive, setActiveArchive] = useState(null);
+  const opacityFade = useTransform(scrollYProgress, [0.85, 1], [1, 0]);
 
   return (
     <div ref={containerRef} className="bg-[#050505] text-white min-h-screen font-sans selection:bg-[#4c4e51] selection:text-white relative overflow-hidden">
       
-      {/* Global Noise Overlay */}
-      <div className="pointer-events-none fixed inset-0 z-50 opacity-[0.03] mix-blend-overlay" 
-           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}>
+      {/* Subtle Grain Overlay */}
+      <div className="pointer-events-none fixed inset-0 z-50 opacity-[0.02] mix-blend-overlay" 
+           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}>
       </div>
 
       <Navbar />
 
-      <main className="relative z-10 pt-[15vh]">
+      <main className="relative z-10 pt-[20vh] pb-32">
         
-        {/* CINEMATIC INTRO */}
-        <section className="min-h-[85vh] flex flex-col justify-center px-6 lg:px-12 max-w-[1400px] mx-auto relative border-b border-[#47484c]/30 pb-20">
+        {/* SECTION 1: CINEMATIC INTRO */}
+        <section className="min-h-[70vh] flex flex-col justify-center px-6 lg:px-12 max-w-[1400px] mx-auto relative">
           <motion.div 
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="flex items-center gap-4 mb-8">
-              <span className="w-2 h-2 bg-red-500 animate-pulse rounded-full" />
-              <p className="text-[10px] font-mono uppercase tracking-[0.4em] text-[#4c4e51]">
-                System Log: Active
-              </p>
-            </div>
+            <p className="text-xs font-mono uppercase tracking-[0.2em] text-zinc-500 mb-8">
+              The Identity
+            </p>
             
-            <h1 className="text-6xl md:text-[8rem] lg:text-[12rem] font-black uppercase tracking-tighter leading-[0.8] mb-12 mix-blend-difference z-10 relative">
-              Classified <br/> Archive
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tighter leading-[1.1] max-w-4xl mb-12">
+              Some outfits are made for attention. <br className="hidden md:block" />
+              <span className="text-zinc-500">Others are made for disappearing into your own world.</span>
             </h1>
-            
-            <div className="flex flex-col md:flex-row gap-12 md:gap-24 ml-auto w-full md:w-2/3 lg:w-1/2">
-              <p className="text-sm font-mono text-[#4c4e51] leading-relaxed uppercase tracking-widest">
-                MiniX is not a brand. It is an encrypted aesthetic transmission. <br/><br/>
-                We engineer garments for the post-modern digital wasteland, focusing on brutalist minimalism and functional survival.
-              </p>
-              <div className="flex flex-col gap-4 text-[10px] font-mono text-zinc-500 uppercase tracking-widest border-l border-[#47484c]/50 pl-6">
-                <span>Status: Classified</span>
-                <span>Location: Sector-9 Sub-level</span>
-                <span>Clearance: Level 4 Required</span>
-              </div>
-            </div>
           </motion.div>
         </section>
 
-        {/* INTERACTIVE LORE SYSTEM */}
-        <section className="py-32 px-6 lg:px-12 max-w-[1400px] mx-auto relative">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-20">
-            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">
-              Recovered <br/> Transmissions
-            </h2>
-            <div className="flex items-center gap-3 text-[10px] font-mono uppercase tracking-widest text-zinc-500 mt-8 md:mt-0">
-              <Database size={14} />
-              <span>4 Files Retrieved</span>
-            </div>
-          </div>
+        {/* SECTION 2: EDITORIAL PHILOSOPHY */}
+        <section className="py-24 px-6 lg:px-12 max-w-[1400px] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-32 items-center">
+            <motion.div 
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="aspect-[3/4] bg-[#111] overflow-hidden relative"
+            >
+              <img 
+                src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop" 
+                alt="Editorial Mood"
+                className="w-full h-full object-cover mix-blend-luminosity opacity-80"
+              />
+            </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-            {ARCHIVE_DATA.map((item, index) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                onMouseEnter={() => setActiveArchive(item.id)}
-                onMouseLeave={() => setActiveArchive(null)}
-                className="group relative border border-[#47484c]/50 bg-[#0a0a0c] p-8 md:p-12 cursor-pointer overflow-hidden h-[300px] flex flex-col justify-between"
-              >
-                {/* Background Glitch Hover Effect */}
-                <div className="absolute inset-0 bg-[#1e2023] translate-y-[100%] group-hover:translate-y-0 transition-transform duration-700 ease-[0.16,1,0.3,1] z-0" />
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+              className="flex flex-col gap-12 max-w-lg"
+            >
+              <div>
+                <h3 className="text-2xl font-bold mb-4">Quiet Confidence</h3>
+                <p className="text-zinc-400 leading-relaxed font-light">
+                  MiniX was never about being the loudest person in the room. It was born from late-night thoughts, city walks, and the desire for comfort in an overwhelming world.
+                </p>
+              </div>
 
-                {/* Header */}
-                <div className="relative z-10 flex justify-between items-start mb-8">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 group-hover:text-white transition-colors">
-                    File // {item.id}
-                  </span>
-                  <div className={`text-[10px] font-mono uppercase tracking-widest flex items-center gap-2 ${item.status === 'DECRYPTED' ? 'text-green-500' : item.status === 'ENCRYPTED' ? 'text-red-500' : 'text-yellow-500'}`}>
-                    {item.status === 'DECRYPTED' ? <Unlock size={12} /> : item.status === 'ENCRYPTED' ? <Lock size={12} /> : <Terminal size={12} />}
-                    {item.status}
-                  </div>
-                </div>
-
-                {/* Title */}
-                <h3 className="relative z-10 text-2xl md:text-3xl font-black uppercase tracking-tighter leading-none mb-6 group-hover:text-white">
-                  {item.title}
-                </h3>
-
-                {/* Hidden Content */}
-                <div className="relative z-10 overflow-hidden h-0 group-hover:h-auto transition-all duration-500">
-                  <p className="text-xs font-mono text-zinc-400 leading-relaxed uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100">
-                    {item.status === 'ENCRYPTED' ? "⬛⬛⬛⬛ ⬛⬛⬛⬛⬛ ⬛⬛⬛ ⬛⬛⬛⬛ ⬛⬛⬛⬛⬛ ⬛⬛ ⬛⬛⬛⬛ ⬛⬛⬛⬛⬛ ⬛⬛⬛⬛⬛⬛ ⬛⬛ ⬛⬛⬛⬛⬛⬛" : item.content}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+              <div>
+                <h3 className="text-2xl font-bold mb-4">An Extension of Mood</h3>
+                <p className="text-zinc-400 leading-relaxed font-light">
+                  We don't design for seasons. We design for feelings. For those slow mornings. For the nights that changed you. Comfort isn't just a physical feeling—it became our entire design language.
+                </p>
+              </div>
+            </motion.div>
           </div>
         </section>
 
-        {/* ATMOSPHERIC BRIDGE / FOOTER TRANSITION */}
+        {/* SECTION 3: STATEMENT BANNER */}
+        <section className="py-32 px-6 lg:px-12 max-w-[1400px] mx-auto text-center">
+          <motion.h2 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tighter leading-tight text-white/90"
+          >
+            Minimal outside. <br />
+            Loud inside.
+          </motion.h2>
+        </section>
+
+        {/* SECTION 4: IMMERSIVE LIFESTYLE */}
+        <section className="py-24 px-6 lg:px-12 max-w-[1400px] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-16">
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="md:col-span-5 md:mt-32"
+            >
+              <h3 className="text-3xl font-bold tracking-tight mb-6 leading-snug">
+                Not made for trends. <br/>
+                Made for people figuring themselves out.
+              </h3>
+              <p className="text-zinc-400 font-light leading-relaxed mb-8">
+                Clothing should feel like a safe space. An oversized hoodie isn't just fabric; it's a barrier between you and the noise. A muted palette isn't boring; it's clarity.
+              </p>
+            </motion.div>
+
+            <motion.div 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+              className="md:col-span-7 aspect-square md:aspect-[4/5] bg-[#111] overflow-hidden"
+            >
+              <img 
+                src="https://images.unsplash.com/photo-1618090584126-129cd1f3f38f?q=80&w=1000&auto=format&fit=crop" 
+                alt="City Lifestyle"
+                className="w-full h-full object-cover mix-blend-luminosity opacity-70 hover:opacity-100 transition-opacity duration-[2s]"
+              />
+            </motion.div>
+
+          </div>
+        </section>
+
+        {/* SECTION 5: FOOTER TRANSITION */}
         <motion.section 
           style={{ opacity: opacityFade }}
-          className="h-[50vh] flex flex-col items-center justify-center relative overflow-hidden border-t border-[#47484c]/30"
+          className="h-[40vh] flex flex-col items-center justify-end relative overflow-hidden pb-12"
         >
-          <motion.div style={{ y: yBackground }} className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#4c4e51] via-[#050505] to-[#050505] z-0" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1e1f22] to-transparent opacity-50 z-0" />
           
-          <h2 className="relative z-10 text-xl md:text-4xl font-mono text-zinc-600 uppercase tracking-[0.5em] text-center px-4">
-            End of Transmission
-          </h2>
-          <div className="relative z-10 w-[1px] h-32 bg-gradient-to-b from-zinc-600 to-transparent mt-12" />
+          <p className="relative z-10 text-sm font-mono text-zinc-500 uppercase tracking-widest text-center px-4 mb-4">
+            Built for the modern mind.
+          </p>
+          <div className="relative z-10 w-[1px] h-20 bg-zinc-700 mt-4" />
         </motion.section>
 
       </main>
