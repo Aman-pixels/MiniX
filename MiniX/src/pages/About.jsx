@@ -60,7 +60,7 @@ export default function About() {
               className="aspect-[3/4] bg-[#111] overflow-hidden relative"
             >
               <img 
-                src="/Hero.jpg" 
+                src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop" 
                 alt="Editorial Mood"
                 className="w-full h-full object-cover mix-blend-luminosity opacity-80"
               />
