@@ -123,78 +123,117 @@ export default function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[100] bg-[#1e2023] text-white selection:bg-[#4c4e51] selection:text-white overflow-y-auto"
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-[100] bg-[#050505] text-white selection:bg-[#4c4e51] selection:text-white overflow-hidden"
           >
-            <div className="min-h-screen flex flex-col w-full">
+            {/* Cinematic Noise & Background Blur */}
+            <div className="absolute inset-0 z-0 opacity-40">
+              <img src="/Hero.jpg" alt="Atmosphere" className="w-full h-full object-cover mix-blend-luminosity blur-[100px] scale-110" />
+            </div>
+            <div className="absolute inset-0 z-0 opacity-[0.03] mix-blend-overlay" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
+
+            <div className="relative z-10 min-h-screen flex flex-col w-full h-full overflow-y-auto">
+              {/* Header */}
               <div className="flex justify-between items-center p-6 lg:p-12 shrink-0">
                 <span className="text-2xl font-black tracking-tighter uppercase cursor-pointer hover:opacity-70 transition-opacity" onClick={() => { setMenuOpen(false); navigate("/"); }}>
                   MiniX
                 </span>
                 <button 
                   onClick={() => setMenuOpen(false)}
-                  className="text-xs font-bold uppercase tracking-[0.2em] flex items-center gap-3 hover:text-zinc-400 transition-colors"
+                  className="text-xs font-mono uppercase tracking-[0.2em] flex items-center gap-3 hover:text-zinc-400 transition-colors"
                 >
-                  Close <X size={24} strokeWidth={1.5}/>
+                  Close <X size={20} strokeWidth={1}/>
                 </button>
               </div>
 
-              <div className="flex-1 flex flex-col lg:flex-row max-w-[1400px] w-full mx-auto px-6 lg:px-12 py-10 gap-16 lg:gap-20">
+              <div className="flex-grow flex flex-col lg:flex-row max-w-[1400px] w-full mx-auto px-6 lg:px-12 py-10 gap-16 lg:gap-20 h-full">
                 
-                {/* Main Nav */}
-                <div className="flex flex-col justify-center gap-4 w-full lg:w-2/3">
-                  {/* Mobile Search Bar */}
-                  <form onSubmit={handleSearchSubmit} className="flex lg:hidden items-center relative mb-12">
+                {/* Main Nav Links */}
+                <div className="flex flex-col justify-center gap-6 w-full lg:w-2/3 h-full">
+                  <div className="mb-8 hidden lg:block">
+                    <p className="text-xs font-mono uppercase tracking-[0.2em] text-zinc-500">
+                      Minimal outside. Loud inside.
+                    </p>
+                  </div>
+
+                  <form onSubmit={handleSearchSubmit} className="flex lg:hidden items-center relative mb-8">
                     <input
                       type="text"
-                      placeholder="Search catalog..."
+                      placeholder="Search..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full bg-transparent border-b border-[#47484c] text-white text-sm font-mono uppercase tracking-widest px-2 py-3 focus:border-white focus:outline-none transition-colors"
+                      className="w-full bg-transparent border-b border-zinc-800 text-white text-sm font-mono uppercase tracking-widest px-2 py-3 focus:border-white focus:outline-none transition-colors"
                     />
-                    <button type="submit" className="absolute right-0 px-4 text-[#4c4e51] hover:text-white transition-colors">
-                      <Search size={20} />
+                    <button type="submit" className="absolute right-0 px-4 text-zinc-500 hover:text-white transition-colors">
+                      <Search size={18} strokeWidth={1} />
                     </button>
                   </form>
 
-                  {menuLinks.map((link, i) => (
-                    <div key={link.name} className="py-2">
+                  {[
+                    { name: "Collections", path: "/shop" },
+                    { name: "Essentials", path: "/shop?search=essentials" },
+                    { name: "The Journal", path: "/about" },
+                    { name: "Everyday Uniform", path: "/shop" }
+                  ].map((link, i) => (
+                    <motion.div 
+                      key={link.name} 
+                      className="py-1 overflow-hidden"
+                      initial={{ opacity: 0, y: 40 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 + (i * 0.1), duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    >
                       <NavLink 
                         to={link.path}
                         onClick={() => setMenuOpen(false)}
-                        className="group flex items-center gap-6 text-4xl sm:text-5xl md:text-[5rem] font-black uppercase tracking-tighter leading-none hover:text-[#4c4e51] transition-colors"
+                        className="group flex items-center gap-6 text-4xl sm:text-5xl md:text-[5.5rem] font-medium tracking-tighter leading-none text-zinc-400 hover:text-white transition-colors duration-500"
                       >
-                        <span className="text-sm font-mono text-[#4c4e51] mb-4 md:mb-8 hidden md:block">0{i + 1}</span>
+                        <span className="text-[10px] font-mono text-zinc-600 mb-6 hidden md:block group-hover:text-white transition-colors duration-500">0{i + 1}</span>
                         {link.name}
-                        <ArrowRight size={48} className="opacity-0 -translate-x-10 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 ease-[0.16,1,0.3,1] hidden md:block" />
                       </NavLink>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
 
-                {/* Utility Nav */}
-                <div className="flex flex-col justify-end pb-12 gap-12 lg:ml-auto w-full lg:w-1/3 mt-auto lg:mt-0">
+                {/* Right Panel / Emotional Lifestyle */}
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5, duration: 1 }}
+                  className="flex flex-col justify-end pb-12 gap-16 lg:ml-auto w-full lg:w-1/3 mt-auto lg:mt-0 lg:h-full"
+                >
                   <div className="flex flex-col gap-6">
-                    <h4 className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#4c4e51] font-bold border-b border-[#47484c] pb-2">System Access</h4>
+                    <h4 className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-600 border-b border-zinc-800 pb-2">
+                      Personal Space
+                    </h4>
                     {user ? (
-                      <>
-                        <button onClick={() => { setMenuOpen(false); navigate("/profile"); }} className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 text-left transition-colors">Profile</button>
-                        <button onClick={() => { setMenuOpen(false); navigate("/orders"); }} className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 text-left transition-colors">Orders</button>
-                        <button onClick={() => { setMenuOpen(false); navigate("/wishlist"); }} className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 text-left transition-colors">Wishlist</button>
-                        <button onClick={() => { setMenuOpen(false); logoutUser(); }} className="text-sm font-bold uppercase tracking-wider text-red-500 hover:text-red-400 text-left transition-colors mt-4">Terminate Session</button>
-                      </>
+                      <div className="flex flex-col gap-3">
+                        <button onClick={() => { setMenuOpen(false); navigate("/profile"); }} className="text-sm font-light tracking-wide text-zinc-400 hover:text-white text-left transition-colors">Your Profile</button>
+                        <button onClick={() => { setMenuOpen(false); navigate("/orders"); }} className="text-sm font-light tracking-wide text-zinc-400 hover:text-white text-left transition-colors">Past Orders</button>
+                        <button onClick={() => { setMenuOpen(false); navigate("/wishlist"); }} className="text-sm font-light tracking-wide text-zinc-400 hover:text-white text-left transition-colors">Saved Pieces</button>
+                        <button onClick={() => { setMenuOpen(false); logoutUser(); }} className="text-sm font-light tracking-wide text-zinc-600 hover:text-red-400 text-left transition-colors mt-2">Sign Out</button>
+                      </div>
                     ) : (
-                      <button onClick={() => { setMenuOpen(false); navigate("/auth"); }} className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 text-left transition-colors">Authenticate</button>
+                      <button onClick={() => { setMenuOpen(false); navigate("/auth"); }} className="text-sm font-light tracking-wide text-zinc-400 hover:text-white text-left transition-colors">Sign In / Register</button>
                     )}
                   </div>
 
                   <div className="flex flex-col gap-6">
-                    <h4 className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#4c4e51] font-bold border-b border-[#47484c] pb-2">Comms Network</h4>
-                    <a href="#" className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 transition-colors">Instagram</a>
-                    <a href="#" className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 transition-colors">Twitter (X)</a>
-                    <a href="mailto:support@minix.com" className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 transition-colors mt-4">support@minix.com</a>
+                    <h4 className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-600 border-b border-zinc-800 pb-2">
+                      Community
+                    </h4>
+                    <div className="flex flex-col gap-3">
+                      <a href="#" className="text-sm font-light tracking-wide text-zinc-400 hover:text-white transition-colors">Instagram</a>
+                      <a href="#" className="text-sm font-light tracking-wide text-zinc-400 hover:text-white transition-colors">Pinterest</a>
+                      <a href="mailto:studio@minix.com" className="text-sm font-light tracking-wide text-zinc-400 hover:text-white transition-colors mt-2">studio@minix.com</a>
+                    </div>
                   </div>
-                </div>
+
+                  <div className="mt-8">
+                    <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-600 leading-relaxed">
+                      Designed for people who feel <br/> everything deeply.
+                    </p>
+                  </div>
+                </motion.div>
               </div>
             </div>
           </motion.div>
