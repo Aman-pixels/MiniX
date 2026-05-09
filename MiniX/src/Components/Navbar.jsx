@@ -120,17 +120,10 @@ export default function Navbar() {
       <AnimatePresence>
         {menuOpen && (
           <motion.div 
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            variants={{
-              hidden: { opacity: 0 },
-              visible: { 
-                opacity: 1, 
-                transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1], staggerChildren: 0.1, delayChildren: 0.1 } 
-              },
-              exit: { opacity: 0, transition: { duration: 0.4 } }
-            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
             className="fixed inset-0 z-[100] bg-[#050505] text-white selection:bg-[#4c4e51] selection:text-white overflow-hidden"
           >
             {/* Cinematic Noise & Background Blur */}
@@ -158,7 +151,9 @@ export default function Navbar() {
                 {/* Main Nav Links */}
                 <div className="flex flex-col justify-center gap-6 w-full lg:w-2/3 h-full">
                   <motion.div 
-                    variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8 } } }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.1 }}
                     className="mb-8 hidden lg:block"
                   >
                     <p className="text-xs font-mono uppercase tracking-[0.2em] text-zinc-500">
@@ -167,7 +162,9 @@ export default function Navbar() {
                   </motion.div>
 
                   <motion.form 
-                    variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8 } } }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.1 }}
                     onSubmit={handleSearchSubmit} 
                     className="flex lg:hidden items-center relative mb-8"
                   >
@@ -192,10 +189,9 @@ export default function Navbar() {
                     <motion.div 
                       key={link.name} 
                       className="py-1 overflow-hidden"
-                      variants={{
-                        hidden: { opacity: 0, y: 50 },
-                        visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
-                      }}
+                      initial={{ opacity: 0, y: 50 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 + (i * 0.1), duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <NavLink 
                         to={link.path}
@@ -211,10 +207,9 @@ export default function Navbar() {
 
                 {/* Right Panel / Emotional Lifestyle */}
                 <motion.div 
-                  variants={{
-                    hidden: { opacity: 0, y: 30 },
-                    visible: { opacity: 1, y: 0, transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } }
-                  }}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 1, ease: [0.16, 1, 0.3, 1] }}
                   className="flex flex-col justify-end pb-12 gap-16 lg:ml-auto w-full lg:w-1/3 mt-auto lg:mt-0 lg:h-full"
                 >
                   <div className="flex flex-col gap-6">
