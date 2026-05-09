@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
@@ -7,18 +7,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
   User,
-  Heart,
   ShoppingBag,
-  LogOut,
-  LogIn,
-  MapPin,
-  CreditCard,
-  Package,
-  HelpCircle,
   Menu,
   X,
+  ArrowRight
 } from "lucide-react";
-import productData from "../data/productData";
+import axios from "axios";
+import API_BASE_URL from "../config";
 
 export default function Navbar() {
   const { cartItems, setIsCartOpen } = useCart();
@@ -26,441 +21,187 @@ export default function Navbar() {
   const { user, logoutUser } = useAuth();
   const navigate = useNavigate();
 
-  const [profileOpen, setProfileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 🔍 Search state
-  const [query, setQuery] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
-  const [showResults, setShowResults] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
-
-  useEffect(() => {
-    if (!query.trim()) {
-      setSuggestions([]);
-      return;
-    }
-
-    const fetchSuggestions = async () => {
-      setIsSearching(true);
-      try {
-        const { data } = await axios.get(`${API_BASE_URL}/api/product/search?q=${query}`);
-        if (data.success) {
-          // Convert backend 'slug' to 'id' for frontend compatibility if needed
-          const mapped = data.products.map(p => ({
-            ...p,
-            id: p.slug // Navbar uses .id for navigation
-          }));
-          setSuggestions(mapped);
-        }
-      } catch (err) {
-        console.error("Search failed", err);
-      } finally {
-        setIsSearching(false);
-      }
-    };
-
-    const timeoutId = setTimeout(fetchSuggestions, 300); // 300ms debounce
-    return () => clearTimeout(timeoutId);
-  }, [query]);
-
-
-  const handleEnter = (e) => {
-    if (e.key === "Enter") {
-      if (suggestions.length > 0) {
-        navigate(`/product/${suggestions[0].id}`);
-        setQuery("");
-        setShowResults(false);
-      }
-    }
-  };
-
+  // Fullscreen Menu links
+  const menuLinks = [
+    { name: "Home", path: "/" },
+    { name: "Collections", path: "/shop" },
+    { name: "Archive", path: "/about" },
+    { name: "Support", path: "/contact" }
+  ];
 
   return (
-    <nav
-      className={`
-        fixed top-0 left-0 w-full z-50
-        transition-all duration-500 ease-in-out
-        ${scrolled ? "pt-4 px-4 sm:px-6" : "pt-6 px-4 sm:px-6"}
-      `}
-    >
-      <div className={`
-        max-w-[1250px] mx-auto flex items-center justify-between gap-6
-        transition-all duration-500 ease-in-out
-        ${scrolled ? "bg-black/60 backdrop-blur-2xl border border-white/10 rounded-full py-3 px-6 sm:px-8 shadow-2xl" : "bg-transparent py-2"}
-      `}>
-        {/* LOGO & SIDEBAR MENU */}
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="text-white hover:text-gray-300 transition flex items-center justify-center pt-1"
-            aria-label="Toggle sidebar menu"
-          >
-            {sidebarOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
-          <div
-            onClick={() => navigate("/")}
-            className="text-2xl font-bold tracking-wide cursor-pointer"
-          >
-            MiniX
-          </div>
-        </div>
-
-        {/* MID LINKS */}
-        <ul className="hidden lg:flex gap-8 text-white/80 font-medium">
-          {["shop", "about", "contact"].map((link) => (
-            <NavLink
-              key={link}
-              to={`/${link}`}
-              className={({ isActive }) =>
-                `relative capitalize transition-colors duration-300 hover:text-white ${isActive ? "text-white font-semibold" : ""
-                }`
-              }
+    <>
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-700 ease-[0.16,1,0.3,1] ${scrolled ? "bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 py-4" : "bg-transparent py-8"}`}
+      >
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-12 flex items-center justify-between">
+          
+          {/* MENU TOGGLE (LEFT) */}
+          <div className="flex-1 flex items-center">
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="group flex items-center gap-3 text-white mix-blend-difference"
             >
-              {({ isActive }) => (
-                <>
-                  {link}
-                  {isActive && (
-                    <motion.div
-                      layoutId="navbar-indicator"
-                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-white rounded-full"
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    />
-                  )}
-                </>
-              )}
-            </NavLink>
-          ))}
-        </ul>
-
-        {/* SEARCH */}
-        <div className="hidden md:flex relative w-64">
-          <Search
-            size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-white/60"
-          />
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setShowResults(true);
-            }}
-            onKeyDown={handleEnter}
-            className="
-              w-full bg-white/5 border border-transparent rounded-full
-              py-2.5 pl-10 pr-3 text-sm text-white placeholder-white/40
-              focus:border-white/20 focus:bg-white/10 transition-all outline-none
-            "
-          />
-
-          {/* SEARCH RESULTS */}
-          <AnimatePresence>
-            {showResults && query && (
-              <motion.div
-                initial={{ opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                className="
-                  absolute top-12 left-0 w-full
-                  glass-card z-50
-                  overflow-hidden
-                "
-              >
-                {suggestions.length > 0 ? (
-                  suggestions.map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => {
-                        navigate(`/product/${item.id}`);
-                        setQuery("");
-                        setShowResults(false);
-                      }}
-                      className="w-full text-left px-4 py-2 text-sm text-white/80 hover:bg-white/10 transition-colors"
-                    >
-                      {item.name}
-                    </button>
-                  ))
-                ) : (
-                  <div className="px-4 py-3 text-sm text-white/50">
-                    No products found
-                  </div>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* RIGHT ICONS */}
-        <div className="flex items-center gap-6">
-          {/* PROFILE */}
-          <div className="relative">
-            <User
-              size={26}
-              className="cursor-pointer hover:text-gray-300 transition"
-              onClick={() => setProfileOpen(!profileOpen)}
-            />
-
-            <AnimatePresence>
-              {profileOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="
-                    absolute right-0 mt-3 w-52
-                    glass-card p-4 z-50
-                  "
-                >
-                  {user ? (
-                    <>
-                      <p className="text-white/80 text-sm mb-4">
-                        Logged in as
-                        <span className="block font-medium text-white mt-0.5">
-                          {user.name}
-                        </span>
-                      </p>
-
-                      <div className="flex flex-col gap-2">
-                        <button onClick={() => navigate("/profile")} className="flex items-center gap-3 text-sm text-white/80 hover:text-white">
-                          <User size={16} /> My Profile
-                        </button>
-
-                        <button onClick={() => navigate("/orders")} className="flex items-center gap-3 text-sm text-white/80 hover:text-white">
-                          <Package size={16} /> Orders
-                        </button>
-
-                        <button onClick={() => navigate("/wishlist")} className="flex items-center gap-3 text-sm text-white/80 hover:text-white">
-                          <Heart size={16} /> Wishlist
-                        </button>
-
-                        <button onClick={() => navigate("/addresses")} className="flex items-center gap-3 text-sm text-white/80 hover:text-white">
-                          <MapPin size={16} /> Addresses
-                        </button>
-
-                        <button onClick={() => navigate("/payments")} className="flex items-center gap-3 text-sm text-white/80 hover:text-white">
-                          <CreditCard size={16} /> Payments
-                        </button>
-                      </div>
-
-                      <div className="border-t border-white/10 my-3" />
-
-                      <button onClick={logoutUser} className="flex items-center gap-3 text-sm text-red-400 hover:text-red-300">
-                        <LogOut size={16} /> Logout
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button onClick={() => navigate("/auth")} className="flex items-center gap-3 text-sm text-white hover:text-gray-300 mb-2">
-                        <LogIn size={16} /> Login / Sign Up
-                      </button>
-
-                      <button onClick={() => navigate("/help")} className="flex items-center gap-3 text-sm text-white/80 hover:text-white">
-                        <HelpCircle size={16} /> Help & Support
-                      </button>
-                    </>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* WISHLIST */}
-          <div className="relative cursor-pointer" onClick={() => navigate(user ? "/wishlist" : "/auth")}>
-            <Heart size={24} />
-            {wishlist.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                {wishlist.length}
-              </span>
-            )}
-          </div>
-
-          {/* CART */}
-          <div className="relative cursor-pointer" onClick={() => user ? setIsCartOpen(true) : navigate("/auth")}>
-            <ShoppingBag size={24} />
-            {cartItems.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-white text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                {cartItems.length}
-              </span>
-            )}
-          </div>
-
-        </div>
-      </div>
-
-      {/* SIDEBAR DRAWER */}
-      <AnimatePresence>
-        {sidebarOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSidebarOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
-            />
-
-            {/* Drawer */}
-            <motion.div
-              initial={{ x: "-100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 left-0 h-full w-[280px] bg-[#0a0a0a] border-r border-white/10 z-50 overflow-y-auto"
-            >
-              <div className="p-6">
-                {/* Close Button */}
-                <button
-                  onClick={() => setSidebarOpen(false)}
-                  className="absolute top-6 right-6 text-white/60 hover:text-white"
-                >
-                  <X size={24} />
-                </button>
-
-                {/* Logo */}
-                <div className="text-2xl font-bold mb-8">MiniX</div>
-
-                {/* Navigation Links */}
-                <div className="space-y-4 mb-8">
-                  <h3 className="text-xs uppercase text-white/40 font-semibold mb-3">
-                    Navigation
-                  </h3>
-                  {["shop", "about", "contact"].map((link) => (
-                    <NavLink
-                      key={link}
-                      to={`/${link}`}
-                      onClick={() => setSidebarOpen(false)}
-                      className={({ isActive }) =>
-                        `block text-lg capitalize hover:text-white transition ${isActive ? "text-white font-semibold" : "text-white/70"
-                        }`
-                      }
-                    >
-                      {link}
-                    </NavLink>
-                  ))}
-                </div>
-
-                {/* User Menu */}
-                <div className="border-t border-white/10 pt-6">
-                  {user ? (
-                    <>
-                      <p className="text-white/60 text-xs mb-1">Logged in as</p>
-                      <p className="text-white font-medium mb-6">{user.name}</p>
-
-                      <div className="space-y-3">
-                        <button
-                          onClick={() => {
-                            navigate("/profile");
-                            setSidebarOpen(false);
-                          }}
-                          className="flex items-center gap-3 text-white/80 hover:text-white w-full"
-                        >
-                          <User size={18} /> My Profile
-                        </button>
-
-                        <button
-                          onClick={() => {
-                            setIsCartOpen(true);
-                            setSidebarOpen(false);
-                          }}
-                          className="flex items-center w-full gap-3 text-white/80 hover:text-white"
-                        >
-                          <ShoppingBag size={18} /> 
-                          Cart {cartItems.length > 0 && <span className="bg-white text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full">{cartItems.length}</span>}
-                        </button>
-
-                        <button
-                          onClick={() => {
-                            navigate("/orders");
-                            setSidebarOpen(false);
-                          }}
-                          className="flex items-center gap-3 text-white/80 hover:text-white w-full"
-                        >
-                          <Package size={18} /> Orders
-                        </button>
-
-                        <button
-                          onClick={() => {
-                            navigate("/wishlist");
-                            setSidebarOpen(false);
-                          }}
-                          className="flex items-center w-full gap-3 text-white/80 hover:text-white"
-                        >
-                          <Heart size={18} /> 
-                          Wishlist {wishlist.length > 0 && <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{wishlist.length}</span>}
-                        </button>
-
-                        <button
-                          onClick={() => {
-                            navigate("/addresses");
-                            setSidebarOpen(false);
-                          }}
-                          className="flex items-center gap-3 text-white/80 hover:text-white w-full"
-                        >
-                          <MapPin size={18} /> Addresses
-                        </button>
-
-                        <button
-                          onClick={() => {
-                            navigate("/payments");
-                            setSidebarOpen(false);
-                          }}
-                          className="flex items-center gap-3 text-white/80 hover:text-white w-full"
-                        >
-                          <CreditCard size={18} /> Payments
-                        </button>
-
-                        <div className="border-t border-white/10 my-4" />
-
-                        <button
-                          onClick={() => {
-                            logoutUser();
-                            setSidebarOpen(false);
-                          }}
-                          className="flex items-center gap-3 text-red-400 hover:text-red-300 w-full"
-                        >
-                          <LogOut size={18} /> Logout
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        onClick={() => {
-                          navigate("/auth");
-                          setSidebarOpen(false);
-                        }}
-                        className="flex items-center gap-3 text-white hover:text-gray-300 mb-4 w-full"
-                      >
-                        <LogIn size={18} /> Login / Sign Up
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          navigate("/help");
-                          setSidebarOpen(false);
-                        }}
-                        className="flex items-center gap-3 text-white/80 hover:text-white w-full"
-                      >
-                        <HelpCircle size={18} /> Help & Support
-                      </button>
-                    </>
-                  )}
-                </div>
+              <div className="flex flex-col gap-1.5 items-start">
+                <span className="w-6 h-[2px] bg-white transition-all duration-300 group-hover:w-8" />
+                <span className="w-4 h-[2px] bg-white transition-all duration-300 group-hover:w-8" />
               </div>
-            </motion.div>
-          </>
+              <span className="text-xs font-bold uppercase tracking-[0.2em] hidden md:block">Menu</span>
+            </button>
+          </div>
+
+          {/* LOGO (CENTER) */}
+          <div 
+            onClick={() => navigate("/")}
+            className="flex-1 text-center cursor-pointer mix-blend-difference"
+          >
+            <span className="text-2xl font-black tracking-tighter uppercase text-white">MiniX</span>
+          </div>
+
+          {/* ACTIONS (RIGHT) */}
+          <div className="flex-1 flex items-center justify-end gap-6 text-white mix-blend-difference">
+            <button onClick={() => setSearchOpen(true)} className="hover:opacity-70 transition-opacity">
+              <Search size={20} strokeWidth={1.5} />
+            </button>
+            <button onClick={() => navigate(user ? "/profile" : "/auth")} className="hover:opacity-70 transition-opacity hidden md:block">
+              <User size={20} strokeWidth={1.5} />
+            </button>
+            <button onClick={() => setIsCartOpen(true)} className="relative hover:opacity-70 transition-opacity flex items-center gap-2">
+              <ShoppingBag size={20} strokeWidth={1.5} />
+              {cartItems.length > 0 && (
+                <span className="absolute -top-1 -right-2 text-[10px] bg-white text-black font-bold px-1.5 py-0.5 rounded-full">
+                  {cartItems.length}
+                </span>
+              )}
+            </button>
+          </div>
+        </div>
+      </motion.nav>
+
+      {/* FULLSCREEN OVERLAY MENU */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div 
+            initial={{ clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)" }}
+            animate={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
+            exit={{ clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)" }}
+            transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+            className="fixed inset-0 z-[100] bg-[#050505] text-white flex flex-col"
+          >
+            <div className="flex justify-between items-center p-6 lg:p-12">
+              <span className="text-2xl font-black tracking-tighter uppercase">MiniX</span>
+              <button 
+                onClick={() => setMenuOpen(false)}
+                className="text-xs font-bold uppercase tracking-[0.2em] flex items-center gap-3 hover:opacity-70 transition-opacity"
+              >
+                Close <X size={24} strokeWidth={1.5}/>
+              </button>
+            </div>
+
+            <div className="flex-1 flex flex-col lg:flex-row max-w-[1400px] w-full mx-auto px-6 lg:px-12 py-10 gap-20">
+              {/* Main Nav */}
+              <div className="flex flex-col justify-center gap-4 flex-2">
+                {menuLinks.map((link, i) => (
+                  <div key={link.name} className="overflow-hidden">
+                    <motion.div
+                      initial={{ y: "100%" }}
+                      animate={{ y: 0 }}
+                      exit={{ y: "100%" }}
+                      transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1], delay: 0.1 * i }}
+                    >
+                      <NavLink 
+                        to={link.path}
+                        onClick={() => setMenuOpen(false)}
+                        className="group flex items-center gap-6 text-[3rem] md:text-[5rem] font-black uppercase tracking-tighter leading-none hover:text-zinc-500 transition-colors"
+                      >
+                        <span className="text-sm font-mono text-zinc-600 mb-8 hidden md:block">0{i + 1}</span>
+                        {link.name}
+                        <ArrowRight size={48} className="opacity-0 -translate-x-10 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 ease-[0.16,1,0.3,1] hidden md:block" />
+                      </NavLink>
+                    </motion.div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Utility Nav */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5, duration: 1 }}
+                className="flex flex-col justify-end pb-12 gap-8 lg:ml-auto"
+              >
+                <div className="flex flex-col gap-4">
+                  <h4 className="text-xs uppercase tracking-[0.2em] text-zinc-500 font-bold mb-2">Account</h4>
+                  {user ? (
+                    <>
+                      <button onClick={() => { setMenuOpen(false); navigate("/profile"); }} className="text-lg font-medium hover:text-zinc-400 text-left">Profile</button>
+                      <button onClick={() => { setMenuOpen(false); navigate("/orders"); }} className="text-lg font-medium hover:text-zinc-400 text-left">Orders</button>
+                      <button onClick={() => { setMenuOpen(false); navigate("/wishlist"); }} className="text-lg font-medium hover:text-zinc-400 text-left">Wishlist</button>
+                      <button onClick={() => { setMenuOpen(false); logoutUser(); }} className="text-lg font-medium text-red-500 hover:text-red-400 text-left">Logout</button>
+                    </>
+                  ) : (
+                    <button onClick={() => { setMenuOpen(false); navigate("/auth"); }} className="text-lg font-medium hover:text-zinc-400 text-left">Login / Register</button>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  <h4 className="text-xs uppercase tracking-[0.2em] text-zinc-500 font-bold mb-2">Social</h4>
+                  <a href="#" className="text-lg font-medium hover:text-zinc-400">Instagram</a>
+                  <a href="#" className="text-lg font-medium hover:text-zinc-400">Twitter (X)</a>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+
+      {/* FULLSCREEN SEARCH OVERLAY */}
+      <AnimatePresence>
+        {searchOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center p-6"
+          >
+            <button 
+              onClick={() => setSearchOpen(false)}
+              className="absolute top-8 right-8 text-white/50 hover:text-white"
+            >
+              <X size={32} strokeWidth={1} />
+            </button>
+            <div className="w-full max-w-3xl relative">
+              <input 
+                type="text" 
+                placeholder="TYPE TO SEARCH..." 
+                className="w-full bg-transparent border-b-2 border-white/20 text-4xl md:text-6xl text-white font-black uppercase tracking-tighter pb-4 outline-none placeholder-white/20 focus:border-white transition-colors"
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    navigate(`/shop?search=${e.target.value}`);
+                    setSearchOpen(false);
+                  }
+                }}
+              />
+              <p className="text-xs uppercase tracking-[0.2em] text-zinc-500 mt-6 font-bold">Press Enter to search</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

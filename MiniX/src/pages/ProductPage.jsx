@@ -1,16 +1,8 @@
-// src/pages/ProductPage.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import useSEO from "../hooks/useSEO";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  ArrowLeft,
-  Star,
-  ShoppingBag,
-  Heart,
-  Minus,
-  Plus,
-} from "lucide-react";
+import { ArrowLeft, ShoppingBag, Heart } from "lucide-react";
 
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
@@ -28,11 +20,11 @@ export default function ProductPage() {
   const { addToCart } = useCart();
   const { toggleWishlist, isWishlisted } = useWishlist();
 
-  /* ---------------- Product lookup ---------------- */
   const [dbProduct, setDbProduct] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const fetchProduct = async () => {
       try {
         const { data } = await axios.get(`${API_BASE_URL}/api/product/${id}`);
@@ -51,123 +43,63 @@ export default function ProductPage() {
     return {
       ...dbProduct,
       category: dbProduct.category?.name || "Product",
-      rating: 4.8,
-      reviewCount: 15,
       variants: {
         sizes: ["S", "M", "L", "XL"],
         colors: [
-          { name: "Black", hex: "#111111" },
-          { name: "White", hex: "#eaeaea" },
+          { name: "Obsidian", hex: "#111111" },
+          { name: "Bone", hex: "#eaeaea" },
         ],
       },
       details: {
-        material: "Premium Material",
-        fit: "Standard Fit",
+        material: "100% Heavyweight Cotton",
+        fit: "Oversized Brutalist Fit",
       }
     };
   }, [dbProduct]);
 
-  /* ---------------- Safe defaults (HOOK SAFE) ---------------- */
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState(null);
-  const [quantity, setQuantity] = useState(1);
   const [showToast, setShowToast] = useState(false);
 
-  /* ---------------- Sync when product loads ---------------- */
   useEffect(() => {
     if (!product) return;
-
     setSelectedSize(product.variants.sizes[0]);
     setSelectedColor(product.variants.colors[0]);
     setSelectedImage(0);
-    setQuantity(1);
   }, [product]);
 
-  /* ---------------- Dynamic SEO ---------------- */
   useSEO(
     product
       ? {
-          title: product.name,
-          description:
-            product.description ||
-            `Shop ${product.name} at MiniX. Premium streetwear — fast shipping & secure checkout.`,
+          title: `${product.name} // MiniX`,
+          description: product.description || `Shop ${product.name}.`,
           image: product.images?.[0] || undefined,
           url: `/product/${id}`,
         }
-      : { title: "Product", description: "Shop premium fashion at MiniX.", url: `/product/${id}` }
+      : { title: "Loading...", url: `/product/${id}` }
   );
 
-  /* Product JSON-LD */
-  useEffect(() => {
-    if (!product) return;
-    const scriptId = "product-jsonld";
-    let script = document.getElementById(scriptId);
-    if (!script) {
-      script = document.createElement("script");
-      script.id = scriptId;
-      script.type = "application/ld+json";
-      document.head.appendChild(script);
-    }
-    script.textContent = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Product",
-      name: product.name,
-      description: product.description || "",
-      image: product.images || [],
-      sku: product._id || id,
-      brand: { "@type": "Brand", name: "MiniX" },
-      offers: {
-        "@type": "Offer",
-        priceCurrency: "USD",
-        price: product.price,
-        availability: "https://schema.org/InStock",
-        url: `https://minix.vercel.app/product/${id}`,
-      },
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: product.rating || 4.8,
-        reviewCount: product.reviewCount || 15,
-      },
-    });
-    return () => {
-      const el = document.getElementById(scriptId);
-      if (el) el.remove();
-    };
-  }, [product, id]);
-
-  /* ---------------- Guards ---------------- */
   if (loading) {
     return (
-      <>
+      <div className="bg-[#050505]">
         <Navbar />
         <ProductSkeleton />
-        <Footer />
-      </>
+      </div>
     );
   }
 
   if (!product) {
     return (
-      <>
+      <div className="bg-[#050505] min-h-[100svh] flex items-center justify-center">
         <Navbar />
-        <div className="min-h-screen pt-32 text-center text-zinc-400">
-          Product not found
-        </div>
-        <Footer />
-      </>
+        <h1 className="text-4xl font-black uppercase tracking-tighter text-white/20">Item Not Found</h1>
+      </div>
     );
   }
 
-  /* ---------------- Actions ---------------- */
   const handleAddToCart = () => {
-    addToCart({
-      ...product,
-      selectedSize,
-      selectedColor,
-      quantity,
-    });
-
+    addToCart({ ...product, selectedSize, selectedColor, quantity: 1 });
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
   };
@@ -177,193 +109,165 @@ export default function ProductPage() {
     navigate("/checkout");
   };
 
-  const isInWishlist = isWishlisted(product.id);
+  const isInWishlist = isWishlisted(product._id || id);
 
-  /* ---------------- UI ---------------- */
   return (
-    <>
+    <div className="bg-[#050505] min-h-screen text-white font-sans selection:bg-white selection:text-black">
       <Navbar />
 
-      <main className="min-h-screen bg-[#050509] text-white pt-24 pb-20">
-        <div className="max-w-6xl mx-auto px-4">
+      <main className="max-w-[1400px] mx-auto px-6 lg:px-12 pt-[120px] pb-32">
+        <Link 
+          to="/shop" 
+          className="inline-flex items-center gap-3 text-xs font-mono uppercase tracking-[0.2em] text-zinc-500 hover:text-white transition-colors mb-12"
+        >
+          <ArrowLeft size={14} /> Back to Archive
+        </Link>
 
-          {/* Back */}
-          <div className="mb-6 flex items-center gap-2 text-sm text-zinc-400">
-            <ArrowLeft size={18} />
-            <Link to="/shop" className="hover:text-white">
-              Back to Shop
-            </Link>
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-20">
+          
+          {/* IMAGE GALLERY */}
+          <div className="lg:col-span-7 flex flex-col gap-4">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="w-full bg-[#111] overflow-hidden group relative"
+            >
+              <img
+                src={product.images[selectedImage]}
+                alt={product.name}
+                className="w-full h-auto max-h-[80vh] object-cover cursor-crosshair hover:scale-125 transition-transform duration-[2s] ease-out"
+              />
+            </motion.div>
+
+            <div className="flex gap-4 overflow-x-auto custom-scrollbar pb-2">
+              {product.images.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setSelectedImage(i)}
+                  className={`w-24 h-32 shrink-0 bg-[#111] border transition-all duration-300 ${selectedImage === i ? "border-white" : "border-transparent opacity-50 hover:opacity-100"}`}
+                >
+                  <img src={img} loading="lazy" className="w-full h-full object-cover mix-blend-luminosity hover:mix-blend-normal transition-all" />
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12">
-
-            {/* Images */}
-            <div>
-              <div className="rounded-3xl overflow-hidden border border-white/10 bg-zinc-900">
-                <img
-                  src={product.images[selectedImage]}
-                  alt={product.name}
-                  loading="lazy"
-                  className="w-full h-[420px] object-cover"
-                />
-              </div>
-
-              <div className="flex gap-3 mt-4">
-                {product.images.map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setSelectedImage(i)}
-                    className={`h-20 w-20 rounded-xl overflow-hidden border ${selectedImage === i
-                      ? "border-white"
-                      : "border-white/10"
-                      }`}
-                  >
-                    <img src={img} loading="lazy" className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
+          {/* PRODUCT INFO */}
+          <motion.div 
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+            className="lg:col-span-5 flex flex-col justify-center"
+          >
+            <div className="mb-12 border-b border-white/10 pb-8">
+              <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-4">
+                ID: {product._id?.slice(-6) || id.slice(-6)} // {product.category}
+              </p>
+              <h1 className="text-5xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-6">
+                {product.name}
+              </h1>
+              <p className="text-2xl font-mono text-zinc-300">
+                ${product.price}.00
+              </p>
             </div>
 
-            {/* Info */}
-            <div className="space-y-6">
+            <p className="text-zinc-400 text-sm leading-relaxed mb-10 max-w-md border-l border-white/10 pl-6">
+              {product.description || "Experimental design constructed with premium heavyweight materials. Engineered for motion and durability."}
+            </p>
+
+            {/* SELECTION GRID */}
+            <div className="grid grid-cols-2 gap-8 mb-12">
               <div>
-                <p className="uppercase text-xs tracking-widest text-zinc-400">
-                  {product.category}
-                </p>
-                <h1 className="text-3xl font-semibold">{product.name}</h1>
-
-                <div className="flex items-center gap-4 mt-3">
-                  <span className="text-2xl font-semibold">
-                    ${product.price}
-                  </span>
-                  <span className="flex items-center gap-1 text-sm text-zinc-400">
-                    <Star size={16} className="text-amber-400 fill-amber-400" />
-                    {product.rating} ({product.reviewCount})
-                  </span>
-                </div>
-              </div>
-
-              <p className="text-zinc-300 text-sm">{product.description}</p>
-
-              {/* Size */}
-              <div>
-                <p className="text-xs uppercase tracking-widest text-zinc-400 mb-2">
-                  Size
-                </p>
-                <div className="flex gap-2">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-4">Select Size</p>
+                <div className="flex flex-wrap gap-2">
                   {product.variants.sizes.map((size) => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`px-4 py-2 rounded-full border text-sm transition ${selectedSize === size
-                        ? "bg-white text-black"
-                        : "border-white/10 hover:border-white/40"
-                        }`}
+                      className={`w-12 h-12 flex items-center justify-center text-xs font-mono border transition-all duration-300 ${selectedSize === size ? "bg-white text-black border-white" : "border-white/20 text-white/50 hover:text-white hover:border-white/60"}`}
                     >
                       {size}
                     </button>
                   ))}
                 </div>
               </div>
-
-              {/* Color */}
+              
               <div>
-                <p className="text-xs uppercase tracking-widest text-zinc-400 mb-2">
-                  Color
-                </p>
+                <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-4">Select Color</p>
                 <div className="flex gap-3">
                   {product.variants.colors.map((color) => (
                     <button
                       key={color.name}
                       onClick={() => setSelectedColor(color)}
-                      className={`w-7 h-7 rounded-full border-2 transition ${selectedColor?.name === color.name
-                        ? "border-white scale-110"
-                        : "border-transparent"
-                        }`}
+                      className={`w-8 h-8 rounded-full border-2 transition-all duration-300 ${selectedColor?.name === color.name ? "border-white scale-125" : "border-transparent opacity-50 hover:opacity-100"}`}
                       style={{ backgroundColor: color.hex }}
                     />
                   ))}
                 </div>
               </div>
+            </div>
 
-              {/* Quantity */}
-              <div className="flex items-center gap-4 mt-2 mb-2">
-                <button 
-                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"
-                >
-                  <Minus size={16} />
-                </button>
-                <span className="w-6 text-center font-medium">{quantity}</span>
-                <button 
-                  onClick={() => setQuantity((q) => q + 1)}
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"
-                >
-                  <Plus size={16} />
-                </button>
-              </div>
+            {/* ACTIONS */}
+            <div className="flex flex-col gap-4">
+              <button
+                onClick={handleAddToCart}
+                className="w-full relative group bg-white text-black font-bold uppercase tracking-widest text-sm py-5 overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-black translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-[0.16,1,0.3,1]" />
+                <span className="relative z-10 group-hover:text-white flex items-center justify-center gap-3 transition-colors duration-500">
+                  <ShoppingBag size={16} /> Add to Cart
+                </span>
+              </button>
 
-              {/* Actions */}
-              <div className="flex gap-3">
-                <button
-                  onClick={handleAddToCart}
-                  className="flex-1 rounded-full bg-white text-black py-3 font-medium"
-                >
-                  <ShoppingBag size={18} className="inline mr-2" />
-                  Add to Cart
-                </button>
-
+              <div className="flex gap-4">
                 <button
                   onClick={handleBuyNow}
-                  className="flex-1 rounded-full border border-white/20 py-3"
+                  className="flex-1 border border-white/20 py-4 font-bold uppercase tracking-widest text-xs hover:bg-white/5 transition-colors"
                 >
                   Buy Now
                 </button>
-
                 <button
                   onClick={() => toggleWishlist(product)}
-                  className="rounded-full border border-white/20 p-3"
+                  className={`flex items-center justify-center w-16 border border-white/20 hover:bg-white/5 transition-colors ${isInWishlist ? 'text-pink-500' : 'text-white'}`}
                 >
-                  <Heart
-                    className={`${isInWishlist
-                      ? "fill-pink-500 text-pink-500"
-                      : "text-pink-400"
-                      }`}
-                  />
+                  <Heart size={18} className={isInWishlist ? 'fill-pink-500' : ''} />
                 </button>
               </div>
+            </div>
 
-              {/* Details */}
-              <div className="grid grid-cols-2 gap-4 text-xs text-zinc-400 pt-4 border-t border-white/10">
-                <div>
-                  <p className="text-zinc-500">Material</p>
-                  <p>{product.details.material}</p>
-                </div>
-                <div>
-                  <p className="text-zinc-500">Fit</p>
-                  <p>{product.details.fit}</p>
-                </div>
+            {/* DETAILS */}
+            <div className="mt-12 pt-8 border-t border-white/10 grid grid-cols-2 gap-6">
+              <div>
+                <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-600 mb-1">Material</p>
+                <p className="text-sm font-bold">{product.details.material}</p>
+              </div>
+              <div>
+                <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-600 mb-1">Fit</p>
+                <p className="text-sm font-bold">{product.details.fit}</p>
               </div>
             </div>
-          </div>
-
-          {/* Toast */}
-          <AnimatePresence>
-            {showToast && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="fixed bottom-24 right-6 bg-white text-black px-4 py-2 rounded-full shadow-xl text-xs z-50"
-              >
-                Added to cart
-              </motion.div>
-            )}
-          </AnimatePresence>
+          </motion.div>
         </div>
+
+        {/* TOAST */}
+        <AnimatePresence>
+          {showToast && (
+            <motion.div
+              initial={{ opacity: 0, y: 50, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 50, scale: 0.9 }}
+              transition={{ type: "spring", damping: 20, stiffness: 300 }}
+              className="fixed bottom-12 right-12 bg-white text-black font-mono text-xs uppercase tracking-widest px-6 py-4 shadow-[0_20px_40px_rgba(0,0,0,0.5)] z-50 flex items-center gap-3"
+            >
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              Item secured
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
 
       <Footer />
-    </>
+    </div>
   );
 }
