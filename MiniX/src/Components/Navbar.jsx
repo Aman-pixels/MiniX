@@ -126,47 +126,55 @@ export default function Navbar() {
             transition={{ duration: 0.5 }}
             className="fixed inset-0 z-[100] bg-[#050505] text-white selection:bg-[#4c4e51] selection:text-white overflow-hidden"
           >
+            {/* Pure CSS Animations for bulletproof staggering */}
+            <style>{`
+              @keyframes fadeSlideUp {
+                from { opacity: 0; transform: translateY(30px); }
+                to { opacity: 1; transform: translateY(0); }
+              }
+              .animate-stagger {
+                opacity: 0;
+                animation: fadeSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+              }
+            `}</style>
+
             {/* Cinematic Noise & Background Blur */}
             <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">
               <img src="/Hero.jpg" alt="Atmosphere" className="w-full h-full object-cover mix-blend-luminosity blur-[100px] scale-110" />
             </div>
             <div className="absolute inset-0 z-0 opacity-[0.03] mix-blend-overlay pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
 
-            <div className="relative z-10 min-h-screen flex flex-col w-full h-full overflow-y-auto">
+            <div className="relative z-10 min-h-screen flex flex-col w-full overflow-y-auto">
               {/* Header properly aligned to the 1400px grid */}
               <div className="w-full max-w-[1400px] mx-auto px-6 lg:px-12 py-6 lg:py-12 flex justify-between items-center shrink-0">
-                <span className="text-2xl font-black tracking-tighter uppercase cursor-pointer hover:opacity-70 transition-opacity" onClick={() => { setMenuOpen(false); navigate("/"); }}>
+                <span className="text-2xl font-black tracking-tighter uppercase cursor-pointer hover:opacity-70 transition-opacity animate-stagger" style={{ animationDelay: '0.1s' }} onClick={() => { setMenuOpen(false); navigate("/"); }}>
                   MiniX
                 </span>
                 <button 
                   onClick={() => setMenuOpen(false)}
-                  className="text-xs font-mono uppercase tracking-[0.2em] flex items-center gap-3 hover:text-zinc-400 transition-colors"
+                  className="text-xs font-mono uppercase tracking-[0.2em] flex items-center gap-3 hover:text-zinc-400 transition-colors animate-stagger" style={{ animationDelay: '0.1s' }}
                 >
                   Close <X size={20} strokeWidth={1}/>
                 </button>
               </div>
 
-              <div className="flex-grow flex flex-col lg:flex-row max-w-[1400px] w-full mx-auto px-6 lg:px-12 pb-12 lg:pb-20 gap-16 lg:gap-24 h-full">
+              <div className="flex-grow flex flex-col lg:flex-row max-w-[1400px] w-full mx-auto px-6 lg:px-12 pb-12 lg:pb-20 gap-16 lg:gap-24">
                 
                 {/* Main Nav Links */}
-                <div className="flex flex-col justify-center gap-4 w-full lg:w-3/5 h-full">
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.1 }}
-                    className="mb-6 hidden lg:block"
+                <div className="flex flex-col justify-center gap-4 w-full lg:w-3/5">
+                  <div 
+                    className="mb-6 hidden lg:block animate-stagger"
+                    style={{ animationDelay: '0.1s' }}
                   >
                     <p className="text-xs font-mono uppercase tracking-[0.2em] text-zinc-500">
                       Minimal outside. Loud inside.
                     </p>
-                  </motion.div>
+                  </div>
 
-                  <motion.form 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.1 }}
+                  <form 
                     onSubmit={handleSearchSubmit} 
-                    className="flex lg:hidden items-center relative mb-8"
+                    className="flex lg:hidden items-center relative mb-8 animate-stagger"
+                    style={{ animationDelay: '0.1s' }}
                   >
                     <input
                       type="text"
@@ -178,7 +186,7 @@ export default function Navbar() {
                     <button type="submit" className="absolute right-0 px-4 text-zinc-500 hover:text-white transition-colors">
                       <Search size={18} strokeWidth={1} />
                     </button>
-                  </motion.form>
+                  </form>
 
                   {[
                     { name: "Collections", path: "/shop" },
@@ -186,12 +194,10 @@ export default function Navbar() {
                     { name: "The Journal", path: "/about" },
                     { name: "Everyday Uniform", path: "/shop" }
                   ].map((link, i) => (
-                    <motion.div 
+                    <div 
                       key={link.name} 
-                      className="py-1 overflow-hidden"
-                      initial={{ opacity: 0, y: 50 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 + (i * 0.1), duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                      className="py-1 overflow-hidden animate-stagger"
+                      style={{ animationDelay: `${0.2 + (i * 0.1)}s` }}
                     >
                       <NavLink 
                         to={link.path}
@@ -201,16 +207,14 @@ export default function Navbar() {
                         <span className="text-[10px] font-mono text-zinc-600 mb-6 hidden md:block group-hover:text-white transition-colors duration-500">0{i + 1}</span>
                         {link.name}
                       </NavLink>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
 
                 {/* Right Panel / Emotional Lifestyle */}
-                <motion.div 
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex flex-col justify-end pb-8 gap-16 lg:ml-auto w-full lg:w-2/5 mt-auto lg:mt-0 lg:h-full lg:pl-12"
+                <div 
+                  className="flex flex-col justify-end pb-8 gap-16 lg:ml-auto w-full lg:w-2/5 mt-auto lg:mt-0 lg:pl-12 animate-stagger"
+                  style={{ animationDelay: '0.5s' }}
                 >
                   <div className="flex flex-col gap-6">
                     <h4 className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-600 border-b border-zinc-800 pb-2">
@@ -244,7 +248,7 @@ export default function Navbar() {
                       Designed for people who feel <br/> everything deeply.
                     </p>
                   </div>
-                </motion.div>
+                </div>
               </div>
             </div>
           </motion.div>
