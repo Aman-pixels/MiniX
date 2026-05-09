@@ -2,52 +2,58 @@ import React from "react";
 import { useWishlist } from "../context/WishlistContext";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
+import ProductCard from "../Components/ProductCard";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export default function WishlistPage() {
-  const { wishlist, toggleWishlist } = useWishlist();
+  const { wishlist } = useWishlist();
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-[#1e2023] text-white selection:bg-[#4c4e51] selection:text-white flex flex-col">
       <Navbar />
 
-      <section className="px-6 lg:px-20 py-14">
-        <h1 className="text-2xl font-semibold mb-6">Your Wishlist</h1>
+      <main className="flex-grow pt-32 px-6 lg:px-12 max-w-[1400px] mx-auto w-full">
+        <div className="flex flex-col mb-16 border-b border-[#47484c] pb-8">
+          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#4c4e51] mb-4">
+            System // User
+          </p>
+          <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9]">
+            Saved <br /> Archive
+          </h1>
+        </div>
 
         {wishlist.length === 0 ? (
-          <p className="text-gray-400">
-            Your wishlist is empty.{" "}
-            <Link to="/shop" className="underline text-white">
-              Browse products
+          <div className="h-[40vh] flex flex-col items-center justify-center border border-[#47484c] bg-[#1e1f22]">
+            <p className="text-[#4c4e51] font-mono text-xs uppercase tracking-widest mb-6">
+              Archive is empty.
+            </p>
+            <Link 
+              to="/shop" 
+              className="px-8 py-4 bg-white text-black text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-[#4c4e51] hover:text-white transition-colors"
+            >
+              Access Catalog
             </Link>
-          </p>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-            {wishlist.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white/5 border border-white/10 rounded-xl p-3"
-              >
-                <Link to={`/product/${item.id}`}>
-                  <img src={item.image} alt={item.name} className="rounded-lg h-40 object-cover w-full" />
-                </Link>
-
-                <div className="mt-3">
-                  <p className="text-sm font-medium">{item.name}</p>
-                  <p className="text-gray-400 text-xs">${item.price}</p>
-                </div>
-
-                <button
-                  onClick={() => toggleWishlist(item)}
-                  className="mt-3 w-full text-sm py-2 bg-red-400/20 text-red-300 rounded-md"
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
           </div>
+        ) : (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+          >
+            {wishlist.map((item, i) => (
+              <motion.div
+                key={item.id || item._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <ProductCard product={item} />
+              </motion.div>
+            ))}
+          </motion.div>
         )}
-      </section>
+      </main>
 
       <Footer />
     </div>
