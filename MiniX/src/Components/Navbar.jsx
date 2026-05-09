@@ -124,74 +124,76 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[100] bg-[#1e2023] text-white flex flex-col selection:bg-[#4c4e51] selection:text-white overflow-y-auto"
+            className="fixed inset-0 z-[100] bg-[#1e2023] text-white selection:bg-[#4c4e51] selection:text-white overflow-y-auto"
           >
-            <div className="flex justify-between items-center p-6 lg:p-12 shrink-0">
-              <span className="text-2xl font-black tracking-tighter uppercase cursor-pointer hover:opacity-70 transition-opacity" onClick={() => { setMenuOpen(false); navigate("/"); }}>
-                MiniX
-              </span>
-              <button 
-                onClick={() => setMenuOpen(false)}
-                className="text-xs font-bold uppercase tracking-[0.2em] flex items-center gap-3 hover:text-zinc-400 transition-colors"
-              >
-                Close <X size={24} strokeWidth={1.5}/>
-              </button>
-            </div>
-
-            <div className="flex-grow flex flex-col lg:flex-row max-w-[1400px] w-full mx-auto px-6 lg:px-12 py-10 gap-16 lg:gap-20">
-              
-              {/* Main Nav */}
-              <div className="flex flex-col justify-center gap-4 w-full lg:w-2/3">
-                {/* Mobile Search Bar */}
-                <form onSubmit={handleSearchSubmit} className="flex lg:hidden items-center relative mb-12">
-                  <input
-                    type="text"
-                    placeholder="Search catalog..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-transparent border-b border-[#47484c] text-white text-sm font-mono uppercase tracking-widest px-2 py-3 focus:border-white focus:outline-none transition-colors"
-                  />
-                  <button type="submit" className="absolute right-0 px-4 text-[#4c4e51] hover:text-white transition-colors">
-                    <Search size={20} />
-                  </button>
-                </form>
-
-                {menuLinks.map((link, i) => (
-                  <div key={link.name} className="py-2">
-                    <NavLink 
-                      to={link.path}
-                      onClick={() => setMenuOpen(false)}
-                      className="group flex items-center gap-6 text-4xl sm:text-5xl md:text-[5rem] font-black uppercase tracking-tighter leading-none hover:text-[#4c4e51] transition-colors"
-                    >
-                      <span className="text-sm font-mono text-[#4c4e51] mb-4 md:mb-8 hidden md:block">0{i + 1}</span>
-                      {link.name}
-                      <ArrowRight size={48} className="opacity-0 -translate-x-10 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 ease-[0.16,1,0.3,1] hidden md:block" />
-                    </NavLink>
-                  </div>
-                ))}
+            <div className="min-h-screen flex flex-col w-full">
+              <div className="flex justify-between items-center p-6 lg:p-12 shrink-0">
+                <span className="text-2xl font-black tracking-tighter uppercase cursor-pointer hover:opacity-70 transition-opacity" onClick={() => { setMenuOpen(false); navigate("/"); }}>
+                  MiniX
+                </span>
+                <button 
+                  onClick={() => setMenuOpen(false)}
+                  className="text-xs font-bold uppercase tracking-[0.2em] flex items-center gap-3 hover:text-zinc-400 transition-colors"
+                >
+                  Close <X size={24} strokeWidth={1.5}/>
+                </button>
               </div>
 
-              {/* Utility Nav */}
-              <div className="flex flex-col justify-end pb-12 gap-12 lg:ml-auto w-full lg:w-1/3">
-                <div className="flex flex-col gap-6">
-                  <h4 className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#4c4e51] font-bold border-b border-[#47484c] pb-2">System Access</h4>
-                  {user ? (
-                    <>
-                      <button onClick={() => { setMenuOpen(false); navigate("/profile"); }} className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 text-left transition-colors">Profile</button>
-                      <button onClick={() => { setMenuOpen(false); navigate("/orders"); }} className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 text-left transition-colors">Orders</button>
-                      <button onClick={() => { setMenuOpen(false); navigate("/wishlist"); }} className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 text-left transition-colors">Wishlist</button>
-                      <button onClick={() => { setMenuOpen(false); logoutUser(); }} className="text-sm font-bold uppercase tracking-wider text-red-500 hover:text-red-400 text-left transition-colors mt-4">Terminate Session</button>
-                    </>
-                  ) : (
-                    <button onClick={() => { setMenuOpen(false); navigate("/auth"); }} className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 text-left transition-colors">Authenticate</button>
-                  )}
+              <div className="flex-1 flex flex-col lg:flex-row max-w-[1400px] w-full mx-auto px-6 lg:px-12 py-10 gap-16 lg:gap-20">
+                
+                {/* Main Nav */}
+                <div className="flex flex-col justify-center gap-4 w-full lg:w-2/3">
+                  {/* Mobile Search Bar */}
+                  <form onSubmit={handleSearchSubmit} className="flex lg:hidden items-center relative mb-12">
+                    <input
+                      type="text"
+                      placeholder="Search catalog..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full bg-transparent border-b border-[#47484c] text-white text-sm font-mono uppercase tracking-widest px-2 py-3 focus:border-white focus:outline-none transition-colors"
+                    />
+                    <button type="submit" className="absolute right-0 px-4 text-[#4c4e51] hover:text-white transition-colors">
+                      <Search size={20} />
+                    </button>
+                  </form>
+
+                  {menuLinks.map((link, i) => (
+                    <div key={link.name} className="py-2">
+                      <NavLink 
+                        to={link.path}
+                        onClick={() => setMenuOpen(false)}
+                        className="group flex items-center gap-6 text-4xl sm:text-5xl md:text-[5rem] font-black uppercase tracking-tighter leading-none hover:text-[#4c4e51] transition-colors"
+                      >
+                        <span className="text-sm font-mono text-[#4c4e51] mb-4 md:mb-8 hidden md:block">0{i + 1}</span>
+                        {link.name}
+                        <ArrowRight size={48} className="opacity-0 -translate-x-10 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 ease-[0.16,1,0.3,1] hidden md:block" />
+                      </NavLink>
+                    </div>
+                  ))}
                 </div>
 
-                <div className="flex flex-col gap-6">
-                  <h4 className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#4c4e51] font-bold border-b border-[#47484c] pb-2">Comms Network</h4>
-                  <a href="#" className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 transition-colors">Instagram</a>
-                  <a href="#" className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 transition-colors">Twitter (X)</a>
-                  <a href="mailto:support@minix.com" className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 transition-colors mt-4">support@minix.com</a>
+                {/* Utility Nav */}
+                <div className="flex flex-col justify-end pb-12 gap-12 lg:ml-auto w-full lg:w-1/3 mt-auto lg:mt-0">
+                  <div className="flex flex-col gap-6">
+                    <h4 className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#4c4e51] font-bold border-b border-[#47484c] pb-2">System Access</h4>
+                    {user ? (
+                      <>
+                        <button onClick={() => { setMenuOpen(false); navigate("/profile"); }} className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 text-left transition-colors">Profile</button>
+                        <button onClick={() => { setMenuOpen(false); navigate("/orders"); }} className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 text-left transition-colors">Orders</button>
+                        <button onClick={() => { setMenuOpen(false); navigate("/wishlist"); }} className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 text-left transition-colors">Wishlist</button>
+                        <button onClick={() => { setMenuOpen(false); logoutUser(); }} className="text-sm font-bold uppercase tracking-wider text-red-500 hover:text-red-400 text-left transition-colors mt-4">Terminate Session</button>
+                      </>
+                    ) : (
+                      <button onClick={() => { setMenuOpen(false); navigate("/auth"); }} className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 text-left transition-colors">Authenticate</button>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col gap-6">
+                    <h4 className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#4c4e51] font-bold border-b border-[#47484c] pb-2">Comms Network</h4>
+                    <a href="#" className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 transition-colors">Instagram</a>
+                    <a href="#" className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 transition-colors">Twitter (X)</a>
+                    <a href="mailto:support@minix.com" className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 transition-colors mt-4">support@minix.com</a>
+                  </div>
                 </div>
               </div>
             </div>
