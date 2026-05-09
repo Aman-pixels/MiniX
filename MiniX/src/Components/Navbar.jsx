@@ -123,11 +123,11 @@ export default function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.3 }}
             className="fixed inset-0 z-[100] bg-[#1e2023] text-white flex flex-col selection:bg-[#4c4e51] selection:text-white overflow-y-auto"
           >
             <div className="flex justify-between items-center p-6 lg:p-12 shrink-0">
-              <span className="text-2xl font-black tracking-tighter uppercase cursor-pointer" onClick={() => { setMenuOpen(false); navigate("/"); }}>
+              <span className="text-2xl font-black tracking-tighter uppercase cursor-pointer hover:opacity-70 transition-opacity" onClick={() => { setMenuOpen(false); navigate("/"); }}>
                 MiniX
               </span>
               <button 
@@ -138,10 +138,10 @@ export default function Navbar() {
               </button>
             </div>
 
-            <div className="flex-1 flex flex-col lg:flex-row max-w-[1400px] w-full mx-auto px-6 lg:px-12 py-10 gap-16 lg:gap-20">
+            <div className="flex-grow flex flex-col lg:flex-row max-w-[1400px] w-full mx-auto px-6 lg:px-12 py-10 gap-16 lg:gap-20">
               
               {/* Main Nav */}
-              <div className="flex flex-col justify-center gap-4 flex-2 w-full lg:w-2/3">
+              <div className="flex flex-col justify-center gap-4 w-full lg:w-2/3">
                 {/* Mobile Search Bar */}
                 <form onSubmit={handleSearchSubmit} className="flex lg:hidden items-center relative mb-12">
                   <input
@@ -157,13 +157,7 @@ export default function Navbar() {
                 </form>
 
                 {menuLinks.map((link, i) => (
-                  <motion.div 
-                    key={link.name} 
-                    className="py-2"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 + (i * 0.1), duration: 0.4 }}
-                  >
+                  <div key={link.name} className="py-2">
                     <NavLink 
                       to={link.path}
                       onClick={() => setMenuOpen(false)}
@@ -173,17 +167,12 @@ export default function Navbar() {
                       {link.name}
                       <ArrowRight size={48} className="opacity-0 -translate-x-10 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 ease-[0.16,1,0.3,1] hidden md:block" />
                     </NavLink>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
 
               {/* Utility Nav */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-                className="flex flex-col justify-end pb-12 gap-12 lg:ml-auto w-full lg:w-1/3"
-              >
+              <div className="flex flex-col justify-end pb-12 gap-12 lg:ml-auto w-full lg:w-1/3">
                 <div className="flex flex-col gap-6">
                   <h4 className="text-[10px] font-mono uppercase tracking-[0.3em] text-[#4c4e51] font-bold border-b border-[#47484c] pb-2">System Access</h4>
                   {user ? (
@@ -204,7 +193,7 @@ export default function Navbar() {
                   <a href="#" className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 transition-colors">Twitter (X)</a>
                   <a href="mailto:support@minix.com" className="text-sm font-bold uppercase tracking-wider hover:text-zinc-400 transition-colors mt-4">support@minix.com</a>
                 </div>
-              </motion.div>
+              </div>
             </div>
           </motion.div>
         )}
