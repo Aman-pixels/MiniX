@@ -87,11 +87,15 @@ export default function Navbar() {
     <nav
       className={`
         fixed top-0 left-0 w-full z-50
-        transition-all duration-300
-        ${scrolled ? "glass py-3" : "bg-transparent py-5"}
+        transition-all duration-500 ease-in-out
+        ${scrolled ? "pt-4 px-4 sm:px-6" : "pt-6 px-4 sm:px-6"}
       `}
     >
-      <div className="max-w-[1250px] mx-auto px-6 flex items-center justify-between gap-6">
+      <div className={`
+        max-w-[1250px] mx-auto flex items-center justify-between gap-6
+        transition-all duration-500 ease-in-out
+        ${scrolled ? "bg-black/60 backdrop-blur-2xl border border-white/10 rounded-full py-3 px-6 sm:px-8 shadow-2xl" : "bg-transparent py-2"}
+      `}>
         {/* LOGO & SIDEBAR MENU */}
         <div className="flex items-center gap-4">
           <button
@@ -110,17 +114,28 @@ export default function Navbar() {
         </div>
 
         {/* MID LINKS */}
-        <ul className="hidden lg:flex gap-10 text-white/80 font-medium">
+        <ul className="hidden lg:flex gap-8 text-white/80 font-medium">
           {["shop", "about", "contact"].map((link) => (
             <NavLink
               key={link}
               to={`/${link}`}
               className={({ isActive }) =>
-                `capitalize hover:text-white transition ${isActive ? "text-white font-semibold" : ""
+                `relative capitalize transition-colors duration-300 hover:text-white ${isActive ? "text-white font-semibold" : ""
                 }`
               }
             >
-              {link}
+              {({ isActive }) => (
+                <>
+                  {link}
+                  {isActive && (
+                    <motion.div
+                      layoutId="navbar-indicator"
+                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-white rounded-full"
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                  )}
+                </>
+              )}
             </NavLink>
           ))}
         </ul>
@@ -141,9 +156,9 @@ export default function Navbar() {
             }}
             onKeyDown={handleEnter}
             className="
-              w-full bg-white/5 border border-white/10 rounded-xl
-              py-2 pl-10 pr-3 text-sm text-white placeholder-white/40
-              focus:border-white/40 focus:bg-white/10 transition outline-none
+              w-full bg-white/5 border border-transparent rounded-full
+              py-2.5 pl-10 pr-3 text-sm text-white placeholder-white/40
+              focus:border-white/20 focus:bg-white/10 transition-all outline-none
             "
           />
 

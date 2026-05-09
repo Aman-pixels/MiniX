@@ -140,9 +140,9 @@ export default function Shop() {
         <div className="flex flex-col gap-6">
           {/* Categories */}
           <motion.div
-            initial={{ opacity: 0, y: -8 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-wrap gap-3 bg-[rgba(255,255,255,0.03)] border border-white/10 px-4 py-3 rounded-2xl"
+            className="flex flex-wrap gap-2 md:gap-3 bg-white/5 border border-white/10 px-2 py-2 rounded-2xl md:rounded-[1.5rem] backdrop-blur-md w-max max-w-full overflow-x-auto custom-scrollbar"
           >
             {categories.map((cat) => (
               <button
@@ -152,9 +152,9 @@ export default function Shop() {
                   updateURL({ category: cat });
                   setPage(1);
                 }}
-                className={`px-4 py-2 rounded-xl text-sm ${activeCategory === cat
-                  ? "bg-white text-black"
-                  : "text-gray-300 hover:bg-white/10"
+                className={`relative px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${activeCategory === cat
+                  ? "text-black bg-white shadow-lg scale-100"
+                  : "text-zinc-400 hover:text-white hover:bg-white/10 scale-95"
                   }`}
               >
                 {cat}
@@ -180,7 +180,7 @@ export default function Shop() {
                   updateURL({ search: value });
                   setPage(1);
                 }}
-                className="w-full bg-black border border-white/10 rounded-lg pl-10 pr-3 py-2 text-sm"
+                className="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm focus:border-white/30 focus:bg-white/10 transition-all outline-none placeholder-zinc-500"
               />
             </div>
 
@@ -213,7 +213,7 @@ export default function Shop() {
                           setSortType(opt.key);
                           setDropdownOpen(false);
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm hover:bg-white/10"
+                        className="block w-full text-left px-4 py-2.5 text-sm hover:bg-white/10 transition-colors"
                       >
                         {opt.label}
                       </button>

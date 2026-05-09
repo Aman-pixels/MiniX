@@ -28,7 +28,7 @@ export default function CartDrawer() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsCartOpen(false)}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99]"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[99]"
           />
 
           {/* Right-aligned Drawer */}
@@ -36,8 +36,8 @@ export default function CartDrawer() {
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full max-w-[400px] bg-[#0a0a09] border-l border-white/10 z-[100] flex flex-col shadow-2xl"
+            transition={{ type: "spring", damping: 30, stiffness: 300 }}
+            className="fixed top-0 right-0 h-full w-full max-w-[420px] bg-[#0a0a0a]/90 backdrop-blur-3xl border-l border-white/10 z-[100] flex flex-col shadow-[-20px_0_60px_rgba(0,0,0,0.5)]"
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-white/10 shrink-0">
@@ -116,13 +116,13 @@ export default function CartDrawer() {
                 <div className="space-y-3">
                   <button
                     onClick={handleCheckout}
-                    className="w-full py-3.5 bg-white text-black font-semibold rounded-xl hover:bg-gray-200 transition-colors shadow-xl"
+                    className="w-full py-4 bg-white text-black font-semibold rounded-2xl hover:bg-gray-200 transition-colors shadow-xl active:scale-95"
                   >
-                    Checkout securely
+                    Checkout Securely
                   </button>
                   <button
                     onClick={handleCartReady}
-                    className="w-full py-3.5 border border-white/20 text-white font-medium rounded-xl hover:bg-white/10 transition-colors"
+                    className="w-full py-4 border border-white/10 text-white font-medium rounded-2xl hover:bg-white/5 transition-colors"
                   >
                     View Full Cart
                   </button>
