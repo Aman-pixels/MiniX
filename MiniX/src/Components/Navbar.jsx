@@ -120,17 +120,24 @@ export default function Navbar() {
       <AnimatePresence>
         {menuOpen && (
           <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { 
+                opacity: 1, 
+                transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1], staggerChildren: 0.1, delayChildren: 0.1 } 
+              },
+              exit: { opacity: 0, transition: { duration: 0.4 } }
+            }}
             className="fixed inset-0 z-[100] bg-[#050505] text-white selection:bg-[#4c4e51] selection:text-white overflow-hidden"
           >
             {/* Cinematic Noise & Background Blur */}
-            <div className="absolute inset-0 z-0 opacity-40">
+            <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">
               <img src="/Hero.jpg" alt="Atmosphere" className="w-full h-full object-cover mix-blend-luminosity blur-[100px] scale-110" />
             </div>
-            <div className="absolute inset-0 z-0 opacity-[0.03] mix-blend-overlay" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
+            <div className="absolute inset-0 z-0 opacity-[0.03] mix-blend-overlay pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
 
             <div className="relative z-10 min-h-screen flex flex-col w-full h-full overflow-y-auto">
               {/* Header */}
@@ -150,13 +157,20 @@ export default function Navbar() {
                 
                 {/* Main Nav Links */}
                 <div className="flex flex-col justify-center gap-6 w-full lg:w-2/3 h-full">
-                  <div className="mb-8 hidden lg:block">
+                  <motion.div 
+                    variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8 } } }}
+                    className="mb-8 hidden lg:block"
+                  >
                     <p className="text-xs font-mono uppercase tracking-[0.2em] text-zinc-500">
                       Minimal outside. Loud inside.
                     </p>
-                  </div>
+                  </motion.div>
 
-                  <form onSubmit={handleSearchSubmit} className="flex lg:hidden items-center relative mb-8">
+                  <motion.form 
+                    variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8 } } }}
+                    onSubmit={handleSearchSubmit} 
+                    className="flex lg:hidden items-center relative mb-8"
+                  >
                     <input
                       type="text"
                       placeholder="Search..."
@@ -167,7 +181,7 @@ export default function Navbar() {
                     <button type="submit" className="absolute right-0 px-4 text-zinc-500 hover:text-white transition-colors">
                       <Search size={18} strokeWidth={1} />
                     </button>
-                  </form>
+                  </motion.form>
 
                   {[
                     { name: "Collections", path: "/shop" },
@@ -178,9 +192,10 @@ export default function Navbar() {
                     <motion.div 
                       key={link.name} 
                       className="py-1 overflow-hidden"
-                      initial={{ opacity: 0, y: 40 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1 + (i * 0.1), duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                      variants={{
+                        hidden: { opacity: 0, y: 50 },
+                        visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+                      }}
                     >
                       <NavLink 
                         to={link.path}
@@ -196,9 +211,10 @@ export default function Navbar() {
 
                 {/* Right Panel / Emotional Lifestyle */}
                 <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5, duration: 1 }}
+                  variants={{
+                    hidden: { opacity: 0, y: 30 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } }
+                  }}
                   className="flex flex-col justify-end pb-12 gap-16 lg:ml-auto w-full lg:w-1/3 mt-auto lg:mt-0 lg:h-full"
                 >
                   <div className="flex flex-col gap-6">
