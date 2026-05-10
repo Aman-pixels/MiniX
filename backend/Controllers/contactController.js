@@ -5,7 +5,7 @@ const sendEmail = require("../utils/sendEmail");
 // @route   POST /api/contact
 // @access  Public
 exports.submitContactForm = asyncHandler(async (req, res) => {
-    const { user_name, user_email, message } = req.body;
+    const { user_name, user_email, subject, message } = req.body;
 
     if (!user_name || !user_email || !message) {
         res.status(400);
@@ -15,6 +15,7 @@ exports.submitContactForm = asyncHandler(async (req, res) => {
     const messageContent = `
         Name: ${user_name}
         Email: ${user_email}
+        Subject: ${subject || 'General Inquiry'}
         
         Message:
         ${message}
@@ -24,6 +25,7 @@ exports.submitContactForm = asyncHandler(async (req, res) => {
         <h3>New Contact Message</h3>
         <p><strong>Name:</strong> ${user_name}</p>
         <p><strong>Email:</strong> ${user_email}</p>
+        <p><strong>Subject:</strong> ${subject || 'General Inquiry'}</p>
         <p><strong>Message:</strong></p>
         <p>${message.replace(/\n/g, '<br>')}</p>
     `;
