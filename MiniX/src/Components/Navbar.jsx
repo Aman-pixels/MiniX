@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
@@ -128,7 +129,7 @@ export default function Navbar() {
 
       {/* FULLSCREEN OVERLAY MENU */}
       <AnimatePresence>
-        {menuOpen && (
+        {menuOpen && createPortal(
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -148,7 +149,7 @@ export default function Navbar() {
               }
             `}</style>
 
-            <div className="flex flex-col lg:flex-row w-full flex-grow h-[calc(100vh-50px)]">
+            <div className="flex flex-col lg:flex-row w-full flex-grow h-[calc(100vh-50px)] min-h-0">
               
               {/* LEFT PANEL */}
               <div className="relative w-full lg:w-[65%] h-full border-r border-[#1a1a1a] flex flex-col justify-between p-8 lg:p-12 overflow-y-auto">
@@ -289,7 +290,8 @@ export default function Navbar() {
               <span className="text-zinc-500">Comfort is everything.</span>
               <span>Worldwide</span>
             </div>
-          </motion.div>
+          </motion.div>,
+          document.body
         )}
       </AnimatePresence>
     </>
