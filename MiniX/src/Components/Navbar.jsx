@@ -128,9 +128,10 @@ export default function Navbar() {
       </nav>
 
       {/* FULLSCREEN OVERLAY MENU */}
-      <AnimatePresence>
-        {menuOpen && createPortal(
-          <motion.div 
+      {createPortal(
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -290,10 +291,11 @@ export default function Navbar() {
               <span className="text-zinc-500">Comfort is everything.</span>
               <span>Worldwide</span>
             </div>
-          </motion.div>,
-          document.body
-        )}
-      </AnimatePresence>
+          </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   );
 }
